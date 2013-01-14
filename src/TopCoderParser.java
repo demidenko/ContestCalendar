@@ -8,15 +8,14 @@ import java.util.Locale;
  * 13.01.13 1:38
  */
 public class TopCoderParser implements SiteParser {
-    static final String url = "http://community.topcoder.com/tc?module=Static&d1=calendar&d2=thisMonth";
     static final SimpleDateFormat frm = new SimpleDateFormat("dd MMM yyyy HH:mm Z", Locale.ENGLISH);
     public String url() {
-        return url;
+        return "http://community.topcoder.com/tc?module=Static&d1=calendar&d2=thisMonth";
     }
 
     public ArrayList<Contest> parse() {
         ArrayList<Contest> contests = new ArrayList<Contest>();
-        String s = Utils.URLToString(url, "UTF-8"); if(s==null) return contests;
+        String s = Utils.URLToString(url(), "UTF-8"); if(s==null) return contests;
 
         try{
             int i, j, k, l, day;

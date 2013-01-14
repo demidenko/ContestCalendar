@@ -7,17 +7,16 @@ import java.util.Calendar;
  * 12.01.13 20:53
  */
 public class CodeForcesParser implements SiteParser{
-    private static final String url = "http://codeforces.ru/contests";
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm z");
     private static final SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
 
     public String url() {
-        return url;
+        return "http://codeforces.ru/contests";
     }
 
     public ArrayList<Contest> parse(){
         ArrayList<Contest> contests = new ArrayList<Contest>();
-        String s = Utils.URLToString(url, "UTF-8"); if(s==null) return contests;
+        String s = Utils.URLToString(url(), "UTF-8"); if(s==null) return contests;
         
         try{
             int i, j, k = s.indexOf("data-contestId="), end = s.indexOf("class=\"contests-table\"");

@@ -6,16 +6,15 @@ import java.util.ArrayList;
  * 12.01.13 21:38
  */
 public class SnarkNewsContestsParser implements SiteParser {
-    private static final String url = "http://contests.snarknews.info/index.cgi?data=main/schedule";
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm z");
     
     public String url() {
-        return url;
+        return "http://contests.snarknews.info/index.cgi?data=main/schedule";
     }
 
     public ArrayList<Contest> parse(){
         ArrayList<Contest> contests = new ArrayList<Contest>();
-        String s = Utils.URLToString(url, "windows-1251"); if(s==null) return contests;
+        String s = Utils.URLToString(url(), "windows-1251"); if(s==null) return contests;
         try{
             int i, j, k = s.indexOf("class=\"standings\""), l = s.indexOf("</table>", k);
             k = s.indexOf("<tr>", k+1);

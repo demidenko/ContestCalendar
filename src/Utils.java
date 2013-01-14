@@ -8,6 +8,12 @@ import java.util.Calendar;
  * 12.01.13 21:05
  */
 public class Utils {
+    static Calendar getNowDate(){
+        Calendar c = Calendar.getInstance();
+        c.add(Calendar.HOUR_OF_DAY, 1);
+        return c;
+    }
+    
     static String whitespace = " \t\n\r\0";
 
     static String trim(String s){
@@ -38,7 +44,7 @@ public class Utils {
     }
     
     static Calendar sum(Calendar c1, Calendar c2){
-        Calendar res = Calendar.getInstance();
+        Calendar res = getNowDate();
         res.set(
                 c1.get(Calendar.YEAR)+c2.get(Calendar.YEAR)-1970,
                 c1.get(Calendar.MONTH)+c2.get(Calendar.MONTH),

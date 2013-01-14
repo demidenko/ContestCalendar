@@ -5,8 +5,8 @@ import java.util.*;
  * 13.01.13 13:31
  */
 public class MyTableModel extends AbstractTableModel {
-    private ArrayList<Contest> list;
-    private TreeSet<Contest> contests;
+    public ArrayList<Contest> list;
+    public TreeSet<Contest> contests;
     private final Comparator<Contest> comparatorTime = new Comparator<Contest>() {
         @Override
         public int compare(Contest o1, Contest o2) {
@@ -18,13 +18,14 @@ public class MyTableModel extends AbstractTableModel {
     };
     
     public MyTableModel(){
+        
         contests = new TreeSet<Contest>();
-        refresh();
+        list = new ArrayList<Contest>();
     }
 
     @Override
     public int getRowCount() {
-        return contests.size();
+        return list.size();
     }
 
     @Override
@@ -56,9 +57,10 @@ public class MyTableModel extends AbstractTableModel {
      */
 
     public void refresh(){
-        final Calendar nowDate = Calendar.getInstance();
-        ArrayList<Contest> toRemove = new ArrayList<Contest>();
-        for(Contest c : contests) if(nowDate.getTime().getTime()-c.endDate.getTime().getTime()>1000*60*60*24) toRemove.add(c);
+        final Calendar nowDate = Utils.getNowDate();
+        List<Contest> toRemove = new ArrayList<Contest>();
+        for(Contest c : contests) 
+            if(nowDate.getTimeInMillis()-c.endDate.getTimeInMillis()>1000*60*60*24) toRemove.add(c);
         contests.removeAll(toRemove);
         list = new ArrayList<Contest>(contests);
         Collections.sort(list, new Comparator<Contest>() {
@@ -71,18 +73,13 @@ public class MyTableModel extends AbstractTableModel {
         });
         fireTableDataChanged();
     }
-    
-    public void addRow(Contest c){
-        if(contests.contains(c)) contests.remove(c);
-        contests.add(c);
-        refresh();
-    }
 
-    public void addRows(Collection<Contest> cc){
-        for(Contest c : cc){
-            if(contests.contains(c)) contests.remove(c);
-            contests.add(c);
+    public void addRows(Collection<Contest> newContests){
+        synchronized (contests){
+            for(Contest c : newContests){
+                if(contests.contains(c)) contests.remove(c);
+                contests.add(c);
+            }
         }
-        refresh();
     }
 }

@@ -8,17 +8,16 @@ import java.util.Locale;
  * 13.01.13 1:32
  */
 public class GoogleCodeJamParser implements SiteParser{
-    static final String url = "http://code.google.com/codejam/schedule.html";
     static final SimpleDateFormat format = new SimpleDateFormat("EEE, MMM dd, yyyy HH:mm Z", Locale.ENGLISH);
     
     
     public String url() {
-        return url;
+        return "http://code.google.com/codejam/schedule.html";
     }
 
     public ArrayList<Contest> parse() {
         ArrayList<Contest> contests = new ArrayList<Contest>();
-        String s = Utils.URLToString(url, "UTF-8"); if(s==null) return contests;
+        String s = Utils.URLToString(url(), "UTF-8"); if(s==null) return contests;
 
         try{
             int i, j, k = s.indexOf("class=\"block\""), end = s.indexOf("</table>", k);
