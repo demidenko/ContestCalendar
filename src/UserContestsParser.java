@@ -9,7 +9,7 @@ import java.util.Scanner;
  * 14.01.13 19:04
  */
 public class UserContestsParser implements SiteParser {
-    static final SimpleDateFormat frm = new SimpleDateFormat("dd.MM.yy HH:mm");
+    static final SimpleDateFormat frm = new SimpleDateFormat("dd.MM.yyyy HH:mm Z");
     
     public String url() {
         return "UserContests.txt";

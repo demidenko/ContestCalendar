@@ -27,10 +27,11 @@ public class MyTableCellRenderer implements TableCellRenderer {
         cell.setOpaque(true);
         cell.setForeground(Color.black);
         cell.setBackground(new Color(224, 240, 255));
-        if(nowDate.compareTo(c.endDate)>0){
+        int status = ((MyTableModel)table.getModel()).status(c, nowDate);
+        if(status==-1){
             cell.setForeground(new Color(96, 96, 96));
         }else
-        if(nowDate.compareTo(c.startDate)>=0){
+        if(status==0){
             cell.setBackground(new Color(0, 224, 0));
         }
         

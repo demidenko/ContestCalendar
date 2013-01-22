@@ -8,8 +8,8 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.Timer;
 
 /**
@@ -19,46 +19,35 @@ public class Main {
     
     static SiteParser parsers[] = {
             new CodeForcesParser(),
-            new SnarkNewsContestsParser(),
             new TopCoderParser(),
+            new SnarkNewsContestsParser(),
+            new ACMPParser(),
+            new NEERCIFMOSchoolParser(),
+            new CodeChefParser(),
             new GoogleCodeJamParser(),
             new RussianCodeCupParser(),
             new ICLParser(),
-            new CodeChefParser(),
+            new IPSCParser(),
             new UserContestsParser(),
     };
     
     
-    static void trash(){
-        Timer t = new Timer();
-        t.schedule(new TimerTask() {
-            public void run() {
-
-                long tm  =System.currentTimeMillis();
-                System.out.println("start...");System.out.flush();
-                Random r = new Random();
-                double sum = 0;
-                double its = 1e7;
-                for(int i=0;i<its;++i) sum+=Math.acos((r.nextDouble() * 2 - 1));
-                System.out.println(String.format("%.3f",sum/its)+" "+(System.currentTimeMillis()-tm));
-                System.out.flush();
-            }
-        }, 1000, 1000);
-
-        String s;
-        do{
-            s = in.next();
-        }while(!s.equals("stop"));
-        System.exit(0);
-    }
     
     public static void main(String[] args) {
-        //trash();
+        
+        //System.exit(0);
         
         JFrame window = initWindow();
         window.setVisible(true);
 
 
+        timerUpdateData = new Timer();
+        timerUpdateData.schedule(new TimerTask() {
+            public void run() {
+                runParsers(parsers);
+            }
+        }, 0, 1000*60*60);
+        
 
         timerUpdateTable = new Timer();
         timerUpdateTable.schedule(new TimerTask() {
@@ -69,28 +58,6 @@ public class Main {
                 }
             }
         }, 0, 1000);
-        
-
-        runParsers(parsers);
-        
-        /*Calendar date = getNowDate;
-        date.add(Calendar.DAY_OF_MONTH, -1);
-        date.add(Calendar.SECOND, 5);
-        Contest c1 = new Contest();
-        c1.startDate = c1.endDate = date;
-        c1.tittle = "test contest #1";
-        tableModel.addRow(c1);
-
-        date = getNowDate;
-        date.add(Calendar.SECOND, 10);
-        Contest c2 = new Contest();
-        c2.startDate = date;
-        date = getNowDate();
-        date.add(Calendar.SECOND, 15);
-        c2.endDate = date;
-        c2.tittle = "test contest #2";
-        tableModel.addRow(c2);*/
-
         
     }
     
@@ -116,8 +83,8 @@ public class Main {
     static MyTableModel tableModel;
     static SystemTray systemTray = SystemTray.getSystemTray();
     static TrayIcon trayIcon;
-    static Timer timerUpdateTable = new Timer();
-    static Timer timerUpdateData = new Timer();
+    static Timer timerUpdateTable;
+    static Timer timerUpdateData;
     
     public static final JFrame initWindow(){
         final JFrame window = new JFrame("== calendar ==");

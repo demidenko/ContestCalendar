@@ -3,6 +3,7 @@ import java.io.DataInputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Calendar;
+import java.util.TreeMap;
 
 /**
  * 12.01.13 21:05
@@ -10,7 +11,7 @@ import java.util.Calendar;
 public class Utils {
     static Calendar getNowDate(){
         Calendar c = Calendar.getInstance();
-        c.add(Calendar.HOUR_OF_DAY, 1);
+        //c.add(Calendar.HOUR_OF_DAY, 1);
         return c;
     }
     
@@ -29,7 +30,7 @@ public class Utils {
             URL url = new URL(urlName);
             URLConnection con = url.openConnection();
             DataInputStream dis = new DataInputStream(con.getInputStream());
-            byte bytes[] = new byte[1<<18];
+            byte bytes[] = new byte[1<<17];
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             for(;;){
                 int cnt = dis.read(bytes);
@@ -55,5 +56,33 @@ public class Utils {
                 
                 );
         return res;
+    }
+
+    static TreeMap<String, String> month = new TreeMap<String,String>();
+    static{
+        month.put("январь", "01");
+        month.put("января", "01");
+        month.put("февраль", "02");
+        month.put("февраля", "02");
+        month.put("март", "03");
+        month.put("марта", "03");
+        month.put("апрель", "04");
+        month.put("апреля", "04");
+        month.put("май", "05");
+        month.put("мая", "05");
+        month.put("июнь", "06");
+        month.put("июня", "06");
+        month.put("июль", "07");
+        month.put("июля", "07");
+        month.put("август", "08");
+        month.put("августа", "08");
+        month.put("сентябрь", "09");
+        month.put("сентября", "09");
+        month.put("октябрь", "10");
+        month.put("октября", "10");
+        month.put("ноябрь", "11");
+        month.put("ноября", "11");
+        month.put("декабрь", "12");
+        month.put("декабря", "12");
     }
 }
