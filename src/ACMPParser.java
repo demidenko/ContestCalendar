@@ -9,13 +9,17 @@ import java.util.Calendar;
 public class ACMPParser implements SiteParser {
     static final SimpleDateFormat frm = new SimpleDateFormat("ddMMyyyy HH:mm:ss Z");
     
-    public String url() {
+    public String contestsPage() {
         return "http://acmp.ru/asp/champ/";
+    }
+
+    public String mainPage() {
+        return "acmp.ru";
     }
 
     public ArrayList<Contest> parse() {
         ArrayList<Contest> contests = new ArrayList<Contest>();
-        String s = Utils.URLToString(url(), "windows-1251"); if(s==null) return contests;
+        String s = Utils.URLToString(contestsPage(), "windows-1251"); if(s==null) return contests;
 
         try{
             int i, j, k = s.indexOf("<h1>Расписание</h1>");
@@ -23,7 +27,7 @@ public class ACMPParser implements SiteParser {
             i = s.indexOf("<h4>", k);
             for(;i>=0;){
                 Contest c = new Contest();
-                c.source = "acmp.ru";
+                c.source = mainPage();
                 j = s.indexOf("</h4>",i);
                 str = Utils.trim(s.substring(i+4, j)).replace("&nbsp;", " ");
                 c.tittle = Utils.trim(str.substring(str.indexOf('.')+1));

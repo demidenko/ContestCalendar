@@ -8,13 +8,18 @@ import java.util.ArrayList;
 public class RussianCodeCupParser implements SiteParser{
     static final SimpleDateFormat frm = new SimpleDateFormat("yyyyMMddHHmmss Z");
     
-    public String url() {
+    public String contestsPage() {
         return "http://russiancodecup.ru/ical";
+    }
+
+    @Override
+    public String mainPage() {
+        return "russiancodecup.ru";
     }
 
     public ArrayList<Contest> parse() {
         ArrayList<Contest> contests = new ArrayList<Contest>();
-        String s = Utils.URLToString(url(), "UTF-8"); if(s==null) return contests;
+        String s = Utils.URLToString(contestsPage(), "UTF-8"); if(s==null) return contests;
 
         try{
             int i, j=0, k;
@@ -28,6 +33,7 @@ public class RussianCodeCupParser implements SiteParser{
                 c.startDate.setTime(frm.parse(s.substring(s.indexOf(':',k)+1, s.indexOf("\r",k)).replace("T", "")+" MSK"));
                 k = s.indexOf("DTEND",i);
                 c.endDate.setTime(frm.parse(s.substring(s.indexOf(':',k)+1, s.indexOf("\r",k)).replace("T", "")+" MSK"));
+                c.source = mainPage();
                 contests.add(c);
             }
         }catch (ParseException e){

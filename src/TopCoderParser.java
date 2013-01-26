@@ -9,13 +9,18 @@ import java.util.Locale;
  */
 public class TopCoderParser implements SiteParser {
     static final SimpleDateFormat frm = new SimpleDateFormat("dd MMM yyyy HH:mm Z", Locale.ENGLISH);
-    public String url() {
+    
+    public String contestsPage() {
         return "http://community.topcoder.com/tc?module=Static&d1=calendar&d2=thisMonth";
+    }
+
+    public String mainPage() {
+        return "community.topcoder.com/tc";
     }
 
     public ArrayList<Contest> parse() {
         ArrayList<Contest> contests = new ArrayList<Contest>();
-        String s = Utils.URLToString(url(), "UTF-8"); if(s==null) return contests;
+        String s = Utils.URLToString(contestsPage(), "UTF-8"); if(s==null) return contests;
 
         try{
             int i, j, k, l, day;
@@ -34,7 +39,7 @@ public class TopCoderParser implements SiteParser {
                         Contest c = new Contest();
                         c.tittle = s.substring(s.indexOf("\">", i)+2, s.indexOf("</",i));
                         if(!c.tittle.toLowerCase().contains("srm") && !c.tittle.toLowerCase().contains("algorithm")) continue;
-                        c.source = "community.topcoder.com";
+                        c.source = mainPage();
                         str = s.substring(s.indexOf("</strong>",i)+9,s.indexOf("</div>",i));
                         while(str.contains("<")) str = str.substring(0,str.indexOf("<"))+str.substring(str.indexOf(">")+1);
                         str = Utils.trim(str);

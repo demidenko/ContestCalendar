@@ -11,13 +11,17 @@ public class GoogleCodeJamParser implements SiteParser{
     static final SimpleDateFormat format = new SimpleDateFormat("EEE, MMM dd, yyyy HH:mm Z", Locale.ENGLISH);
     
     
-    public String url() {
+    public String contestsPage() {
         return "http://code.google.com/codejam/schedule.html";
+    }
+
+    public String mainPage() {
+        return "code.google.com/codejam";
     }
 
     public ArrayList<Contest> parse() {
         ArrayList<Contest> contests = new ArrayList<Contest>();
-        String s = Utils.URLToString(url(), "UTF-8"); if(s==null) return contests;
+        String s = Utils.URLToString(contestsPage(), "UTF-8"); if(s==null) return contests;
 
         try{
             int i, j, k = s.indexOf("class=\"block\""), end = s.indexOf("</table>", k);
@@ -26,7 +30,7 @@ public class GoogleCodeJamParser implements SiteParser{
                 k = s.indexOf("<tr>", k+1);
                 if(k>end || k<0) break;
                 Contest c = new Contest();
-                c.source = "code.google.com/codejam";
+                c.source = mainPage();
                 i = s.indexOf("<td class=\"date\">",k); j = s.indexOf("</td>",i);
                 str = s.substring(i,j);
                 while(str.contains("<")) str = str.substring(0,str.indexOf("<"))+str.substring(str.indexOf(">")+1);

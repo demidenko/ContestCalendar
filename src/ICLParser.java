@@ -8,20 +8,24 @@ import java.util.ArrayList;
 public class ICLParser implements SiteParser{
     static final SimpleDateFormat frm = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z");
     
-    public String url() {
+    public String contestsPage() {
         return "http://www.icl.ru/turnir/contest.php";
+    }
+
+    public String mainPage() {
+        return "www.icl.ru/turnir";
     }
 
     public ArrayList<Contest> parse() {
         ArrayList<Contest> contests = new ArrayList<Contest>();
-        String s = Utils.URLToString(url(), "windows-1251"); if(s==null) return contests;
+        String s = Utils.URLToString(contestsPage(), "windows-1251"); if(s==null) return contests;
         try{
             int i, j, k = s.indexOf("<table>"), l = s.indexOf("</table>", k);
             for(;;){
                 k = s.indexOf("<tr class=\"active\">", k+1);
                 if(k<0 || k>l) break;
                 Contest c = new Contest();
-                c.source = "www.icl.ru/turnir";
+                c.source = mainPage();
                 i = s.indexOf("</a>", k);
                 c.tittle = Utils.trim(s.substring(s.lastIndexOf(">",i-4)+1,i));
                 if(c.tittle.equalsIgnoreCase("архив задач")) continue;

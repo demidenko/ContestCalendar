@@ -10,13 +10,17 @@ public class CodeForcesParser implements SiteParser{
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm z");
     private static final SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
 
-    public String url() {
+    public String contestsPage() {
         return "http://codeforces.ru/contests";
+    }
+
+    public String mainPage() {
+        return "codeforces.ru";
     }
 
     public ArrayList<Contest> parse(){
         ArrayList<Contest> contests = new ArrayList<Contest>();
-        String s = Utils.URLToString(url(), "UTF-8"); if(s==null) return contests;
+        String s = Utils.URLToString(contestsPage(), "UTF-8"); if(s==null) return contests;
         
         try{
             int i, j, k = s.indexOf("data-contestId="), end = s.indexOf("class=\"contests-table\"");
@@ -24,7 +28,7 @@ public class CodeForcesParser implements SiteParser{
             Calendar d = Calendar.getInstance();
             while(k<end){
                 Contest c = new Contest();
-                c.source = "codeforces.ru";
+                c.source = mainPage();
                 i = s.indexOf("<td>", k);
                 j = s.indexOf("</td>", i);
                 str = s.substring(i + 4, j);

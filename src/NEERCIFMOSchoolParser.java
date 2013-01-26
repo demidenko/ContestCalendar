@@ -9,20 +9,22 @@ import java.util.Calendar;
 public class NEERCIFMOSchoolParser implements SiteParser{
     static final SimpleDateFormat frm = new SimpleDateFormat("dd MM yyyy HH-mm z");
 
-    public String url() {
+    public String contestsPage() {
         return "http://neerc.ifmo.ru/school/io/index.html";
     }
-    
-    
-    
+
+    public String mainPage() {
+        return "neerc.ifmo.ru/school/io";
+    }
+
+
     public ArrayList<Contest> parse() {
         ArrayList<Contest> contests = new ArrayList<Contest>();
-        String s = Utils.URLToString(url(), "windows-1251"); if(s==null) return contests;
+        String s = Utils.URLToString(contestsPage(), "windows-1251"); if(s==null) return contests;
 
         try{
             int i, j, k1 = s.indexOf("Расписание командных олимпиад"), k2 = s.indexOf("Расписание личных олимпиад");
             String t, sp[];
-            int cnt1 = 0, cnt2 = 0;
             j = k1;
             for(;;){
                 Contest c = new Contest();
@@ -36,9 +38,10 @@ public class NEERCIFMOSchoolParser implements SiteParser{
                 c.startDate.setTime(frm.parse(t));
                 c.endDate.setTime(c.startDate.getTime());
                 c.endDate.add(Calendar.HOUR_OF_DAY, 5);
-                if(i<k2) c.tittle = "Командная олимпиада школьников #"+(++cnt1);
-                else c.tittle = "Личная олимпиада школьников #"+(++cnt2);
+                if(i<k2) c.tittle = "Командная олимпиада школьников";
+                else c.tittle = "Личная олимпиада школьников";
                 for(i=1;i<sp.length;++i) c.tittle+=","+sp[i];
+                c.source = mainPage();
                 contests.add(c);
             }
         } catch (ParseException e) {

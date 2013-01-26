@@ -8,13 +8,17 @@ import java.util.ArrayList;
 public class SnarkNewsContestsParser implements SiteParser {
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm z");
     
-    public String url() {
+    public String contestsPage() {
         return "http://contests.snarknews.info/index.cgi?data=main/schedule";
+    }
+
+    public String mainPage() {
+        return "contests.snarknews.info";
     }
 
     public ArrayList<Contest> parse(){
         ArrayList<Contest> contests = new ArrayList<Contest>();
-        String s = Utils.URLToString(url(), "windows-1251"); if(s==null) return contests;
+        String s = Utils.URLToString(contestsPage(), "windows-1251"); if(s==null) return contests;
         try{
             int i, j, k = s.indexOf("class=\"standings\""), l = s.indexOf("</table>", k);
             k = s.indexOf("<tr>", k+1);
@@ -22,7 +26,7 @@ public class SnarkNewsContestsParser implements SiteParser {
                 k = s.indexOf("<tr>", k+1);
                 if(k>l || k<0) break;
                 Contest c = new Contest();
-                c.source = "contests.snarknews.info";
+                c.source = mainPage();
                 i = s.indexOf("<b>", k);
                 c.tittle = Utils.trim(s.substring(i+3, s.indexOf("</b>",i+1)));
                 if(c.tittle.length()==0) continue;

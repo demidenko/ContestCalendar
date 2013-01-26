@@ -103,12 +103,12 @@ public class MyTableModel extends AbstractTableModel {
         }
     }
 
-    public void addRows(Collection<Contest> newContests){
+    public void addRows(List<Contest> newContests){
         synchronized (contests){
-            for(Contest c : newContests){
-                if(contests.contains(c)) contests.remove(c);
-                contests.add(c);
-            }
+            if(newContests==null || newContests.size()==0) return;
+            String source = newContests.get(0).source;
+            for(Contest c : new ArrayList<Contest>(contests)) if(c.source==source) contests.remove(c);
+            for(Contest c : newContests) contests.add(c);
             needRefresh = true;
         }
     }

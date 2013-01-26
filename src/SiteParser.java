@@ -5,7 +5,9 @@ import java.util.ArrayList;
  */
 public interface SiteParser {
     
-    public String url();
+    public String contestsPage();
+    
+    public String mainPage();
     
     public ArrayList<Contest> parse();
 }

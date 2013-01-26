@@ -9,13 +9,17 @@ import java.util.Locale;
 public class IPSCParser implements SiteParser {
     static final SimpleDateFormat frm = new SimpleDateFormat("d MMMMM yyyy, HH:mm z", Locale.ENGLISH);
     
-    public String url() {
+    public String contestsPage() {
         return "http://ipsc.ksp.sk/rules";
+    }
+
+    public String mainPage() {
+        return "ipsc.ksp.sk";
     }
 
     public ArrayList<Contest> parse() {
         ArrayList<Contest> contests = new ArrayList<Contest>();
-        String s = Utils.URLToString(url(), "UTF-8"); if(s==null) return contests;
+        String s = Utils.URLToString(contestsPage(), "UTF-8"); if(s==null) return contests;
         
         try{
             int i,j;
@@ -24,7 +28,7 @@ public class IPSCParser implements SiteParser {
             String sp[] = s.substring(i+7, s.indexOf("</title>", i)).split(" ");
             c.tittle = sp[0]+" "+sp[1];
             i = s.indexOf("<h3>When is IPSC?</h3>");
-            c.source = "ipsc.ksp.sk";
+            c.source = mainPage();
             i = s.indexOf("\">", i+1);
             j = s.indexOf("</a>", i);
             c.startDate.setTime(frm.parse(s.substring(i+2, j)));

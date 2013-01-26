@@ -11,20 +11,25 @@ import java.util.Scanner;
 public class UserContestsParser implements SiteParser {
     static final SimpleDateFormat frm = new SimpleDateFormat("dd.MM.yyyy HH:mm Z");
     
-    public String url() {
+    public String contestsPage() {
         return "UserContests.txt";
+    }
+
+    public String mainPage() {
+        return "user";
     }
 
     public ArrayList<Contest> parse() {
         ArrayList<Contest> contests = new ArrayList<Contest>();
 
         try {
-            Scanner in = new Scanner(new File(url()));
+            Scanner in = new Scanner(new File(contestsPage()));
             while(in.hasNextLine()){
                 Contest c = new Contest();
                 c.tittle = in.nextLine();
                 c.startDate.setTime(frm.parse(in.nextLine()));
                 c.endDate.setTime(frm.parse(in.nextLine()));
+                c.source = mainPage();
                 contests.add(c);
             }
             in.close();

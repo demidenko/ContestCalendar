@@ -29,6 +29,7 @@ public class Contest implements Comparable<Contest> {
         int cmp = 0;
         if(cmp!=0) return cmp; else cmp = source.compareTo(o.source);
         if(cmp!=0) return cmp; else cmp = tittle.compareTo(o.tittle);
+        if(cmp!=0) return cmp; else cmp = startDate.compareTo(o.startDate);
         return cmp;
     }
 }

@@ -8,13 +8,17 @@ import java.util.ArrayList;
 public class CodeChefParser implements SiteParser {
     static final SimpleDateFormat frm = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
     
-    public String url() {
+    public String contestsPage() {
         return "http://www.codechef.com/contests/";
+    }
+
+    public String mainPage() {
+        return "www.codechef.com";
     }
 
     public ArrayList<Contest> parse() {
         ArrayList<Contest> contests = new ArrayList<Contest>();
-        String s = Utils.URLToString(url(), "UTF-8"); if(s==null) return contests;
+        String s = Utils.URLToString(contestsPage(), "UTF-8"); if(s==null) return contests;
 
         try{
             int i, j, k, end;
@@ -25,7 +29,7 @@ public class CodeChefParser implements SiteParser {
                 j = s.indexOf("<tr >", j+1);
                 if(j<0 || j>end) break;
                 Contest c = new Contest();
-                c.source = "www.codechef.com";
+                c.source = mainPage();
                 i = s.indexOf("<td", j+1);
                 i = s.indexOf("<td", i+1);
                 c.tittle = s.substring(s.indexOf("\">",i)+2, s.indexOf("</a",i));
