@@ -26,10 +26,10 @@ public class SnarkNewsContestsParser implements SiteParser {
                 k = s.indexOf("<tr>", k+1);
                 if(k>l || k<0) break;
                 Contest c = new Contest();
-                c.source = mainPage();
+                c.mainPage = mainPage();
                 i = s.indexOf("<b>", k);
-                c.tittle = Utils.trim(s.substring(i+3, s.indexOf("</b>",i+1)));
-                if(c.tittle.length()==0) continue;
+                c.title = Utils.trim(s.substring(i+3, s.indexOf("</b>",i+1)));
+                if(c.title.length()==0) continue;
                 i = s.indexOf("<b>", i+1);
                 i = s.indexOf("<b>", i+1);
                 i = s.indexOf("<b>", i+1);

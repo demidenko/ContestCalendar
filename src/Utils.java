@@ -1,5 +1,8 @@
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
+import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Calendar;
@@ -40,6 +43,15 @@ public class Utils {
             return new String(baos.toByteArray(), code);
         } catch (Exception e) {
             e.printStackTrace();
+        }
+        return null;
+    }
+    
+    static BufferedImage loadImage(String url){
+        try {
+            return ImageIO.read(new URL(url));
+        } catch (IOException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
         return null;
     }

@@ -28,12 +28,12 @@ public class CodeForcesParser implements SiteParser{
             Calendar d = Calendar.getInstance();
             while(k<end){
                 Contest c = new Contest();
-                c.source = mainPage();
+                c.mainPage = mainPage();
                 i = s.indexOf("<td>", k);
                 j = s.indexOf("</td>", i);
                 str = s.substring(i + 4, j);
                 while((i=str.indexOf("<br"))>=0) str = str.substring(0,i);
-                c.tittle = Utils.trim(str);
+                c.title = Utils.trim(str);
                 i = s.indexOf(">", s.indexOf(">", j + 5) + 1);
                 j = s.indexOf("<", i);
                 str = Utils.trim(s.substring(i + 1, j));

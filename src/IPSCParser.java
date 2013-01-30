@@ -26,9 +26,9 @@ public class IPSCParser implements SiteParser {
             Contest c = new Contest();
             i = s.indexOf("<title>");
             String sp[] = s.substring(i+7, s.indexOf("</title>", i)).split(" ");
-            c.tittle = sp[0]+" "+sp[1];
+            c.title = sp[0]+" "+sp[1];
             i = s.indexOf("<h3>When is IPSC?</h3>");
-            c.source = mainPage();
+            c.mainPage = mainPage();
             i = s.indexOf("\">", i+1);
             j = s.indexOf("</a>", i);
             c.startDate.setTime(frm.parse(s.substring(i+2, j)));

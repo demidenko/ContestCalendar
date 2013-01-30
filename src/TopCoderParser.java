@@ -37,9 +37,9 @@ public class TopCoderParser implements SiteParser {
                     i = k;
                     while((i=s.indexOf("<strong",i+1))<l && i>=0){
                         Contest c = new Contest();
-                        c.tittle = s.substring(s.indexOf("\">", i)+2, s.indexOf("</",i));
-                        if(!c.tittle.toLowerCase().contains("srm") && !c.tittle.toLowerCase().contains("algorithm")) continue;
-                        c.source = mainPage();
+                        c.title = s.substring(s.indexOf("\">", i)+2, s.indexOf("</",i));
+                        if(!c.title.toLowerCase().contains("srm") && !c.title.toLowerCase().contains("algorithm")) continue;
+                        c.mainPage = mainPage();
                         str = s.substring(s.indexOf("</strong>",i)+9,s.indexOf("</div>",i));
                         while(str.contains("<")) str = str.substring(0,str.indexOf("<"))+str.substring(str.indexOf(">")+1);
                         str = Utils.trim(str);

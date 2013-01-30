@@ -28,12 +28,12 @@ public class RussianCodeCupParser implements SiteParser{
                 j = s.indexOf("END:VEVENT", i);
                 Contest c = new Contest();
                 k = s.indexOf("SUMMARY:",i);
-                c.tittle = "Russian Code Cup "+s.substring(s.indexOf(':',k)+1, s.indexOf("\r",k));
+                c.title = "Russian Code Cup "+s.substring(s.indexOf(':',k)+1, s.indexOf("\r",k));
                 k = s.indexOf("DTSTART",i);
                 c.startDate.setTime(frm.parse(s.substring(s.indexOf(':',k)+1, s.indexOf("\r",k)).replace("T", "")+" MSK"));
                 k = s.indexOf("DTEND",i);
                 c.endDate.setTime(frm.parse(s.substring(s.indexOf(':',k)+1, s.indexOf("\r",k)).replace("T", "")+" MSK"));
-                c.source = mainPage();
+                c.mainPage = mainPage();
                 contests.add(c);
             }
         }catch (ParseException e){

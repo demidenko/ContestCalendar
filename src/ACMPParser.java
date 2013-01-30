@@ -16,6 +16,7 @@ public class ACMPParser implements SiteParser {
     public String mainPage() {
         return "acmp.ru";
     }
+    
 
     public ArrayList<Contest> parse() {
         ArrayList<Contest> contests = new ArrayList<Contest>();
@@ -27,11 +28,11 @@ public class ACMPParser implements SiteParser {
             i = s.indexOf("<h4>", k);
             for(;i>=0;){
                 Contest c = new Contest();
-                c.source = mainPage();
+                c.mainPage = mainPage();
                 j = s.indexOf("</h4>",i);
                 str = Utils.trim(s.substring(i+4, j)).replace("&nbsp;", " ");
-                c.tittle = Utils.trim(str.substring(str.indexOf('.')+1));
-                if((i=c.tittle.indexOf("<"))>=0) c.tittle = Utils.trim(c.tittle.substring(0,i));
+                c.title = Utils.trim(str.substring(str.indexOf('.')+1));
+                if((i=c.title.indexOf("<"))>=0) c.title = Utils.trim(c.title.substring(0,i));
                 sp = str.split(" ");
                 t = sp[0]+Utils.month.get(sp[1].toLowerCase())+sp[2];
                 i = s.indexOf("<li>",j);

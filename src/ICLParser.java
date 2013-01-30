@@ -25,10 +25,10 @@ public class ICLParser implements SiteParser{
                 k = s.indexOf("<tr class=\"active\">", k+1);
                 if(k<0 || k>l) break;
                 Contest c = new Contest();
-                c.source = mainPage();
+                c.mainPage = mainPage();
                 i = s.indexOf("</a>", k);
-                c.tittle = Utils.trim(s.substring(s.lastIndexOf(">",i-4)+1,i));
-                if(c.tittle.equalsIgnoreCase("архив задач")) continue;
+                c.title = Utils.trim(s.substring(s.lastIndexOf(">",i-4)+1,i));
+                if(c.title.equalsIgnoreCase("архив задач")) continue;
                 i = s.indexOf("<td>",i+1);
                 c.startDate.setTime(frm.parse(s.substring(i+4,s.indexOf("</td>",i))+" MSK"));
                 i = s.indexOf("<td>",i+1);

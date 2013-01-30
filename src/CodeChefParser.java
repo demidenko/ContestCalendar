@@ -29,10 +29,10 @@ public class CodeChefParser implements SiteParser {
                 j = s.indexOf("<tr >", j+1);
                 if(j<0 || j>end) break;
                 Contest c = new Contest();
-                c.source = mainPage();
+                c.mainPage = mainPage();
                 i = s.indexOf("<td", j+1);
                 i = s.indexOf("<td", i+1);
-                c.tittle = s.substring(s.indexOf("\">",i)+2, s.indexOf("</a",i));
+                c.title = s.substring(s.indexOf("\">",i)+2, s.indexOf("</a",i));
                 i = s.indexOf("<td", i+1);
                 c.startDate.setTime(frm.parse(Utils.trim(s.substring(s.indexOf(">", i) + 1, s.indexOf("</", i))) + " India Standard Time"));
                 i = s.indexOf("<td", i+1);

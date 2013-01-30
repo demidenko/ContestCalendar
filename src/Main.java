@@ -1,5 +1,7 @@
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -9,8 +11,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
-import java.util.*;
+import java.util.Scanner;
 import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * 17.12.12 20:27
@@ -95,10 +98,10 @@ public class Main {
         
         MyTableCellRenderer cellRenderer = new MyTableCellRenderer();
         tableModel = new MyTableModel();
-        JTable t = new JTable(tableModel);
+        final JTable table = new JTable(tableModel);
+        table.setDefaultRenderer(Object.class, cellRenderer);
+        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         
-        t.setDefaultRenderer(Object.class, cellRenderer);
-        window.add(new JScrollPane(t), BorderLayout.CENTER);
         
         try {
             trayIcon = new TrayIcon(ImageIO.read(new File("ico.png")), "Contests schedule");
@@ -127,6 +130,38 @@ public class Main {
 
         });
 
+        Insets none = new Insets(0,0,0,0);
+        final JPanel infoPanel = new JPanel();
+        infoPanel.setLayout(new GridBagLayout());
+        final JLabel info1 = new JLabel(); 
+        final JLabel info2 = new JLabel(); 
+        info1.setFont(new Font(null, Font.BOLD, 14));
+        info2.setFont(new Font(null, Font.ITALIC, 10));
+       // infoPanel.setBorder(BorderFactory.createLineBorder(Color.red));
+       // info1.setBorder(BorderFactory.createLineBorder(Color.blue));
+       // info2.setBorder(BorderFactory.createLineBorder(Color.blue));
+        infoPanel.add(info1, new GridBagConstraints(0, 0, 1, 1, 0, 0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, none, 0, 0));
+        infoPanel.add(info2, new GridBagConstraints(0,1,1,1,0,0,GridBagConstraints.CENTER,GridBagConstraints.BOTH,none, 0,0));
+        
+        
+        table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                int[] rows = table.getSelectedRows();
+                if(rows.length==0) {
+                    info1.setText("");
+                    info2.setText("");
+                    return;
+                }
+                int row = rows[0];
+                info1.setText(tableModel.list.get(row).title);
+                info2.setText(tableModel.list.get(row).mainPage);
+            }
+        });
+        
+        window.add(infoPanel, BorderLayout.SOUTH);
+        window.add(new JScrollPane(table), BorderLayout.CENTER);
+                
         return window;
     }
     

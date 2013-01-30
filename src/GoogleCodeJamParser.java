@@ -30,7 +30,7 @@ public class GoogleCodeJamParser implements SiteParser{
                 k = s.indexOf("<tr>", k+1);
                 if(k>end || k<0) break;
                 Contest c = new Contest();
-                c.source = mainPage();
+                c.mainPage = mainPage();
                 i = s.indexOf("<td class=\"date\">",k); j = s.indexOf("</td>",i);
                 str = s.substring(i,j);
                 while(str.contains("<")) str = str.substring(0,str.indexOf("<"))+str.substring(str.indexOf(">")+1);
@@ -56,7 +56,7 @@ public class GoogleCodeJamParser implements SiteParser{
                 i = s.indexOf("<td class=\"desc\">",k); j = s.indexOf("</td>",i);
                 str = s.substring(i,j);
                 while(str.indexOf("<")>=0) str = str.substring(0,str.indexOf("<"))+str.substring(str.indexOf(">")+1);
-                c.tittle = Utils.trim(str);
+                c.title = Utils.trim(str);
                 contests.add(c);
             }
         }catch (ParseException e){

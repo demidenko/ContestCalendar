@@ -16,7 +16,7 @@ public class UserContestsParser implements SiteParser {
     }
 
     public String mainPage() {
-        return "user";
+        return "-user-";
     }
 
     public ArrayList<Contest> parse() {
@@ -26,10 +26,10 @@ public class UserContestsParser implements SiteParser {
             Scanner in = new Scanner(new File(contestsPage()));
             while(in.hasNextLine()){
                 Contest c = new Contest();
-                c.tittle = in.nextLine();
+                c.title = in.nextLine();
                 c.startDate.setTime(frm.parse(in.nextLine()));
                 c.endDate.setTime(frm.parse(in.nextLine()));
-                c.source = mainPage();
+                c.mainPage = mainPage();
                 contests.add(c);
             }
             in.close();

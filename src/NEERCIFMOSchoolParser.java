@@ -38,10 +38,10 @@ public class NEERCIFMOSchoolParser implements SiteParser{
                 c.startDate.setTime(frm.parse(t));
                 c.endDate.setTime(c.startDate.getTime());
                 c.endDate.add(Calendar.HOUR_OF_DAY, 5);
-                if(i<k2) c.tittle = "Командная олимпиада школьников";
-                else c.tittle = "Личная олимпиада школьников";
-                for(i=1;i<sp.length;++i) c.tittle+=","+sp[i];
-                c.source = mainPage();
+                if(i<k2) c.title = "Командная олимпиада школьников";
+                else c.title = "Личная олимпиада школьников";
+                for(i=1;i<sp.length;++i) c.title +=","+sp[i];
+                c.mainPage = mainPage();
                 contests.add(c);
             }
         } catch (ParseException e) {
