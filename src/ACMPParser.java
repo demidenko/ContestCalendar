@@ -45,8 +45,18 @@ public class ACMPParser implements SiteParser {
                 str = s.substring(i+4,j).split(" ")[1];
                 c.endDate.setTime(c.startDate.getTime());
                 c.endDate.add(Calendar.MINUTE, Integer.parseInt(str));
-                i = s.indexOf("<h4>", j);
+                k = s.indexOf("</ul>", i);
+                for(;;){
+                    i = s.indexOf("<li>",j);
+                    if(i<0 || i>k) break;
+                    j = s.indexOf("</li>",i);
+                    str = s.substring(i+4, j);
+                    if(!str.contains("Количество задач")) continue;
+                    c.contestPage = "http://acmp.ru/asp/champ/" + str.substring(str.indexOf("href=")+5, str.indexOf(">")).replace("rating", "tasks");
+                    break;
+                }
                 contests.add(c);
+                i = s.indexOf("<h4>", k);
             }
         } catch (ParseException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.

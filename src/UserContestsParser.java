@@ -16,7 +16,7 @@ public class UserContestsParser implements SiteParser {
     }
 
     public String mainPage() {
-        return "-user-";
+        return "";
     }
 
     public ArrayList<Contest> parse() {

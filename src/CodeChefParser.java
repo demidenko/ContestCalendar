@@ -32,6 +32,7 @@ public class CodeChefParser implements SiteParser {
                 c.mainPage = mainPage();
                 i = s.indexOf("<td", j+1);
                 i = s.indexOf("<td", i+1);
+                c.contestPage = "http://www.codechef.com" + s.substring(s.indexOf("href=\"",i)+6, s.indexOf("\">",i));
                 c.title = s.substring(s.indexOf("\">",i)+2, s.indexOf("</a",i));
                 i = s.indexOf("<td", i+1);
                 c.startDate.setTime(frm.parse(Utils.trim(s.substring(s.indexOf(">", i) + 1, s.indexOf("</", i))) + " India Standard Time"));

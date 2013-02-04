@@ -42,6 +42,7 @@ public class NEERCIFMOSchoolParser implements SiteParser{
                 else c.title = "Личная олимпиада школьников";
                 for(i=1;i<sp.length;++i) c.title +=","+sp[i];
                 c.mainPage = mainPage();
+                c.contestPage = "http://neerc.ifmo.ru/testing/index.jsp";
                 contests.add(c);
             }
         } catch (ParseException e) {

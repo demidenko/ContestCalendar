@@ -1,8 +1,11 @@
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Calendar;
@@ -54,6 +57,25 @@ public class Utils {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
         return null;
+    }
+
+    static void launchBrowser(String uriStr){
+        if(uriStr==null || uriStr.length()==0) return;
+        Desktop desktop;
+        if (Desktop.isDesktopSupported()){
+            desktop = Desktop.getDesktop();
+            if (desktop.isSupported(Desktop.Action.BROWSE)){
+                URI uri;
+                try{
+                    uri = new URI(uriStr.indexOf("http://")==0 ? uriStr : "http://" + uriStr);
+                    desktop.browse(uri);
+                }catch (IOException ioe){
+                    ioe.printStackTrace();
+                }catch (URISyntaxException use){
+                    use.printStackTrace();
+                }
+            }
+        }
     }
     
     static Calendar sum(Calendar c1, Calendar c2){

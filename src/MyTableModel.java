@@ -107,8 +107,9 @@ public class MyTableModel extends AbstractTableModel {
         synchronized (contests){
             if(newContests==null || newContests.size()==0) return;
             String source = newContests.get(0).mainPage;
-            for(Contest c : new ArrayList<Contest>(contests)) if(c.mainPage ==source) contests.remove(c);
             Calendar nowDate = Utils.getNowDate();
+            for(Contest c : new ArrayList<Contest>(contests)) 
+                if(c.mainPage==source && status(c, nowDate)>=0) contests.remove(c);
             for(Contest c : newContests) if(!isTooFar(c,nowDate)){
                 contests.add(c);
                 needRefresh = true;

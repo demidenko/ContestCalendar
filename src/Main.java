@@ -3,10 +3,7 @@ import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -19,8 +16,15 @@ import java.util.TimerTask;
  * 17.12.12 20:27
  */
 public class Main {
+    static MyTableModel tableModel;
+    static SystemTray systemTray = SystemTray.getSystemTray();
+    static TrayIcon trayIcon;
+    static Timer timerUpdateTable;
+    static Timer timerUpdateData;
+    static JButton buttonUpdate;
+    static long updateTime = 1000*60*60;
     
-    static SiteParser parsers[] = {
+    static SiteParser allParsers[] = {
             new CodeForcesParser(),
             new TopCoderParser(),
             new SnarkNewsContestsParser(),
@@ -33,6 +37,8 @@ public class Main {
             new IPSCParser(),
             new UserContestsParser(),
     };
+
+    static SiteParser wishParsers[];
     
     
     
@@ -43,13 +49,9 @@ public class Main {
         JFrame window = initWindow();
         window.setVisible(true);
 
-
-        timerUpdateData = new Timer();
-        timerUpdateData.schedule(new TimerTask() {
-            public void run() {
-                runParsers(parsers);
-            }
-        }, 0, 1000*60*60);
+        wishParsers = allParsers;
+        
+        runParsers(wishParsers);
         
 
         timerUpdateTable = new Timer();
@@ -64,11 +66,36 @@ public class Main {
         
     }
     
-    static void runParsers(SiteParser[] parsers){
-        for(SiteParser parser : parsers){
-            Thread t = new ParserThread(parser);
-            t.start();
-        }
+    static threadCounter counter = new threadCounter();
+    static void runParsers(final SiteParser[] parsers){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                System.out.print("parse... ");
+                if(timerUpdateData!=null) timerUpdateData.cancel();
+                buttonUpdate.setEnabled(false);
+                counter.init(parsers.length);
+                for(SiteParser parser : parsers){
+                    Thread t = new ParserThread(parser);
+                    t.start();
+                }
+                synchronized (counter){
+                    try {
+                        counter.wait();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                    }
+                }
+                buttonUpdate.setEnabled(true);
+                timerUpdateData = new Timer();
+                timerUpdateData.schedule(new TimerTask() {
+                    public void run() {
+                        runParsers(wishParsers);
+                    }
+                }, updateTime, updateTime);
+                System.out.println("done. ");
+            }
+        }).start();
     }
     
     public static class ParserThread extends Thread{
@@ -79,20 +106,33 @@ public class Main {
         public void run() {
             List<Contest> c = parser.parse();
             tableModel.addRows(c);
+            synchronized (counter){
+                counter.increase();
+            }
             //System.out.println("update "+parser.getClass().getName()); System.out.flush();
         }
     }
     
-    static MyTableModel tableModel;
-    static SystemTray systemTray = SystemTray.getSystemTray();
-    static TrayIcon trayIcon;
-    static Timer timerUpdateTable;
-    static Timer timerUpdateData;
+    public static class threadCounter{
+        int count, current;
+        
+        public void init(int count){
+            this.count = count;
+            current = 0;
+        }
+        
+        public void increase(){
+            ++current;
+            if(current==count) notifyAll();
+        }
+    }
+    
+    
     
     public static final JFrame initWindow(){
         final JFrame window = new JFrame("== calendar ==");
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        window.setSize(600, 300);
+        window.setSize(600, 305);
         window.setLocationRelativeTo(null);
         window.setLayout(new BorderLayout());
         
@@ -137,18 +177,59 @@ public class Main {
         final JLabel info2 = new JLabel(); 
         info1.setFont(new Font(null, Font.BOLD, 14));
         info2.setFont(new Font(null, Font.ITALIC, 10));
+        buttonUpdate  = new JButton("Update");
        // infoPanel.setBorder(BorderFactory.createLineBorder(Color.red));
        // info1.setBorder(BorderFactory.createLineBorder(Color.blue));
        // info2.setBorder(BorderFactory.createLineBorder(Color.blue));
-        infoPanel.add(info1, new GridBagConstraints(0, 0, 1, 1, 0, 0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, none, 0, 0));
-        infoPanel.add(info2, new GridBagConstraints(0,1,1,1,0,0,GridBagConstraints.CENTER,GridBagConstraints.BOTH,none, 0,0));
+        infoPanel.add(buttonUpdate, new GridBagConstraints(0,0,1,2,0,1, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(5,5,5,5), 0, 0));
+        infoPanel.add(info1, new GridBagConstraints(1,0,1,1,1,1,GridBagConstraints.CENTER, GridBagConstraints.BOTH, none, 0, 0));
+        infoPanel.add(info2, new GridBagConstraints(1,1,1,1,1,1,GridBagConstraints.CENTER,GridBagConstraints.BOTH,none, 0,0));
+
+        final String[] str = new String[]{"",""};
+
+        buttonUpdate.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                runParsers(wishParsers);
+            }
+        });
         
+        info1.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                Utils.launchBrowser(str[0]);
+            }
+            @Override
+            public void mousePressed(MouseEvent e) {}
+            @Override
+            public void mouseReleased(MouseEvent e) {}
+            @Override
+            public void mouseEntered(MouseEvent e) {}
+            @Override
+            public void mouseExited(MouseEvent e) {}
+        });
         
+        info2.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                Utils.launchBrowser(str[1]);
+            }
+            @Override
+            public void mousePressed(MouseEvent e) {}
+            @Override
+            public void mouseReleased(MouseEvent e) {}
+            @Override
+            public void mouseEntered(MouseEvent e) {}
+            @Override
+            public void mouseExited(MouseEvent e) {}
+        });
+
         table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
                 int[] rows = table.getSelectedRows();
-                if(rows.length==0) {
+                if(rows.length==0){
+                    str[0] = str[1] = "";
                     info1.setText("");
                     info2.setText("");
                     return;
@@ -156,6 +237,9 @@ public class Main {
                 int row = rows[0];
                 info1.setText(tableModel.list.get(row).title);
                 info2.setText(tableModel.list.get(row).mainPage);
+                
+                str[0] = tableModel.list.get(row).contestPage;
+                str[1] = tableModel.list.get(row).mainPage;
             }
         });
         
