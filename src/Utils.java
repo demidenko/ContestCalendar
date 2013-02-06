@@ -31,6 +31,11 @@ public class Utils {
         return new String(c, i, j-i+1);
     }
     
+    static String trimTags(String s){
+        while(s.contains("<")) s = s.substring(0,s.indexOf("<"))+s.substring(s.indexOf(">")+1);
+        return s;
+    }
+    
     static String URLToString(String urlName, String code){
         try {
             URL url = new URL(urlName);

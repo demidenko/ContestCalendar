@@ -28,6 +28,7 @@ public class Main {
             new CodeForcesParser(),
             new TopCoderParser(),
             new SnarkNewsContestsParser(),
+            new OpenCupParser(),
             new ACMPParser(),
             new NEERCIFMOSchoolParser(),
             new CodeChefParser(),
@@ -71,7 +72,7 @@ public class Main {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                System.out.print("parse... ");
+                //System.out.print("parse... ");
                 if(timerUpdateData!=null) timerUpdateData.cancel();
                 buttonUpdate.setEnabled(false);
                 counter.init(parsers.length);
@@ -93,7 +94,7 @@ public class Main {
                         runParsers(wishParsers);
                     }
                 }, updateTime, updateTime);
-                System.out.println("done. ");
+                //System.out.println("done. ");
             }
         }).start();
     }
@@ -182,8 +183,8 @@ public class Main {
        // info1.setBorder(BorderFactory.createLineBorder(Color.blue));
        // info2.setBorder(BorderFactory.createLineBorder(Color.blue));
         infoPanel.add(buttonUpdate, new GridBagConstraints(0,0,1,2,0,1, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(5,5,5,5), 0, 0));
-        infoPanel.add(info1, new GridBagConstraints(1,0,1,1,1,1,GridBagConstraints.CENTER, GridBagConstraints.BOTH, none, 0, 0));
-        infoPanel.add(info2, new GridBagConstraints(1,1,1,1,1,1,GridBagConstraints.CENTER,GridBagConstraints.BOTH,none, 0,0));
+        infoPanel.add(info1, new GridBagConstraints(1,0,1,1,1,1,GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0,5,0,0), 0, 0));
+        infoPanel.add(info2, new GridBagConstraints(1,1,1,1,1,1,GridBagConstraints.CENTER,GridBagConstraints.BOTH, new Insets(0,5,0,0), 0, 0));
 
         final String[] str = new String[]{"",""};
 

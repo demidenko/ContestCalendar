@@ -80,11 +80,13 @@ public class MyTableModel extends AbstractTableModel {
         }
         
         if(!needRefresh)
-        for(int i=0;i<list.size();++i)
+        for(int i=0;i<list.size();++i){
             if(status(list.get(i), nowDate)!=oldStatus.get(i)){
                 needRefresh = true;
                 break;
             }
+            if(oldStatus.get(i)==1) break;
+        }
 
         if(needRefresh){
             list = new ArrayList<Contest>(contests);

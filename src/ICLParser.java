@@ -20,19 +20,24 @@ public class ICLParser implements SiteParser{
         ArrayList<Contest> contests = new ArrayList<Contest>();
         String s = Utils.URLToString(contestsPage(), "windows-1251"); if(s==null) return contests;
         try{
+            String str;
             int i, j, k = s.indexOf("<table>"), l = s.indexOf("</table>", k);
+            k = s.indexOf("<tr", k);
             for(;;){
-                k = s.indexOf("<tr class=\"active\">", k+1);
+                k = s.indexOf("<tr", k+1);
                 if(k<0 || k>l) break;
                 Contest c = new Contest();
                 c.mainPage = mainPage();
-                i = s.indexOf("</a>", k);
-                c.title = Utils.trim(s.substring(s.lastIndexOf(">",i-4)+1,i));
-                if(c.title.equalsIgnoreCase("архив задач")) continue;
-                i = s.indexOf("<td>",i+1);
+                i = s.indexOf("<td",k+1);
+                i = s.indexOf("<td",i+1);
+                j = s.indexOf("</td>",i);
+                str = Utils.trimTags(s.substring(s.indexOf(">",i)+1,j));
+                c.title = Utils.trim(str);
+                i = s.indexOf("<td",i+1);
                 c.startDate.setTime(frm.parse(s.substring(i+4,s.indexOf("</td>",i))+" MSK"));
-                i = s.indexOf("<td>",i+1);
+                i = s.indexOf("<td",i+1);
                 c.endDate.setTime(frm.parse(s.substring(i+4,s.indexOf("</td>",i))+" MSK"));
+                if(c.title.equalsIgnoreCase("архив задач")) continue;
                 contests.add(c);
             }
         }catch (ParseException e){

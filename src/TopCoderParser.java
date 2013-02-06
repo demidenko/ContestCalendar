@@ -41,7 +41,7 @@ public class TopCoderParser implements SiteParser {
                         if(!c.title.toLowerCase().contains("srm") && !c.title.toLowerCase().contains("algorithm")) continue;
                         c.mainPage = mainPage();
                         str = s.substring(s.indexOf("</strong>",i)+9,s.indexOf("</div>",i));
-                        while(str.contains("<")) str = str.substring(0,str.indexOf("<"))+str.substring(str.indexOf(">")+1);
+                        str = Utils.trimTags(str);
                         str = Utils.trim(str);
                         sp = str.split(" ");
                         c.startDate.setTime(frm.parse(day + " " + t + " " + sp[sp.length - 1] + " EST"));
