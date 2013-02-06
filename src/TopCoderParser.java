@@ -15,7 +15,7 @@ public class TopCoderParser implements SiteParser {
     }
 
     public String mainPage() {
-        return "community.topcoder.com/tc";
+        return "topcoder.com/tc";
     }
 
     public ArrayList<Contest> parse() {

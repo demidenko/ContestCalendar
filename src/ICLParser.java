@@ -13,7 +13,7 @@ public class ICLParser implements SiteParser{
     }
 
     public String mainPage() {
-        return "www.icl.ru/turnir";
+        return "icl.ru/turnir";
     }
 
     public ArrayList<Contest> parse() {

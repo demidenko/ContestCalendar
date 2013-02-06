@@ -13,7 +13,7 @@ public class CodeChefParser implements SiteParser {
     }
 
     public String mainPage() {
-        return "www.codechef.com";
+        return "codechef.com";
     }
 
     public ArrayList<Contest> parse() {

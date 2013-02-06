@@ -56,16 +56,16 @@ public class MyTableModel extends AbstractTableModel {
         }
     }
     
-    static final int tooFarTime = 1000*60*60*24;
-    static boolean isTooFar(Contest c, Calendar date){
-        if(date.getTimeInMillis()-c.endDate.getTimeInMillis()<tooFarTime) return false;
-        return true;
-    }
+    static final long tooFarTime = 1000l*60*60*24;
     
     public static int status(Contest c, Calendar date){
-        if(c.endDate.compareTo(date)<=0) return -1;
+        if(c.endDate.compareTo(date)<=0){
+            if(Utils.difference(date, c.endDate)>tooFarTime) return -2;
+            return -1;
+        }
         if(c.startDate.compareTo(date)<=0) return 0;
-        return 1;
+        if(Utils.difference(c.startDate, date)<=tooFarTime) return 1;
+        return 2;
     }
 
     public boolean needRefresh;
@@ -73,7 +73,7 @@ public class MyTableModel extends AbstractTableModel {
         final Calendar nowDate = Utils.getNowDate();
         
         List<Contest> toRemove = new ArrayList<Contest>();
-        for(Contest c : contests) if(isTooFar(c, nowDate)) toRemove.add(c);
+        for(Contest c : contests) if(status(c, nowDate)<-1) toRemove.add(c);
         if(toRemove.size()>0){
             contests.removeAll(toRemove);
             needRefresh = true;
@@ -85,7 +85,7 @@ public class MyTableModel extends AbstractTableModel {
                 needRefresh = true;
                 break;
             }
-            if(oldStatus.get(i)==1) break;
+            if(oldStatus.get(i)>1) break;
         }
 
         if(needRefresh){
@@ -112,7 +112,7 @@ public class MyTableModel extends AbstractTableModel {
             Calendar nowDate = Utils.getNowDate();
             for(Contest c : new ArrayList<Contest>(contests)) 
                 if(c.mainPage==source && status(c, nowDate)>=0) contests.remove(c);
-            for(Contest c : newContests) if(!isTooFar(c,nowDate)){
+            for(Contest c : newContests) if(status(c, nowDate)>=-1){
                 contests.add(c);
                 needRefresh = true;
             }

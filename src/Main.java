@@ -63,7 +63,7 @@ public class Main {
                     tableModel.refresh();
                 }
             }
-        }, 0, 1000);
+        }, 1000-System.currentTimeMillis()%1000, 1000);
         
     }
     
