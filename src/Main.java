@@ -36,6 +36,7 @@ public class Main {
             new RussianCodeCupParser(),
             new ICLParser(),
             new IPSCParser(),
+            new SIBSUIRegionalOlympiadParser(),
             new UserContestsParser(),
     };
 
@@ -142,6 +143,8 @@ public class Main {
         final JTable table = new JTable(tableModel);
         table.setDefaultRenderer(Object.class, cellRenderer);
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        table.getColumnModel().getColumn(0).setPreferredWidth(50);
+        table.getColumnModel().getColumn(1).setPreferredWidth(50);
         
         
         try {

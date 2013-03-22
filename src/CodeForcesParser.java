@@ -28,6 +28,8 @@ public class CodeForcesParser implements SiteParser{
             Calendar d = Calendar.getInstance();
             while(k<end){
                 Contest c = new Contest();
+                int id = Integer.parseInt(s.substring(k+16,s.indexOf("\"",k+16)));
+                c.contestPage = "http://codeforces.ru/contest/" + id;
                 c.mainPage = mainPage();
                 i = s.indexOf("<td>", k);
                 j = s.indexOf("</td>", i);

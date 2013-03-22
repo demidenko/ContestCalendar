@@ -44,7 +44,7 @@ public class TopCoderParser implements SiteParser {
                         str = Utils.trimTags(str);
                         str = Utils.trim(str);
                         sp = str.split(" ");
-                        c.startDate.setTime(frm.parse(day + " " + t + " " + sp[sp.length - 1] + " EST"));
+                        c.startDate.setTime(frm.parse(day + " " + t + " " + sp[sp.length - 1] + " EDT"));
                         c.endDate.setTime(c.startDate.getTime());
                         c.endDate.add(Calendar.MINUTE, 60 + 45);
                         contests.add(c);
