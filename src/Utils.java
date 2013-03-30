@@ -99,16 +99,13 @@ public class Utils {
     }
     
     static Calendar sum(Calendar c1, Calendar c2){
-        Calendar res = getNowDate();
-        res.set(
-                c1.get(Calendar.YEAR)+c2.get(Calendar.YEAR)-1970,
-                c1.get(Calendar.MONTH)+c2.get(Calendar.MONTH),
-                c1.get(Calendar.DAY_OF_MONTH)+c2.get(Calendar.DAY_OF_MONTH)-1,
-                c1.get(Calendar.HOUR_OF_DAY)+c2.get(Calendar.HOUR_OF_DAY),
-                c1.get(Calendar.MINUTE)+c2.get(Calendar.MINUTE),
-                c1.get(Calendar.SECOND)+c2.get(Calendar.SECOND)
-                
-                );
+        Calendar res = Calendar.getInstance();
+        res.setTimeInMillis(c1.getTimeInMillis());
+        res.add(Calendar.SECOND, c2.get(Calendar.SECOND));
+        res.add(Calendar.MINUTE, c2.get(Calendar.MINUTE));
+        res.add(Calendar.HOUR_OF_DAY, c2.get(Calendar.HOUR_OF_DAY));
+        res.add(Calendar.DAY_OF_YEAR, c2.get(Calendar.DAY_OF_YEAR));
+        res.add(Calendar.YEAR, c2.get(Calendar.YEAR)-1970);
         return res;
     }
 
