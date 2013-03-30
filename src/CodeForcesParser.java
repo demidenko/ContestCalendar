@@ -8,7 +8,7 @@ import java.util.Calendar;
  */
 public class CodeForcesParser implements SiteParser{
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm z");
-    private static final SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
+    private static final SimpleDateFormat timeFormat = new SimpleDateFormat("dd:HH:mm");
 
     public String contestsPage() {
         return "http://codeforces.ru/contests";
@@ -43,6 +43,7 @@ public class CodeForcesParser implements SiteParser{
                 i = s.indexOf("<td>", j);
                 j = s.indexOf("</td>", i);
                 str = Utils.trim(s.substring(i + 4, j));
+                if(str.indexOf(':')==str.lastIndexOf(':')) str="0:"+str;
                 d.setTime(timeFormat.parse(str));
                 c.endDate = Utils.sum(c.startDate, d);
                 contests.add(c);
