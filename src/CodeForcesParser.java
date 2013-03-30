@@ -35,7 +35,7 @@ public class CodeForcesParser implements SiteParser{
                 j = s.indexOf("</td>", i);
                 str = s.substring(i + 4, j);
                 while((i=str.indexOf("<br"))>=0) str = str.substring(0,i);
-                c.title = Utils.trim(str);
+                c.title = Utils.trim(Utils.replaceHTMLSymbols(str));
                 i = s.indexOf(">", s.indexOf(">", j + 5) + 1);
                 j = s.indexOf("<", i);
                 str = Utils.trim(s.substring(i + 1, j));

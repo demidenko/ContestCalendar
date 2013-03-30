@@ -36,6 +36,17 @@ public class Utils {
         return s;
     }
     
+    static String replaceHTMLSymbols(String s){
+        for(;;){
+            int i = s.indexOf("&#");
+            if(i<0) break;
+            int j = s.indexOf(";",i+2);
+            int code = Integer.parseInt(s.substring(i+2, j));
+            s = s.replace(s.substring(i, j+1), ((char)code)+"");
+        }
+        return s;
+    }
+    
     static String URLToString(String urlName, String code){
         try {
             URL url = new URL(urlName);
