@@ -2,9 +2,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
-/**
- * 22.03.13 17:04
- */
+
 public class SIBSUIRegionalOlympiadParser implements SiteParser{
     static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd MM yyyy HH mm ss z");
     

@@ -2,9 +2,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
-/**
- * 12.01.13 21:38
- */
+
 public class SnarkNewsContestsParser implements SiteParser {
     static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm z");
     

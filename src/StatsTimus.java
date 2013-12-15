@@ -3,13 +3,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-/**
- * Created with IntelliJ IDEA.
- * User: demich
- * Date: 01.05.13
- * Time: 20:53
- * To change this template use File | Settings | File Templates.
- */
+
 public class StatsTimus{
     static PrintWriter out = new PrintWriter(System.out);
     static Scanner in = new Scanner(System.in);

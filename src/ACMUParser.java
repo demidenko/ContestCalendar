@@ -3,9 +3,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-/**
- * 14.01.13 23:19
- */
+
 public class ACMUParser implements SiteParser {
     static final SimpleDateFormat dateFormat = new SimpleDateFormat("ddMMyyyy HH:mm:ss Z");
 

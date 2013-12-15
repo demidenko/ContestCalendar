@@ -2,9 +2,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
-/**
- * 01.04.13 21:57
- */
+
 public class VKOSHPParser implements SiteParser{
     static SimpleDateFormat dateFormat = new SimpleDateFormat("dd MM yyyy HH mm ss z");
     @Override

@@ -3,7 +3,7 @@ import java.util.Calendar;
 
 
 public class Contest implements Comparable<Contest> {
-    final static SimpleDateFormat format = new SimpleDateFormat("EE. dd MMM yyyy. HH:mm");
+    final static SimpleDateFormat dateFormat = new SimpleDateFormat("EE. dd MMM yyyy. HH:mm");
     
     public String title;
     public String contestPage;
@@ -22,7 +22,7 @@ public class Contest implements Comparable<Contest> {
     }
 
     public String toString(){
-        return format.format(startDate.getTime())+" - "+ format.format(endDate.getTime())+" - "+ title;
+        return dateFormat.format(startDate.getTime())+" - "+ dateFormat.format(endDate.getTime())+" - "+ title;
     }
 
     public int compareTo(Contest o) {

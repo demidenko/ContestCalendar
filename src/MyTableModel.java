@@ -1,9 +1,7 @@
 import javax.swing.table.AbstractTableModel;
 import java.util.*;
 
-/**
- * 13.01.13 13:31
- */
+
 public class MyTableModel extends AbstractTableModel {
     public ArrayList<Contest> list;
     public TreeSet<Contest> contests;

@@ -2,9 +2,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
-/**
- * 14.01.13 14:24
- */
+
 public class ICLParser implements SiteParser{
     static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z");
     

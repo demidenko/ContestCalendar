@@ -16,7 +16,7 @@ public class YandexAlgorithmParser implements SiteParser {
         return "algorithm.contest.yandex.ru";
     }
 
-    @Override
+
     public ArrayList<Contest> parse() {
         ArrayList<Contest> contests = new ArrayList<Contest>();
         String s = Utils.URLToString(contestsPage(), "UTF-8"); if(s==null) return contests;
@@ -44,7 +44,7 @@ public class YandexAlgorithmParser implements SiteParser {
                 c.deadLine = Utils.timeConsts.YEAR;
             }
         } catch (ParseException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         }
 
         return contests;

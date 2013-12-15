@@ -1,16 +1,7 @@
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Locale;
 
-/**
- * Created with IntelliJ IDEA.
- * User: demich
- * Date: 09.06.13
- * Time: 21:44
- * To change this template use File | Settings | File Templates.
- */
+
 public class TimusParser implements SiteParser {
     static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd MM yyyy HH:mm Z");
 

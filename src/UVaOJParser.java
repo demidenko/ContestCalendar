@@ -16,7 +16,7 @@ public class UVaOJParser implements SiteParser {
         return "uva.onlinejudge.org";
     }
 
-    @Override
+
     public ArrayList<Contest> parse() {
         ArrayList<Contest> contests = new ArrayList<Contest>();
         String s = Utils.URLToString(contestsPage(), "UTF-8"); if(s==null) return contests;

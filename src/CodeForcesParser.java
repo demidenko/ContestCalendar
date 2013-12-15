@@ -3,9 +3,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-/**
- * 12.01.13 20:53
- */
+
 public class CodeForcesParser implements SiteParser{
     static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm z");
     static final SimpleDateFormat timeFormat = new SimpleDateFormat("dd:HH:mm");

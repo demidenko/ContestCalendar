@@ -3,9 +3,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Locale;
 
-/**
- * 19.01.13 23:52
- */
+
 public class IPSCParser implements SiteParser {
     static final SimpleDateFormat dateFormat = new SimpleDateFormat("d MMMMM yyyy, HH:mm z", Locale.ENGLISH);
     

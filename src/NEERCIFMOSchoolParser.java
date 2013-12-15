@@ -3,9 +3,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-/**
- * 15.01.13 21:44
- */
+
 public class NEERCIFMOSchoolParser implements SiteParser{
     static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd MM yyyy HH-mm z");
 

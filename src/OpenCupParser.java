@@ -5,9 +5,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
-/**
- * 06.02.13 14:27
- */
+
 public class OpenCupParser implements SiteParser{
     static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm z");
     

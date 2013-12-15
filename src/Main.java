@@ -125,9 +125,9 @@ public class Main {
         int count, current;
         
         public void init(int count){
-            buttonUpdate.setText(0+"/"+count);
             this.count = count;
             current = 0;
+            buttonUpdate.setText(0+"/"+count);
         }
         
         public void increase(){

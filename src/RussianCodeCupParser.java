@@ -2,9 +2,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
-/**
- * 13.01.13 20:43
- */
+
 public class RussianCodeCupParser implements SiteParser{
     static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss Z");
     

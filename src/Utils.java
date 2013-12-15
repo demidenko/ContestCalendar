@@ -12,9 +12,7 @@ import java.net.URLConnection;
 import java.util.Calendar;
 import java.util.TreeMap;
 
-/**
- * 12.01.13 21:05
- */
+
 public class Utils {
     static Calendar getNowDate(){
         Calendar c = Calendar.getInstance();

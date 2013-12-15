@@ -4,9 +4,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
-/**
- * 13.01.13 1:38
- */
+
 public class TopCoderParser implements SiteParser {
     static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy HH:mm Z", Locale.ENGLISH);
     

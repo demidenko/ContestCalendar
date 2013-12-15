@@ -1,0 +1,12 @@
+start
+title VIII Открытая олимпиада школьников по программированию, 2013/14 учебный год 
+from 15.11.2013 00:00 MSK
+to 15.01.2014 00:00 MSK
+mainpage olympiads.ru/zaoch/2013-14
+contestpage http://olympiads.ru/zaoch/2013-14/standings/standings.shtml
+
+start
+title Hacker Cup 2014 Online Round 3
+from 21.12.2013 13:00 PST
+to 21.12.2013 16:00 PST
+page http://www.facebook.com/hackercup 

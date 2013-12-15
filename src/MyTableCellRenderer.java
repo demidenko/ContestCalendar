@@ -37,10 +37,10 @@ public class MyTableCellRenderer implements TableCellRenderer {
         int status = ((MyTableModel)table.getModel()).status(c, nowDate);
         
         if(column==0){
-            cell.setText(Contest.format.format(c.startDate.getTime()));
+            cell.setText(Contest.dateFormat.format(c.startDate.getTime()));
         }else
         if(column==1){
-            cell.setText(Contest.format.format(c.endDate.getTime()));
+            cell.setText(Contest.dateFormat.format(c.endDate.getTime()));
         }else
         if(column==2){
             cell.setText(c.title);
