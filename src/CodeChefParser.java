@@ -6,7 +6,7 @@ import java.util.ArrayList;
  * 14.01.13 18:30
  */
 public class CodeChefParser implements SiteParser {
-    static final SimpleDateFormat frm = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
+    static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
     
     public String contestsPage() {
         return "http://www.codechef.com/contests/";
@@ -35,9 +35,9 @@ public class CodeChefParser implements SiteParser {
                 c.contestPage = "http://www.codechef.com" + s.substring(s.indexOf("href=\"",i)+6, s.indexOf("\">",i));
                 c.title = s.substring(s.indexOf("\">",i)+2, s.indexOf("</a",i));
                 i = s.indexOf("<td", i+1);
-                c.startDate.setTime(frm.parse(Utils.trim(s.substring(s.indexOf(">", i) + 1, s.indexOf("</", i))) + " India Standard Time"));
+                c.startDate.setTime(dateFormat.parse(Utils.trim(s.substring(s.indexOf(">", i) + 1, s.indexOf("</", i))) + " India Standard Time"));
                 i = s.indexOf("<td", i+1);
-                c.endDate.setTime(frm.parse(Utils.trim(s.substring(s.indexOf(">",i)+1, s.indexOf("</",i)))+" India Standard Time"));
+                c.endDate.setTime(dateFormat.parse(Utils.trim(s.substring(s.indexOf(">", i) + 1, s.indexOf("</", i))) + " India Standard Time"));
                 contests.add(c);
                 j = i;
             }

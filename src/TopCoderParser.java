@@ -8,7 +8,7 @@ import java.util.Locale;
  * 13.01.13 1:38
  */
 public class TopCoderParser implements SiteParser {
-    static final SimpleDateFormat frm = new SimpleDateFormat("dd MMM yyyy HH:mm Z", Locale.ENGLISH);
+    static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy HH:mm Z", Locale.ENGLISH);
     
     public String contestsPage() {
         return "http://community.topcoder.com/tc?module=Static&d1=calendar&d2=thisMonth";
@@ -44,9 +44,10 @@ public class TopCoderParser implements SiteParser {
                         str = Utils.trimTags(str);
                         str = Utils.trim(str);
                         sp = str.split(" ");
-                        c.startDate.setTime(frm.parse(day + " " + t + " " + sp[sp.length - 1] + " EDT"));
+                        c.startDate.setTime(dateFormat.parse(day + " " + t + " " + sp[sp.length - 1] + " EST"));
                         c.endDate.setTime(c.startDate.getTime());
                         c.endDate.add(Calendar.MINUTE, 60 + 45);
+                        c.deadLine = c.title.contains("SRM") ? Utils.timeConsts.DAY : Utils.timeConsts.YEAR;
                         contests.add(c);
                     }
                 }

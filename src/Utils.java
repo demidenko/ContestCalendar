@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -48,10 +49,12 @@ public class Utils {
     }
     
     static String URLToString(String urlName, String code){
+        if(urlName==null) return null;
         try {
             URL url = new URL(urlName);
             URLConnection con = url.openConnection();
-            DataInputStream dis = new DataInputStream(con.getInputStream());
+            InputStream is = con.getInputStream();
+            DataInputStream dis = new DataInputStream(is);
             byte bytes[] = new byte[1<<17];
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             for(;;){
@@ -70,7 +73,7 @@ public class Utils {
         try {
             return ImageIO.read(new URL(url));
         } catch (IOException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         }
         return null;
     }
@@ -109,6 +112,17 @@ public class Utils {
         return res;
     }
 
+    static String timeInfo(Calendar c, int cnt){
+        String res = "";
+        if(c.get(Calendar.YEAR)!=0){ res+=c.get(Calendar.YEAR)+" years"; --cnt; } if(cnt==0) return res;
+        if(c.get(Calendar.MONTH)!=0){ res+=c.get(Calendar.MONTH)+" months"; --cnt; } if(cnt==0) return res;
+        if(c.get(Calendar.DAY_OF_MONTH)!=0){ res+=c.get(Calendar.DAY_OF_MONTH)+" days"; --cnt; } if(cnt==0) return res;
+        if(c.get(Calendar.HOUR_OF_DAY)!=0){ res+=c.get(Calendar.HOUR_OF_DAY)+" hours"; --cnt; } if(cnt==0) return res;
+        if(c.get(Calendar.MINUTE)!=0){ res+=c.get(Calendar.MINUTE)+" min."; --cnt; } if(cnt==0) return res;
+        if(c.get(Calendar.SECOND)!=0){ res+=c.get(Calendar.SECOND)+" sec."; --cnt; } if(cnt==0) return res;
+        return res;
+    }
+
     static TreeMap<String, String> month = new TreeMap<String,String>();
     static{
         month.put("январь", "01");
@@ -135,5 +149,21 @@ public class Utils {
         month.put("ноября", "11");
         month.put("декабрь", "12");
         month.put("декабря", "12");
+    }
+
+    static class timeConsts{
+        static final long SECOND = 1000l;
+        static final long MINUTE = SECOND*60;
+        static final long HOUR = MINUTE*60;
+        static final long DAY = HOUR*24;
+        static final long WEEK = DAY*7;
+        static final long YEAR = DAY*365;
+    }
+
+    static String replaceMonth(String s){
+        for(String x : month.keySet()){
+            if(s.contains(x)) s=s.replace(x, month.get(x));
+        }
+        return s;
     }
 }

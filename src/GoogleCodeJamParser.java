@@ -8,7 +8,7 @@ import java.util.Locale;
  * 13.01.13 1:32
  */
 public class GoogleCodeJamParser implements SiteParser{
-    static final SimpleDateFormat format = new SimpleDateFormat("EEE, MMM dd, yyyy HH:mm Z", Locale.ENGLISH);
+    static final SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, MMM dd, yyyy HH:mm Z", Locale.ENGLISH);
     
     
     public String contestsPage() {
@@ -41,7 +41,7 @@ public class GoogleCodeJamParser implements SiteParser{
                 while(str.contains("<")) str = str.substring(0,str.indexOf("<"))+str.substring(str.indexOf(">")+1);
                 if(str.equals("TBD")) str = "00:00 UTC";
                 t += " "+Utils.trim(str);
-                c.startDate.setTime(format.parse(t));
+                c.startDate.setTime(dateFormat.parse(t));
                 i = s.indexOf("<td class=\"duration\">",k); j = s.indexOf("</td>",i);
                 str = s.substring(i,j);
                 while(str.contains("<")) str = str.substring(0,str.indexOf("<"))+str.substring(str.indexOf(">")+1);
@@ -57,6 +57,7 @@ public class GoogleCodeJamParser implements SiteParser{
                 str = s.substring(i,j);
                 while(str.indexOf("<")>=0) str = str.substring(0,str.indexOf("<"))+str.substring(str.indexOf(">")+1);
                 c.title = Utils.trim(str);
+                c.deadLine = Utils.timeConsts.YEAR;
                 contests.add(c);
             }
         }catch (ParseException e){

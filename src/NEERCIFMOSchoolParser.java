@@ -7,7 +7,7 @@ import java.util.Calendar;
  * 15.01.13 21:44
  */
 public class NEERCIFMOSchoolParser implements SiteParser{
-    static final SimpleDateFormat frm = new SimpleDateFormat("dd MM yyyy HH-mm z");
+    static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd MM yyyy HH-mm z");
 
     public String contestsPage() {
         return "http://neerc.ifmo.ru/school/io/index.html";
@@ -35,7 +35,7 @@ public class NEERCIFMOSchoolParser implements SiteParser{
                 t = sp[0]+" "+Utils.month.get(sp[1].toLowerCase())+" "+sp[2]+" ";
                 sp = s.substring(j+13, s.indexOf("</td>",j)).split(",");
                 t += sp[0]+" MSK";
-                c.startDate.setTime(frm.parse(t));
+                c.startDate.setTime(dateFormat.parse(t));
                 c.endDate.setTime(c.startDate.getTime());
                 c.endDate.add(Calendar.HOUR_OF_DAY, 5);
                 if(i<k2) c.title = "Командная олимпиада школьников";

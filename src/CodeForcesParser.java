@@ -7,11 +7,11 @@ import java.util.Calendar;
  * 12.01.13 20:53
  */
 public class CodeForcesParser implements SiteParser{
-    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm z");
-    private static final SimpleDateFormat timeFormat = new SimpleDateFormat("dd:HH:mm");
+    static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm z");
+    static final SimpleDateFormat timeFormat = new SimpleDateFormat("dd:HH:mm");
 
     public String contestsPage() {
-        return "http://codeforces.ru/contests";
+        return "http://codeforces.ru/contests?complete=true";
     }
 
     public String mainPage() {
@@ -29,8 +29,6 @@ public class CodeForcesParser implements SiteParser{
             while(k<end){
                 Contest c = new Contest();
                 int id = Integer.parseInt(s.substring(k+16,s.indexOf("\"",k+16)));
-                c.contestPage = "http://codeforces.ru/contest/" + id;
-                c.mainPage = mainPage();
                 i = s.indexOf("<td>", k);
                 j = s.indexOf("</td>", i);
                 str = s.substring(i + 4, j);
@@ -46,6 +44,10 @@ public class CodeForcesParser implements SiteParser{
                 if(str.indexOf(':')==str.lastIndexOf(':')) str="0:"+str;
                 d.setTime(timeFormat.parse(str));
                 c.endDate = Utils.sum(c.startDate, d);
+                if(c.startDate.compareTo(Utils.getNowDate())<=0) c.contestPage = "http://codeforces.ru/contest/" + id;
+                else c.contestPage = "http://codeforces.ru/contestRegistration/" + id;
+                c.mainPage = mainPage();
+                if(!c.title.contains("Codeforces")) c.deadLine = Utils.timeConsts.YEAR;
                 contests.add(c);
                 k = s.indexOf("data-contestId=",k+1);
             }

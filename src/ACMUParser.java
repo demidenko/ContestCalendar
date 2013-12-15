@@ -6,17 +6,17 @@ import java.util.Calendar;
 /**
  * 14.01.13 23:19
  */
-public class ACMPParser implements SiteParser {
+public class ACMUParser implements SiteParser {
     static final SimpleDateFormat dateFormat = new SimpleDateFormat("ddMMyyyy HH:mm:ss Z");
-    
+
     public String contestsPage() {
-        return "http://acmp.ru/asp/champ/";
+        return "http://acmu.ru/asp/champ/";
     }
 
     public String mainPage() {
-        return "acmp.ru";
+        return "acmu.ru";
     }
-    
+
 
     public ArrayList<Contest> parse() {
         ArrayList<Contest> contests = new ArrayList<Contest>();
@@ -59,7 +59,7 @@ public class ACMPParser implements SiteParser {
                 i = s.indexOf("<h4>", k);
             }
         } catch (ParseException e) {
-            e.printStackTrace();
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
 
 

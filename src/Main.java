@@ -17,12 +17,12 @@ import java.util.TimerTask;
  */
 public class Main {
     static MyTableModel tableModel;
-    static SystemTray systemTray = SystemTray.getSystemTray();
-    static TrayIcon trayIcon;
+//    static SystemTray systemTray = SystemTray.getSystemTray();
+//    static TrayIcon trayIcon;
     static Timer timerUpdateTable;
     static Timer timerUpdateData;
     static JButton buttonUpdate;
-    static long updateTime = 1000*60*60;
+    static long updateTime = 1000l*60*60;
     
     static SiteParser allParsers[] = {
             new CodeForcesParser(),
@@ -30,6 +30,7 @@ public class Main {
             new SnarkNewsContestsParser(),
             new OpenCupParser(),
             new ACMPParser(),
+            new ACMUParser(),
             new NEERCIFMOSchoolParser(),
             new CodeChefParser(),
             new GoogleCodeJamParser(),
@@ -37,6 +38,11 @@ public class Main {
             new ICLParser(),
             new IPSCParser(),
             new SIBSUIRegionalOlympiadParser(),
+            new ACMQFParser(),
+            new VKOSHPParser(),
+            new YandexAlgorithmParser(),
+            new TimusParser(),
+            new UVaOJParser(),
             new UserContestsParser(),
     };
 
@@ -45,7 +51,6 @@ public class Main {
     
     
     public static void main(String[] args) {
-        
         //System.exit(0);
         
         JFrame window = initWindow();
@@ -73,7 +78,7 @@ public class Main {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                //System.out.print("parse... ");
+                System.out.print("parse... ");
                 if(timerUpdateData!=null) timerUpdateData.cancel();
                 buttonUpdate.setEnabled(false);
                 counter.init(parsers.length);
@@ -85,17 +90,18 @@ public class Main {
                     try {
                         counter.wait();
                     } catch (InterruptedException e) {
-                        e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                        e.printStackTrace();
                     }
                 }
+                buttonUpdate.setText("Update");
                 buttonUpdate.setEnabled(true);
                 timerUpdateData = new Timer();
                 timerUpdateData.schedule(new TimerTask() {
                     public void run() {
                         runParsers(wishParsers);
                     }
-                }, updateTime, updateTime);
-                //System.out.println("done. ");
+                }, updateTime-System.currentTimeMillis()%updateTime, updateTime);
+                System.out.println("done. ");
             }
         }).start();
     }
@@ -119,16 +125,17 @@ public class Main {
         int count, current;
         
         public void init(int count){
+            buttonUpdate.setText(0+"/"+count);
             this.count = count;
             current = 0;
         }
         
         public void increase(){
             ++current;
+            buttonUpdate.setText(current+"/"+count);
             if(current==count) notifyAll();
         }
     }
-    
     
     
     public static final JFrame initWindow(){
@@ -145,24 +152,24 @@ public class Main {
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         table.getColumnModel().getColumn(0).setPreferredWidth(50);
         table.getColumnModel().getColumn(1).setPreferredWidth(50);
-        
-        
+
+        /*
         try {
             trayIcon = new TrayIcon(ImageIO.read(new File("ico.png")), "Contests schedule");
         } catch (IOException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        }
+        }      */
         
-        trayIcon.addActionListener(new ActionListener() {
+        /*trayIcon.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 window.setVisible(true);
                 window.setExtendedState(JFrame.NORMAL);
                 window.setEnabled(true);
                 systemTray.remove(trayIcon);
             }
-        });
+        }); */
         
-        window.addWindowListener(new WindowAdapter() {
+        /*window.addWindowListener(new WindowAdapter() {
             public void windowIconified(WindowEvent e) {
                 window.setVisible(false);
                 try {
@@ -172,24 +179,26 @@ public class Main {
                 }
             }
 
-        });
+        }); */
 
         Insets none = new Insets(0,0,0,0);
         final JPanel infoPanel = new JPanel();
         infoPanel.setLayout(new GridBagLayout());
+        final JLabel info0 = new JLabel(); 
         final JLabel info1 = new JLabel(); 
-        final JLabel info2 = new JLabel(); 
-        info1.setFont(new Font(null, Font.BOLD, 14));
-        info2.setFont(new Font(null, Font.ITALIC, 10));
+        info0.setFont(new Font(null, Font.BOLD, 14));
+        info1.setFont(new Font(null, Font.ITALIC, 10));
         buttonUpdate  = new JButton("Update");
-       // infoPanel.setBorder(BorderFactory.createLineBorder(Color.red));
-       // info1.setBorder(BorderFactory.createLineBorder(Color.blue));
-       // info2.setBorder(BorderFactory.createLineBorder(Color.blue));
-        infoPanel.add(buttonUpdate, new GridBagConstraints(0,0,1,2,0,1, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(5,5,5,5), 0, 0));
-        infoPanel.add(info1, new GridBagConstraints(1,0,1,1,1,1,GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0,5,0,0), 0, 0));
-        infoPanel.add(info2, new GridBagConstraints(1,1,1,1,1,1,GridBagConstraints.CENTER,GridBagConstraints.BOTH, new Insets(0,5,0,0), 0, 0));
+        //infoPanel.setBorder(BorderFactory.createLineBorder(Color.red));
+        //info1.setBorder(BorderFactory.createLineBorder(Color.blue));
+        //info2.setBorder(BorderFactory.createLineBorder(Color.blue));
+        infoPanel.add(buttonUpdate, new GridBagConstraints(0,0,1,2,0,1, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(5,5,5,5), 0,0));
+        infoPanel.add(info0, new GridBagConstraints(1,0,1,1,1,1,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0,5,0,0), 0,0));
+        infoPanel.add(info1, new GridBagConstraints(1,1,1,1,1,1,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0,5,1,0), 0,0));
 
-        final String[] str = new String[]{"",""};
+        
+        
+        final String[] infoStrings = new String[]{"",""};
 
         buttonUpdate.addActionListener(new ActionListener() {
             @Override
@@ -198,52 +207,43 @@ public class Main {
             }
         });
         
-        info1.addMouseListener(new MouseListener() {
-            @Override
+        info0.addMouseListener(new MouseListener() {
             public void mouseClicked(MouseEvent e) {
-                Utils.launchBrowser(str[0]);
+                Utils.launchBrowser(infoStrings[0]);
             }
-            @Override
             public void mousePressed(MouseEvent e) {}
-            @Override
             public void mouseReleased(MouseEvent e) {}
-            @Override
             public void mouseEntered(MouseEvent e) {}
-            @Override
             public void mouseExited(MouseEvent e) {}
         });
         
-        info2.addMouseListener(new MouseListener() {
-            @Override
+        info1.addMouseListener(new MouseListener() {
             public void mouseClicked(MouseEvent e) {
-                Utils.launchBrowser(str[1]);
+                Utils.launchBrowser(infoStrings[1]);
             }
-            @Override
             public void mousePressed(MouseEvent e) {}
-            @Override
             public void mouseReleased(MouseEvent e) {}
-            @Override
             public void mouseEntered(MouseEvent e) {}
-            @Override
             public void mouseExited(MouseEvent e) {}
         });
 
-        table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-            @Override
-            public void valueChanged(ListSelectionEvent e) {
-                int[] rows = table.getSelectedRows();
-                if(rows.length==0){
-                    str[0] = str[1] = "";
+        table.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
+            public void valueChanged(ListSelectionEvent e){
+                int row = table.getSelectedRow();
+                if(row==-1){
+                    infoStrings[0] = infoStrings[1] = "";
+                    info0.setText("");
                     info1.setText("");
-                    info2.setText("");
                     return;
                 }
-                int row = rows[0];
-                info1.setText(tableModel.list.get(row).title);
-                info2.setText(tableModel.list.get(row).mainPage);
-                
-                str[0] = tableModel.list.get(row).contestPage;
-                str[1] = tableModel.list.get(row).mainPage;
+
+                info0.setText(tableModel.list.get(row).title);
+                info1.setText(tableModel.list.get(row).mainPage);
+                infoStrings[0] = tableModel.list.get(row).contestPage;
+                infoStrings[1] = tableModel.list.get(row).mainPage;
+                info0.setCursor(Cursor.getPredefinedCursor(infoStrings[0].length() != 0 ? Cursor.HAND_CURSOR : Cursor.DEFAULT_CURSOR));
+                info1.setCursor(Cursor.getPredefinedCursor(infoStrings[1].length() != 0 ? Cursor.HAND_CURSOR : Cursor.DEFAULT_CURSOR));
+                table.repaint();
             }
         });
         

@@ -6,7 +6,7 @@ import java.util.ArrayList;
  * 22.03.13 17:04
  */
 public class SIBSUIRegionalOlympiadParser implements SiteParser{
-    static final SimpleDateFormat frm = new SimpleDateFormat("dd MM yyyy HH mm ss z");
+    static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd MM yyyy HH mm ss z");
     
     @Override
     public String contestsPage() {
@@ -31,12 +31,13 @@ public class SIBSUIRegionalOlympiadParser implements SiteParser{
             sp = str.split("[ -]");
             Contest c = new Contest();
             c.title = "Региональная олимпиада по программированию, г. Новокузнецк";
-            c.startDate.setTime(frm.parse(sp[0]+" "+Utils.month.get(sp[2])+" "+sp[3]+" 00 00 00 KRAT"));
-            c.endDate.setTime(frm.parse(sp[1]+" "+Utils.month.get(sp[2])+" "+sp[3]+" 23 59 59 KRAT"));
+            c.startDate.setTime(dateFormat.parse(sp[0] + " " + Utils.month.get(sp[2]) + " " + sp[3] + " 00 00 00 KRAT"));
+            c.endDate.setTime(dateFormat.parse(sp[1] + " " + Utils.month.get(sp[2]) + " " + sp[3] + " 23 59 59 KRAT"));
             c.mainPage = mainPage();
+            c.deadLine = Utils.timeConsts.YEAR;
             contests.add(c);
         } catch (ParseException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         }
         return contests;
     }

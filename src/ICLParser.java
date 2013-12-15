@@ -6,7 +6,7 @@ import java.util.ArrayList;
  * 14.01.13 14:24
  */
 public class ICLParser implements SiteParser{
-    static final SimpleDateFormat frm = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z");
+    static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z");
     
     public String contestsPage() {
         return "http://www.icl.ru/turnir/contest.php";
@@ -34,10 +34,11 @@ public class ICLParser implements SiteParser{
                 str = Utils.trimTags(s.substring(s.indexOf(">",i)+1,j));
                 c.title = Utils.trim(str);
                 i = s.indexOf("<td",i+1);
-                c.startDate.setTime(frm.parse(s.substring(i+4,s.indexOf("</td>",i))+" MSK"));
+                c.startDate.setTime(dateFormat.parse(s.substring(i + 4, s.indexOf("</td>", i)) + " MSK"));
                 i = s.indexOf("<td",i+1);
-                c.endDate.setTime(frm.parse(s.substring(i+4,s.indexOf("</td>",i))+" MSK"));
+                c.endDate.setTime(dateFormat.parse(s.substring(i + 4, s.indexOf("</td>", i)) + " MSK"));
                 if(c.title.equalsIgnoreCase("архив задач")) continue;
+                c.deadLine = Utils.timeConsts.YEAR;
                 contests.add(c);
             }
         }catch (ParseException e){

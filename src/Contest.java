@@ -1,17 +1,16 @@
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-/**
- * 12.01.13 20:46
- */
+
 public class Contest implements Comparable<Contest> {
-    static SimpleDateFormat format = new SimpleDateFormat("EE. dd MMM yyyy. HH:mm");
+    final static SimpleDateFormat format = new SimpleDateFormat("EE. dd MMM yyyy. HH:mm");
     
     public String title;
     public String contestPage;
     public String mainPage;
     public Calendar startDate;
     public Calendar endDate;
+    public long deadLine;
 
     public Contest(){
         title = "";
@@ -19,6 +18,7 @@ public class Contest implements Comparable<Contest> {
         mainPage = "";
         startDate = Calendar.getInstance();
         endDate = Calendar.getInstance();
+        deadLine = Utils.timeConsts.DAY;
     }
 
     public String toString(){
@@ -26,8 +26,7 @@ public class Contest implements Comparable<Contest> {
     }
 
     public int compareTo(Contest o) {
-        int cmp = 0;
-        if(cmp!=0) return cmp; else cmp = mainPage.compareTo(o.mainPage);
+        int cmp = mainPage.compareTo(o.mainPage);
         if(cmp!=0) return cmp; else cmp = title.compareTo(o.title);
         if(cmp!=0) return cmp; else cmp = startDate.compareTo(o.startDate);
         return cmp;

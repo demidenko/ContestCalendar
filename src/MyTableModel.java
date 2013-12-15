@@ -57,14 +57,13 @@ public class MyTableModel extends AbstractTableModel {
     }
     
     static final long tooFarTime = 1000l*60*60*24;
-    
     public static int status(Contest c, Calendar date){
         if(c.endDate.compareTo(date)<=0){
             if(Utils.difference(date, c.endDate)>tooFarTime) return -2;
             return -1;
         }
         if(c.startDate.compareTo(date)<=0) return 0;
-        if(Utils.difference(c.startDate, date)<=tooFarTime) return 1;
+        if(Utils.difference(c.startDate, date)<=c.deadLine) return 1;
         return 2;
     }
 
@@ -85,15 +84,14 @@ public class MyTableModel extends AbstractTableModel {
                 needRefresh = true;
                 break;
             }
-            if(oldStatus.get(i)>1) break;
         }
 
         if(needRefresh){
             list = new ArrayList<Contest>(contests);
             Collections.sort(list, new Comparator<Contest>() {
                 public int compare(Contest o1, Contest o2) {
-                    int cmp1 = status(o1, nowDate);
-                    int cmp2 = status(o2, nowDate);
+                    int cmp1 = Integer.signum(status(o1, nowDate));
+                    int cmp2 = Integer.signum(status(o2, nowDate));
                     if(cmp1!=cmp2) return Integer.signum(cmp1-cmp2);
                     return comparatorTime.compare(o1, o2);
                 }

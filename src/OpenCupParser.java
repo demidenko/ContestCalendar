@@ -9,11 +9,12 @@ import java.util.List;
  * 06.02.13 14:27
  */
 public class OpenCupParser implements SiteParser{
-    static final SimpleDateFormat frm = new SimpleDateFormat("dd.MM.yyyy HH:mm z");
+    static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm z");
     
     @Override
     public String contestsPage() {
         String s = Utils.URLToString("http://"+mainPage(), "windows-1251");
+        if(s==null) return null;
         int i = s.indexOf("schedule");
         if(i<0) return "";
         return "http://"+mainPage()+"/"+s.substring(s.lastIndexOf("\"",i)+1, s.indexOf("\"",i));
@@ -46,7 +47,7 @@ public class OpenCupParser implements SiteParser{
                 ds = ds + " " + Utils.trim(s.substring(i + 4, j)).replace("<b>","").replace("</b>","")+" MSK";
                 boolean valid = true;
                 try {
-                    c.startDate.setTime(frm.parse(ds));
+                    c.startDate.setTime(dateFormat.parse(ds));
                 } catch (ParseException e) {
                     e.printStackTrace(); 
                     valid = false;
@@ -58,6 +59,7 @@ public class OpenCupParser implements SiteParser{
                     j = s.indexOf("</td>", i);
                     c.title = "Open Cup " +number + " " + Utils.trim(s.substring(i+4,j));
                     c.mainPage = mainPage();
+                    c.deadLine = Utils.timeConsts.WEEK;
                     if(!str.equals("-")) contests.add(c);
                 }
                 k = s.indexOf("<tr>", k+1);

@@ -1,5 +1,6 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -9,7 +10,7 @@ import java.util.Scanner;
  * 14.01.13 19:04
  */
 public class UserContestsParser implements SiteParser {
-    static final SimpleDateFormat frm = new SimpleDateFormat("dd.MM.yyyy HH:mm Z");
+    static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm Z");
     
     public String contestsPage() {
         return "UserContests.txt";
@@ -24,19 +25,25 @@ public class UserContestsParser implements SiteParser {
 
         try {
             Scanner in = new Scanner(new File(contestsPage()));
-            while(in.hasNextLine()){
-                Contest c = new Contest();
-                c.title = in.nextLine();
-                c.startDate.setTime(frm.parse(in.nextLine()));
-                c.endDate.setTime(frm.parse(in.nextLine()));
-                c.mainPage = mainPage();
-                contests.add(c);
+            Contest c = null;
+            while(in.hasNext()){
+                String tag = in.next();
+                if(tag.equalsIgnoreCase("start")){
+                    if(c!=null) contests.add(c);
+                    c = new Contest();
+                    c.deadLine = Utils.timeConsts.YEAR;
+                }
+                if(tag.equalsIgnoreCase("title")) c.title = Utils.trim(in.nextLine());
+                if(tag.equalsIgnoreCase("mainpage")) c.mainPage = Utils.trim(in.nextLine());
+                if(tag.equalsIgnoreCase("contestpage")) c.contestPage = Utils.trim(in.nextLine());
+                if(tag.equalsIgnoreCase("page")) c.contestPage = c.mainPage = Utils.trim(in.nextLine());
+                if(tag.equalsIgnoreCase("from")) c.startDate.setTime(dateFormat.parse(Utils.trim(in.nextLine())));
+                if(tag.equalsIgnoreCase("to")) c.endDate.setTime(dateFormat.parse(Utils.trim(in.nextLine())));
             }
+            if(c!=null) contests.add(c);
             in.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        } catch (ParseException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         return contests;
