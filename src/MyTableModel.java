@@ -54,7 +54,7 @@ public class MyTableModel extends AbstractTableModel {
         }
     }
     
-    static final long tooFarTime = 1000l*60*60*24;
+    static final long tooFarTime = Utils.timeConsts.DAY;
     public static int status(Contest c, Calendar date){
         if(c.endDate.compareTo(date)<=0){
             if(Utils.difference(date, c.endDate)>tooFarTime) return -2;
@@ -104,10 +104,11 @@ public class MyTableModel extends AbstractTableModel {
     public void addRows(List<Contest> newContests){
         synchronized (contests){
             if(newContests==null || newContests.size()==0) return;
-            String source = newContests.get(0).mainPage;
+            ArrayList<String> sources = new ArrayList<String>();
+            for(Contest c : newContests) sources.add(c.mainPage);
             Calendar nowDate = Utils.getNowDate();
             for(Contest c : new ArrayList<Contest>(contests)) 
-                if(c.mainPage==source && status(c, nowDate)>=0) contests.remove(c);
+                if(status(c, nowDate)>=0 && sources.contains(c.mainPage)) contests.remove(c);
             for(Contest c : newContests) if(status(c, nowDate)>=-1){
                 contests.add(c);
                 needRefresh = true;

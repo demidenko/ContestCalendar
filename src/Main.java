@@ -7,10 +7,9 @@ import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.*;
 import java.util.List;
-import java.util.Scanner;
 import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * 17.12.12 20:27
@@ -21,6 +20,7 @@ public class Main {
 //    static TrayIcon trayIcon;
     static Timer timerUpdateTable;
     static Timer timerUpdateData;
+    static Timer timerInfo;
     static JButton buttonUpdate;
     static long updateTime = 1000l*60*60;
     
@@ -70,7 +70,6 @@ public class Main {
                 }
             }
         }, 1000-System.currentTimeMillis()%1000, 1000);
-        
     }
     
     static threadCounter counter = new threadCounter();
@@ -184,17 +183,20 @@ public class Main {
         Insets none = new Insets(0,0,0,0);
         final JPanel infoPanel = new JPanel();
         infoPanel.setLayout(new GridBagLayout());
-        final JLabel info0 = new JLabel(); 
-        final JLabel info1 = new JLabel(); 
-        info0.setFont(new Font(null, Font.BOLD, 14));
-        info1.setFont(new Font(null, Font.ITALIC, 10));
+        final JLabel infoBigString = new JLabel();
+        final JLabel infoSmallString = new JLabel();
+        final JLabel infoTimer = new JLabel();
+        infoBigString.setFont(new Font(null, Font.BOLD, 14));
+        infoSmallString.setFont(new Font(null, Font.ITALIC, 10));
+        infoTimer.setFont(new Font(null, Font.PLAIN, 10));
         buttonUpdate  = new JButton("Update");
         //infoPanel.setBorder(BorderFactory.createLineBorder(Color.red));
-        //info1.setBorder(BorderFactory.createLineBorder(Color.blue));
-        //info2.setBorder(BorderFactory.createLineBorder(Color.blue));
+        //infoBigString.setBorder(BorderFactory.createLineBorder(Color.blue));
+        //infoSmallString.setBorder(BorderFactory.createLineBorder(Color.blue));
         infoPanel.add(buttonUpdate, new GridBagConstraints(0,0,1,2,0,1, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(5,5,5,5), 0,0));
-        infoPanel.add(info0, new GridBagConstraints(1,0,1,1,1,1,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0,5,0,0), 0,0));
-        infoPanel.add(info1, new GridBagConstraints(1,1,1,1,1,1,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0,5,1,0), 0,0));
+        infoPanel.add(infoBigString, new GridBagConstraints(1,0,2,1,1,1,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0,5,0,0), 0,0));
+        infoPanel.add(infoSmallString, new GridBagConstraints(1,1,1,1,1,1, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0,5,1,0), 0,0));
+        infoPanel.add(infoTimer, new GridBagConstraints(2,1,1,1,0,1, GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(0,5,1,5), 0,0));
 
         
         
@@ -207,23 +209,31 @@ public class Main {
             }
         });
         
-        info0.addMouseListener(new MouseListener() {
+        infoBigString.addMouseListener(new MouseListener() {
             public void mouseClicked(MouseEvent e) {
                 Utils.launchBrowser(infoStrings[0]);
             }
+
             public void mousePressed(MouseEvent e) {}
+
             public void mouseReleased(MouseEvent e) {}
+
             public void mouseEntered(MouseEvent e) {}
+
             public void mouseExited(MouseEvent e) {}
         });
         
-        info1.addMouseListener(new MouseListener() {
+        infoSmallString.addMouseListener(new MouseListener() {
             public void mouseClicked(MouseEvent e) {
                 Utils.launchBrowser(infoStrings[1]);
             }
+
             public void mousePressed(MouseEvent e) {}
+
             public void mouseReleased(MouseEvent e) {}
+
             public void mouseEntered(MouseEvent e) {}
+
             public void mouseExited(MouseEvent e) {}
         });
 
@@ -232,21 +242,48 @@ public class Main {
                 int row = table.getSelectedRow();
                 if(row==-1){
                     infoStrings[0] = infoStrings[1] = "";
-                    info0.setText("");
-                    info1.setText("");
+                    infoBigString.setText("");
+                    infoSmallString.setText("");
+                    infoTimer.setText("");
                     return;
                 }
 
-                info0.setText(tableModel.list.get(row).title);
-                info1.setText(tableModel.list.get(row).mainPage);
+                infoBigString.setText(tableModel.list.get(row).title);
+                infoSmallString.setText(tableModel.list.get(row).mainPage);
                 infoStrings[0] = tableModel.list.get(row).contestPage;
                 infoStrings[1] = tableModel.list.get(row).mainPage;
-                info0.setCursor(Cursor.getPredefinedCursor(infoStrings[0].length() != 0 ? Cursor.HAND_CURSOR : Cursor.DEFAULT_CURSOR));
-                info1.setCursor(Cursor.getPredefinedCursor(infoStrings[1].length() != 0 ? Cursor.HAND_CURSOR : Cursor.DEFAULT_CURSOR));
+                infoBigString.setCursor(Cursor.getPredefinedCursor(infoStrings[0].length() != 0 ? Cursor.HAND_CURSOR : Cursor.DEFAULT_CURSOR));
+                infoSmallString.setCursor(Cursor.getPredefinedCursor(infoStrings[1].length() != 0 ? Cursor.HAND_CURSOR : Cursor.DEFAULT_CURSOR));
+
+                int status = ((MyTableModel)table.getModel()).status(tableModel.list.get(row), Utils.getNowDate());
+                if(status<0) infoTimer.setText(""); else
+                if(status==0)
+                    infoTimer.setText("ends in "+Utils.differenceToString(Calendar.getInstance(), tableModel.list.get(row).endDate));
+                else
+                    infoTimer.setText("starts in "+Utils.differenceToString(Calendar.getInstance(), tableModel.list.get(row).startDate));
+
                 table.repaint();
             }
         });
-        
+
+
+        timerInfo = new Timer();
+        timerInfo.schedule(new TimerTask() {
+            public void run() {
+                int row = table.getSelectedRow();
+                if(row==-1){
+                    infoTimer.setText("");
+                    return;
+                }
+                int status = ((MyTableModel)table.getModel()).status(tableModel.list.get(row), Utils.getNowDate());
+                if(status<0) infoTimer.setText(""); else
+                if(status==0)
+                    infoTimer.setText("ends in "+Utils.differenceToString(Calendar.getInstance(), tableModel.list.get(row).endDate));
+                else
+                    infoTimer.setText("starts in "+Utils.differenceToString(Calendar.getInstance(), tableModel.list.get(row).startDate));
+            }
+        }, 1000-System.currentTimeMillis()%1000, 1000);
+
         window.add(infoPanel, BorderLayout.SOUTH);
         window.add(new JScrollPane(table), BorderLayout.CENTER);
                 

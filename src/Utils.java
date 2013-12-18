@@ -78,6 +78,7 @@ public class Utils {
 
     static void launchBrowser(String uriStr){
         if(uriStr==null || uriStr.length()==0) return;
+        uriStr = trim(uriStr);
         Desktop desktop;
         if (Desktop.isDesktopSupported()){
             desktop = Desktop.getDesktop();
@@ -97,6 +98,24 @@ public class Utils {
     
     static long difference(Calendar c1, Calendar c2){
         return c1.getTimeInMillis() - c2.getTimeInMillis();
+    }
+
+
+    static String differenceToString(Calendar c1, Calendar c2){
+        long diff = Math.abs(difference(c1,c2));
+        String res = "";
+        long d = diff/timeConsts.DAY;
+        diff%=timeConsts.DAY;
+        long h = diff/timeConsts.HOUR;
+        diff%=timeConsts.HOUR;
+        long m = diff/timeConsts.MINUTE;
+        diff%=timeConsts.MINUTE;
+        long s = diff/timeConsts.SECOND;
+
+        if(d>0) res+=d+" "+(d>1?"days":"day");
+        else res += h+":"+(m/10)+(m%10)+":"+(s/10)+(s%10);
+
+        return res;
     }
     
     static Calendar sum(Calendar c1, Calendar c2){

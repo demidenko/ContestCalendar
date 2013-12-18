@@ -16,8 +16,8 @@ public class MyTableCellRenderer implements TableCellRenderer {
             new Font(null, Font.BOLD, 12),
     };
     
-    static final Font fontTime = new Font("Monospaced", Font.PLAIN, 12);
-    static final Font fontTimeBold = new Font("Monospaced", Font.BOLD, 12);
+    static final Font fontTime = new Font("DejaVu Sans Mono", Font.PLAIN, 12);
+    static final Font fontTimeBold = new Font("DejaVu Sans Mono", Font.BOLD, 12);
     static final Font fontTextPlain = new Font(null, Font.PLAIN, 12);
     static final Font fontTextBold = new Font(null, Font.BOLD, 12);
 
@@ -27,7 +27,7 @@ public class MyTableCellRenderer implements TableCellRenderer {
     static final Color backgroundDefault = new Color(225,225,255);
     static final Color backgroundNow = new Color(0,215,0);
 
-    static MatteBorder selectBorder = new MatteBorder(1, 0, 1, 0, new Color(255,64,0));
+    static final MatteBorder selectBorder = new MatteBorder(1, 0, 1, 0, new Color(255,64,0));
 
 
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {

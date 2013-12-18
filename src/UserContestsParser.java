@@ -11,7 +11,7 @@ public class UserContestsParser implements SiteParser {
     static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm Z");
     
     public String contestsPage() {
-        return "UserContests.txt";
+        return "usercontests.txt";
     }
 
     public String mainPage() {
@@ -30,6 +30,7 @@ public class UserContestsParser implements SiteParser {
                     if(c!=null) contests.add(c);
                     c = new Contest();
                     c.deadLine = Utils.timeConsts.YEAR;
+                    c.mainPage = contestsPage();
                 }
                 if(tag.equalsIgnoreCase("title")) c.title = Utils.trim(in.nextLine());
                 if(tag.equalsIgnoreCase("mainpage")) c.mainPage = Utils.trim(in.nextLine());
