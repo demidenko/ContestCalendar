@@ -1,11 +1,10 @@
-import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.File;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.*;
 import java.util.List;
@@ -138,12 +137,13 @@ public class Main {
     
     
     public static final JFrame initWindow(){
-        final JFrame window = new JFrame("== calendar ==");
+        final JFrame window = new JFrame("== ContestCalendar ==");
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setSize(600, 305);
         window.setLocationRelativeTo(null);
         window.setLayout(new BorderLayout());
-        
+
+
         MyTableCellRenderer cellRenderer = new MyTableCellRenderer();
         tableModel = new MyTableModel();
         final JTable table = new JTable(tableModel);
@@ -156,7 +156,7 @@ public class Main {
         try {
             trayIcon = new TrayIcon(ImageIO.read(new File("ico.png")), "Contests schedule");
         } catch (IOException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         }      */
         
         /*trayIcon.addActionListener(new ActionListener() {
@@ -190,6 +190,7 @@ public class Main {
         infoSmallString.setFont(new Font(null, Font.ITALIC, 10));
         infoTimer.setFont(new Font(null, Font.PLAIN, 10));
         buttonUpdate  = new JButton("Update");
+        buttonUpdate.setFont(new Font(null, Font.BOLD, 11));
         //infoPanel.setBorder(BorderFactory.createLineBorder(Color.red));
         //infoBigString.setBorder(BorderFactory.createLineBorder(Color.blue));
         //infoSmallString.setBorder(BorderFactory.createLineBorder(Color.blue));
@@ -247,20 +248,21 @@ public class Main {
                     infoTimer.setText("");
                     return;
                 }
+                Contest c = tableModel.getValueAtRow(row);
 
-                infoBigString.setText(tableModel.list.get(row).title);
-                infoSmallString.setText(tableModel.list.get(row).mainPage);
-                infoStrings[0] = tableModel.list.get(row).contestPage;
-                infoStrings[1] = tableModel.list.get(row).mainPage;
+                infoBigString.setText(c.title);
+                infoSmallString.setText(c.mainPage);
+                infoStrings[0] = c.contestPage;
+                infoStrings[1] = c.mainPage;
                 infoBigString.setCursor(Cursor.getPredefinedCursor(infoStrings[0].length() != 0 ? Cursor.HAND_CURSOR : Cursor.DEFAULT_CURSOR));
                 infoSmallString.setCursor(Cursor.getPredefinedCursor(infoStrings[1].length() != 0 ? Cursor.HAND_CURSOR : Cursor.DEFAULT_CURSOR));
 
-                int status = ((MyTableModel)table.getModel()).status(tableModel.list.get(row), Utils.getNowDate());
+                int status = ((MyTableModel)table.getModel()).status(c, Utils.getNowDate());
                 if(status<0) infoTimer.setText(""); else
                 if(status==0)
-                    infoTimer.setText("ends in "+Utils.differenceToString(Calendar.getInstance(), tableModel.list.get(row).endDate));
+                    infoTimer.setText("ends in "+Utils.differenceToString(Calendar.getInstance(), c.endDate));
                 else
-                    infoTimer.setText("starts in "+Utils.differenceToString(Calendar.getInstance(), tableModel.list.get(row).startDate));
+                    infoTimer.setText("starts in "+Utils.differenceToString(Calendar.getInstance(), c.startDate));
 
                 table.repaint();
             }
@@ -275,18 +277,51 @@ public class Main {
                     infoTimer.setText("");
                     return;
                 }
-                int status = ((MyTableModel)table.getModel()).status(tableModel.list.get(row), Utils.getNowDate());
+                Contest c = tableModel.getValueAtRow(row);
+                int status = ((MyTableModel)table.getModel()).status(c, Utils.getNowDate());
                 if(status<0) infoTimer.setText(""); else
                 if(status==0)
-                    infoTimer.setText("ends in "+Utils.differenceToString(Calendar.getInstance(), tableModel.list.get(row).endDate));
+                    infoTimer.setText("ends in "+Utils.differenceToString(Calendar.getInstance(), c.endDate));
                 else
-                    infoTimer.setText("starts in "+Utils.differenceToString(Calendar.getInstance(), tableModel.list.get(row).startDate));
+                    infoTimer.setText("starts in "+Utils.differenceToString(Calendar.getInstance(), c.startDate));
             }
         }, 1000-System.currentTimeMillis()%1000, 1000);
 
+
+        final JPanel findPanel = new JPanel();
+        final JTextField findText = new JTextField();
+        window.add(findText, BorderLayout.NORTH);
+        findText.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent documentEvent) {
+                changeFilter();
+            }
+            @Override
+            public void removeUpdate(DocumentEvent documentEvent) {
+                changeFilter();
+            }
+            @Override
+            public void changedUpdate(DocumentEvent documentEvent) {
+                changeFilter();
+            }
+            void changeFilter(){
+                tableModel.filter = findText.getText().toLowerCase();
+                synchronized (tableModel.contests){
+                    tableModel.needRefresh = true;
+                    tableModel.refresh();
+                }
+            }
+        });
+        /*final JLabel findTitle = new JLabel("find: ");
+        findPanel.add(findTitle);
+        findPanel.add(findText);*/
+
+
+
         window.add(infoPanel, BorderLayout.SOUTH);
         window.add(new JScrollPane(table), BorderLayout.CENTER);
-                
+        window.add(findText, BorderLayout.NORTH);
+
         return window;
     }
     

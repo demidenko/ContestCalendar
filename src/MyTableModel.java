@@ -3,9 +3,10 @@ import java.util.*;
 
 
 public class MyTableModel extends AbstractTableModel {
-    public ArrayList<Contest> list;
+    private ArrayList<Contest> list;
     public TreeSet<Contest> contests;
-    public ArrayList<Integer> oldStatus;
+    private ArrayList<Integer> oldStatus;
+    public String filter;
     
     private final Comparator<Contest> comparatorTime = new Comparator<Contest>() {
         @Override
@@ -22,11 +23,15 @@ public class MyTableModel extends AbstractTableModel {
         list = new ArrayList<Contest>();
         oldStatus = new ArrayList<Integer>();
         needRefresh = true;
+        filter = "";
     }
 
     @Override
     public int getRowCount() {
-        return list.size();
+        //return list.size();
+        int size = 0;
+        for(Contest c : list) if(c.title.toLowerCase().contains(filter)) ++size;
+        return size;
     }
 
     @Override
@@ -36,8 +41,17 @@ public class MyTableModel extends AbstractTableModel {
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        Contest c = list.get(rowIndex);
-        return c;
+        return getValueAtRow(rowIndex);
+    }
+
+    public Contest getValueAtRow(int rowIndex){
+        //return list.get(rowIndex);
+        int size = 0;
+        for(Contest c : list) if(c.title.toLowerCase().contains(filter)){
+            if(size==rowIndex) return c;
+            ++size;
+        }
+        return null;
     }
 
     @Override
@@ -102,9 +116,9 @@ public class MyTableModel extends AbstractTableModel {
     }
 
     public void addRows(List<Contest> newContests){
+        if(newContests==null || newContests.size()==0) return;
         synchronized (contests){
-            if(newContests==null || newContests.size()==0) return;
-            ArrayList<String> sources = new ArrayList<String>();
+            TreeSet<String> sources = new TreeSet<String>();
             for(Contest c : newContests) sources.add(c.mainPage);
             Calendar nowDate = Utils.getNowDate();
             for(Contest c : new ArrayList<Contest>(contests)) 
@@ -112,6 +126,7 @@ public class MyTableModel extends AbstractTableModel {
             for(Contest c : newContests) if(status(c, nowDate)>=-1){
                 contests.add(c);
                 needRefresh = true;
+                //refresh();
             }
         }
     }
