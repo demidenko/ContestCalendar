@@ -14,6 +14,7 @@ import java.util.Timer;
  * 17.12.12 20:27
  */
 public class Main {
+    static JFrame window;
     static MyTableModel tableModel;
 //    static SystemTray systemTray = SystemTray.getSystemTray();
 //    static TrayIcon trayIcon;
@@ -52,7 +53,7 @@ public class Main {
     public static void main(String[] args) {
         //System.exit(0);
         
-        JFrame window = initWindow();
+        window = initWindow();
         window.setVisible(true);
 
         wishParsers = allParsers;
@@ -64,7 +65,6 @@ public class Main {
         timerUpdateTable.schedule(new TimerTask() {
             public void run() {
                 synchronized (tableModel.contests){
-                    //System.out.println("refresh"); System.out.flush();
                     tableModel.refresh();
                 }
             }
@@ -194,11 +194,6 @@ public class Main {
         //infoPanel.setBorder(BorderFactory.createLineBorder(Color.red));
         //infoBigString.setBorder(BorderFactory.createLineBorder(Color.blue));
         //infoSmallString.setBorder(BorderFactory.createLineBorder(Color.blue));
-        infoPanel.add(buttonUpdate, new GridBagConstraints(0,0,1,2,0,1, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(5,5,5,5), 0,0));
-        infoPanel.add(infoBigString, new GridBagConstraints(1,0,2,1,1,1,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0,5,0,0), 0,0));
-        infoPanel.add(infoSmallString, new GridBagConstraints(1,1,1,1,1,1, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0,5,1,0), 0,0));
-        infoPanel.add(infoTimer, new GridBagConstraints(2,1,1,1,0,1, GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(0,5,1,5), 0,0));
-
         
         
         final String[] infoStrings = new String[]{"",""};
@@ -290,37 +285,45 @@ public class Main {
 
         final JPanel findPanel = new JPanel();
         final JTextField findText = new JTextField();
-        window.add(findText, BorderLayout.NORTH);
         findText.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent documentEvent) {
                 changeFilter();
             }
+
             @Override
             public void removeUpdate(DocumentEvent documentEvent) {
                 changeFilter();
             }
+
             @Override
             public void changedUpdate(DocumentEvent documentEvent) {
                 changeFilter();
             }
-            void changeFilter(){
+
+            void changeFilter() {
                 tableModel.filter = findText.getText().toLowerCase();
-                synchronized (tableModel.contests){
+                synchronized (tableModel.contests) {
                     tableModel.needRefresh = true;
                     tableModel.refresh();
                 }
             }
         });
-        /*final JLabel findTitle = new JLabel("find: ");
-        findPanel.add(findTitle);
-        findPanel.add(findText);*/
+
+        findText.setVisible(false);
+        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new MyKeyEventDispatcher(findText));
+
+        infoPanel.add(findText, new GridBagConstraints(0,0,3,1,1,0,GridBagConstraints.CENTER,GridBagConstraints.HORIZONTAL,none,0,0));
+        infoPanel.add(buttonUpdate, new GridBagConstraints(0,1,1,2,0,1, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(5,5,5,5), 0,0));
+        infoPanel.add(infoBigString, new GridBagConstraints(1,1,2,1,1,1,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0,5,0,0), 0,0));
+        infoPanel.add(infoSmallString, new GridBagConstraints(1,2,1,1,1,1, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0,5,1,0), 0,0));
+        infoPanel.add(infoTimer, new GridBagConstraints(2,2,1,1,0,1, GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(0,5,1,5), 0,0));
 
 
 
-        window.add(infoPanel, BorderLayout.SOUTH);
+
         window.add(new JScrollPane(table), BorderLayout.CENTER);
-        window.add(findText, BorderLayout.NORTH);
+        window.add(infoPanel, BorderLayout.SOUTH);
 
         return window;
     }

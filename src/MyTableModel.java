@@ -30,7 +30,7 @@ public class MyTableModel extends AbstractTableModel {
     public int getRowCount() {
         //return list.size();
         int size = 0;
-        for(Contest c : list) if(c.title.toLowerCase().contains(filter)) ++size;
+        for(Contest c : list) if(filterMatching(c)) ++size;
         return size;
     }
 
@@ -47,11 +47,17 @@ public class MyTableModel extends AbstractTableModel {
     public Contest getValueAtRow(int rowIndex){
         //return list.get(rowIndex);
         int size = 0;
-        for(Contest c : list) if(c.title.toLowerCase().contains(filter)){
+        for(Contest c : list) if(filterMatching(c)){
             if(size==rowIndex) return c;
             ++size;
         }
         return null;
+    }
+
+    boolean filterMatching(Contest c){
+        return
+                c.title.toLowerCase().contains(filter) |
+                c.mainPage.toLowerCase().contains(filter);
     }
 
     @Override
