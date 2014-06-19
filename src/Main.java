@@ -286,7 +286,7 @@ public class Main {
         }, 1000-System.currentTimeMillis()%1000, 1000);
 
 
-        final JPanel findPanel = new JPanel();
+
         final JTextField findText = new JTextField();
         findText.getDocument().addDocumentListener(new DocumentListener() {
             @Override

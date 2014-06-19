@@ -9,6 +9,7 @@ public class MyKeyEventDispatcher implements KeyEventDispatcher {
     private JComponent component;
     private int openCode, openMask;
     private int closeCode, closeMask;
+
     public MyKeyEventDispatcher(JComponent field, int openCode, int openMask, int closeCode, int closeMask){
         component = field;
         this.openCode = openCode;

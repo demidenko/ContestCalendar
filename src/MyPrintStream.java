@@ -3,9 +3,7 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.text.SimpleDateFormat;
 
-/**
- * Created by demich on 6/19/14.
- */
+
 class MyPrintStream extends PrintStream {
     JTextArea text;
     SimpleDateFormat dateFormat;
