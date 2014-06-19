@@ -41,11 +41,14 @@ public class TopCoderParser implements SiteParser {
                         str = s.substring(s.indexOf("</strong>",i)+9,s.indexOf("</div>",i));
                         str = Utils.trimTags(str);
                         str = Utils.trim(str);
-                        sp = str.split(" ");
-                        c.startDate.setTime(dateFormat.parse(day + " " + t + " " + sp[sp.length - 1] + " EST"));
+                        sp = str.split("["+Utils.whitespace+"]");
+                        for(String z : sp) if(z.matches("[0-9][0-9]:[0-9][0-9]")){
+                            c.startDate.setTime(dateFormat.parse(day + " " + t + " " + z + " EDT"));
+                            break;
+                        }else System.out.println(c.title+"!"+z+"!");
                         c.endDate.setTime(c.startDate.getTime());
                         c.endDate.add(Calendar.MINUTE, 60 + 45);
-                        c.deadLine = c.title.contains("SRM") ? Utils.timeConsts.DAY : Utils.timeConsts.YEAR;
+                        c.deadLine = c.title.contains("SRM") ? Utils.timeConsts.DAY*2 : Utils.timeConsts.YEAR;
                         contests.add(c);
                     }
                 }

@@ -37,7 +37,7 @@ public class UVaOJParser implements SiteParser {
                 c.startDate.setTime(dateFormat.parse(s.substring(i+4,s.indexOf("</td>",i))+" UTC"));
                 i = s.indexOf("<td>", i+1);
                 c.endDate.setTime(dateFormat.parse(s.substring(i+4,s.indexOf("</td>",i))+" UTC"));
-                c.deadLine = Utils.timeConsts.WEEK;
+                c.deadLine = Utils.timeConsts.DAY;
                 contests.add(c);
             }
         } catch (ParseException e) {

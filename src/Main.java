@@ -22,6 +22,7 @@ public class Main {
     static Timer timerUpdateData;
     static Timer timerInfo;
     static JButton buttonUpdate;
+    static JTextArea logText;
     static long updateTime = 1000l*60*60;
     
     static SiteParser allParsers[] = {
@@ -34,7 +35,7 @@ public class Main {
             new NEERCIFMOSchoolParser(),
             new CodeChefParser(),
             new GoogleCodeJamParser(),
-            new RussianCodeCupParser(),
+            //new RussianCodeCupParser(),
             new ICLParser(),
             new IPSCParser(),
             new SIBSUIRegionalOlympiadParser(),
@@ -52,7 +53,9 @@ public class Main {
     
     public static void main(String[] args) {
         //System.exit(0);
-        
+
+
+
         window = initWindow();
         window.setVisible(true);
 
@@ -311,15 +314,21 @@ public class Main {
         });
 
         findText.setVisible(false);
-        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new MyKeyEventDispatcher(findText));
+        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new MyKeyEventDispatcher(findText, KeyEvent.VK_F, KeyEvent.CTRL_MASK, KeyEvent.VK_ESCAPE, 0));
+
+        logText = new JTextArea();
+        logText.setEditable(false);
+        System.setErr(new MyPrintStream(System.err, logText));
+        logText.setVisible(false);
+        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new MyKeyEventDispatcher(logText, KeyEvent.VK_L, KeyEvent.CTRL_MASK, KeyEvent.VK_L, KeyEvent.CTRL_MASK));
+
 
         infoPanel.add(findText, new GridBagConstraints(0,0,3,1,1,0,GridBagConstraints.CENTER,GridBagConstraints.HORIZONTAL,none,0,0));
         infoPanel.add(buttonUpdate, new GridBagConstraints(0,1,1,2,0,1, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(5,5,5,5), 0,0));
         infoPanel.add(infoBigString, new GridBagConstraints(1,1,2,1,1,1,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0,5,0,0), 0,0));
         infoPanel.add(infoSmallString, new GridBagConstraints(1,2,1,1,1,1, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0,5,1,0), 0,0));
         infoPanel.add(infoTimer, new GridBagConstraints(2,2,1,1,0,1, GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(0,5,1,5), 0,0));
-
-
+        infoPanel.add(logText, new GridBagConstraints(0,3,3,1,1,1, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0,5,1,5), 0,0));
 
 
         window.add(new JScrollPane(table), BorderLayout.CENTER);

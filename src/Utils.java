@@ -24,7 +24,7 @@ public class Utils {
 
     static String trim(String s){
         char c[] = s.toCharArray();
-        int i=0, j=s.length()-1;
+        int i=0, j=c.length-1;
         while(i<=j && whitespace.indexOf(c[i])>=0) ++i;
         while(i<=j && whitespace.indexOf(c[j])>=0) --j;
         return new String(c, i, j-i+1);
