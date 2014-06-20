@@ -40,10 +40,12 @@ public class Main {
             new IPSCParser(),
             new SIBSUIRegionalOlympiadParser(),
             new ACMQFParser(),
+            new ACMWFParser(),
             new VKOSHPParser(),
             new YandexAlgorithmParser(),
             new TimusParser(),
             new UVaOJParser(),
+            new HackerRankParser(),
             new UserContestsParser(),
     };
 

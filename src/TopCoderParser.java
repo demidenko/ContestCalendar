@@ -47,7 +47,7 @@ public class TopCoderParser implements SiteParser {
                             break;
                         }else System.out.println(c.title+"!"+z+"!");
                         c.endDate.setTime(c.startDate.getTime());
-                        c.endDate.add(Calendar.MINUTE, 60 + 45);
+                        c.endDate.add(Calendar.MINUTE, 75 + 5 + 15);
                         c.deadLine = c.title.contains("SRM") ? Utils.timeConsts.DAY*2 : Utils.timeConsts.YEAR;
                         contests.add(c);
                     }
