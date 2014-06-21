@@ -1,10 +1,11 @@
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 
 
 public class YandexAlgorithmParser implements SiteParser {
-    static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyy, HH:mm z");
+    static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyy, HH:mm z", Locale.ENGLISH);
 
     @Override
     public String contestsPage() {

@@ -21,7 +21,7 @@ class MyPrintStream extends PrintStream {
 
             for(StackTraceElement d : e.getStackTrace())
             if(d.getMethodName().equals("parse") && d.getClassName().endsWith("Parser")){
-                text.append(dateFormat.format(Utils.getNowDate().getTime())+" "+d.getClassName()+" "+e.getClass().getSimpleName()+"\n");
+                text.append(dateFormat.format(Utils.getNowDate().getTime())+" "+d.getClassName()+" "+e+"\n");
             }
         }
     }
