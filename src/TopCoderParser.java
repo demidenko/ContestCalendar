@@ -21,7 +21,7 @@ public class TopCoderParser implements SiteParser {
         String s = Utils.URLToString(contestsPage(), "UTF-8"); if(s==null) return contests;
 
         try{
-            int i, j, k, l, day;
+            int i, j, k, l, day, stop = s.indexOf("</table>");
             String t, sp[], str;
             for(;;){
                 if(s==null) return contests;
@@ -35,8 +35,9 @@ public class TopCoderParser implements SiteParser {
                     i = k;
                     while((i=s.indexOf("<strong",i+1))<l && i>=0){
                         Contest c = new Contest();
-                        c.title = s.substring(s.indexOf("\">", i)+2, s.indexOf("</",i));
-                        if(!c.title.toLowerCase().contains("srm") && !c.title.toLowerCase().contains("algorithm")) continue;
+                        c.title = Utils.trimTags(s.substring(s.indexOf(">", i)+1, s.indexOf("</",i)));
+                        if(!c.title.toLowerCase().contains("srm")
+                                && !c.title.toLowerCase().contains("algorithm")) continue;
                         c.mainPage = mainPage();
                         str = s.substring(s.indexOf("</strong>",i)+9,s.indexOf("</div>",i));
                         str = Utils.trimTags(str);
@@ -45,7 +46,7 @@ public class TopCoderParser implements SiteParser {
                         for(String z : sp) if(z.matches("[0-9][0-9]:[0-9][0-9]")){
                             c.startDate.setTime(dateFormat.parse(day + " " + t + " " + z + " EDT"));
                             break;
-                        }else System.out.println(c.title+"!"+z+"!");
+                        }
                         c.endDate.setTime(c.startDate.getTime());
                         c.endDate.add(Calendar.MINUTE, 75 + 5 + 15);
                         c.deadLine = c.title.contains("SRM") ? Utils.timeConsts.DAY*2 : Utils.timeConsts.YEAR;

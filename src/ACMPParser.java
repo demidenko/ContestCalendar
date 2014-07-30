@@ -2,11 +2,16 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.TimeZone;
 
 
 public class ACMPParser implements SiteParser {
-    static final SimpleDateFormat dateFormat = new SimpleDateFormat("ddMMyyyy HH:mm:ss Z");
-    
+    static final SimpleDateFormat dateFormat = new SimpleDateFormat("ddMMyyyy HH:mm:ss");
+
+    public ACMPParser(){
+        dateFormat.setTimeZone(TimeZone.getTimeZone("Europe/Moscow"));
+    }
+
     public String contestsPage() {
         return "http://acmp.ru/asp/champ/";
     }
@@ -36,7 +41,7 @@ public class ACMPParser implements SiteParser {
                 i = s.indexOf("<li>",j);
                 j = s.indexOf("</li>",i);
                 str = s.substring(i+4,j).split(" ")[1];
-                t += " "+str+" MSK";
+                t += " "+str;
                 c.startDate.setTime(dateFormat.parse(t));
                 i = s.indexOf("<li>",j);
                 j = s.indexOf("</li>",i);

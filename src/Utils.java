@@ -104,15 +104,13 @@ public class Utils {
     static String differenceToString(Calendar c1, Calendar c2){
         long diff = Math.abs(difference(c1,c2));
         String res = "";
-        long d = diff/timeConsts.DAY;
-        diff%=timeConsts.DAY;
         long h = diff/timeConsts.HOUR;
         diff%=timeConsts.HOUR;
         long m = diff/timeConsts.MINUTE;
         diff%=timeConsts.MINUTE;
         long s = diff/timeConsts.SECOND;
 
-        if(d>0) res+=d+" "+(d>1?"days":"day");
+        if(h>48) res+=(h/24)+" "+"days";
         else res += h+":"+(m/10)+(m%10)+":"+(s/10)+(s%10);
 
         return res;

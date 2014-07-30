@@ -2,11 +2,16 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.TimeZone;
 
 
 public class CodeForcesParser implements SiteParser{
-    static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm z");
+    static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm");
     static final SimpleDateFormat timeFormat = new SimpleDateFormat("dd:HH:mm");
+
+    public CodeForcesParser(){
+        dateFormat.setTimeZone(TimeZone.getTimeZone("Europe/Moscow"));
+    }
 
     public String contestsPage() {
         return "http://codeforces.ru/contests?complete=true";
@@ -35,7 +40,7 @@ public class CodeForcesParser implements SiteParser{
                 i = s.indexOf(">", s.indexOf(">", j + 5) + 1);
                 j = s.indexOf("<", i);
                 str = Utils.trim(s.substring(i + 1, j));
-                c.startDate.setTime(dateFormat.parse(str+" MSK"));
+                c.startDate.setTime(dateFormat.parse(str));
                 i = s.indexOf("<td>", j);
                 j = s.indexOf("</td>", i);
                 str = Utils.trim(s.substring(i + 4, j));

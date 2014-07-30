@@ -78,7 +78,7 @@ public class Main {
     
     static threadCounter counter = new threadCounter();
     static void runParsers(final SiteParser[] parsers){
-        new Thread(new Runnable() {
+        new Thread(){
             @Override
             public void run() {
                 System.out.print("parse... ");
@@ -106,7 +106,7 @@ public class Main {
                 }, updateTime-System.currentTimeMillis()%updateTime, updateTime);
                 System.out.println("done. ");
             }
-        }).start();
+        }.start();
     }
     
     public static class ParserThread extends Thread{
@@ -120,7 +120,7 @@ public class Main {
             synchronized (counter){
                 counter.increase();
             }
-            //System.out.println("update "+parser.getClass().getName()); System.out.flush();
+            //System.out.println(parser.getClass().getName()+" updated"); System.out.flush();
         }
     }
     
@@ -344,6 +344,6 @@ public class Main {
 
     static PrintWriter out = new PrintWriter(System.out);
     static Scanner in = new Scanner(System.in);
-    static void write(Object ... w){ for(Object x:w) out.print(x); out.flush(); }
-    static void writeln(Object ... w){ for(Object x:w) out.print(x); out.println(); out.flush(); }
+    static void write(Object ... w){ for(Object x:w) System.out.print(x); System.out.flush(); }
+    static void writeln(Object ... w){ for(Object x:w) System.out.print(x); System.out.println(); System.out.flush(); }
 }

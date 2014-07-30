@@ -132,7 +132,7 @@ public class MyTableModel extends AbstractTableModel {
             for(Contest c : newContests) if(status(c, nowDate)>=-1){
                 contests.add(c);
                 needRefresh = true;
-                //refresh();
+                refresh();
             }
         }
     }
