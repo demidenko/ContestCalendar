@@ -46,6 +46,7 @@ public class Main {
             new TimusParser(),
             new UVaOJParser(),
             new HackerRankParser(),
+            new DLGSUParser(),
             new UserContestsParser(),
     };
 
