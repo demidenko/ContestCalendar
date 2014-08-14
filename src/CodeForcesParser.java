@@ -51,7 +51,7 @@ public class CodeForcesParser implements SiteParser{
                 else c.contestPage = "http://codeforces.ru/contestRegistration/" + id;
                 c.mainPage = mainPage();
                 if(!c.title.contains("Codeforces")) c.deadLine = Utils.timeConsts.YEAR;
-                c.deadLine = Utils.timeConsts.DAY*2;
+                else c.deadLine = Utils.timeConsts.DAY*2;
                 contests.add(c);
                 k = s.indexOf("data-contestId=",k+1);
             }

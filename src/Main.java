@@ -5,6 +5,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.BufferedReader;
 import java.io.PrintWriter;
 import java.util.*;
 import java.util.List;
@@ -28,14 +29,13 @@ public class Main {
     static SiteParser allParsers[] = {
             new CodeForcesParser(),
             new TopCoderParser(),
-            new SnarkNewsContestsParser(),
+            new SnarkNewsSeriesParser(),
             new OpenCupParser(),
             new ACMPParser(),
             new ACMUParser(),
             new NEERCIFMOSchoolParser(),
             new CodeChefParser(),
             new GoogleCodeJamParser(),
-            //new RussianCodeCupParser(),
             new ICLParser(),
             new IPSCParser(),
             new SIBSUIRegionalOlympiadParser(),
@@ -48,6 +48,8 @@ public class Main {
             new HackerRankParser(),
             new DLGSUParser(),
             new UserContestsParser(),
+            //new SnarkNewsContestsParser(),
+            //new RussianCodeCupParser(),
     };
 
     static SiteParser wishParsers[];
@@ -56,7 +58,6 @@ public class Main {
     
     public static void main(String[] args) {
         //System.exit(0);
-
 
 
         window = initWindow();
@@ -121,7 +122,7 @@ public class Main {
             synchronized (counter){
                 counter.increase();
             }
-            //System.out.println(parser.getClass().getName()+" updated"); System.out.flush();
+            System.out.println(parser.getClass().getName()+" updated"); System.out.flush();
         }
     }
     

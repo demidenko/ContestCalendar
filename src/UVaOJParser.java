@@ -28,20 +28,22 @@ public class UVaOJParser implements SiteParser {
                 Contest c = new Contest();
                 i = s.indexOf("sectiontableentry",i+1);
                 if(i<0 || i>l) break;
-                i = s.indexOf("<td>", i+1);
-                i = s.indexOf("<td>", i+1);
-                c.contestPage = "http://" + mainPage() + "/" + s.substring(s.indexOf("a href=\"",i)+8, s.indexOf("\">",i));
+                i = s.indexOf("<td", i+1);
+                i = s.indexOf("<td", i+1);
+                i = s.indexOf("<td", i+1);
+                j = s.indexOf("a href=\"",i);
+                c.contestPage = "http://" + mainPage() + "/" + s.substring(j+8, s.indexOf("\">",j+1));
                 c.mainPage = mainPage();
-                c.title = s.substring(s.indexOf("\">",i)+2, s.indexOf("</a>",i));
-                i = s.indexOf("<td>", i+1);
-                c.startDate.setTime(dateFormat.parse(s.substring(i+4,s.indexOf("</td>",i))+" UTC"));
-                i = s.indexOf("<td>", i+1);
-                c.endDate.setTime(dateFormat.parse(s.substring(i+4,s.indexOf("</td>",i))+" UTC"));
+                c.title = s.substring(s.indexOf("\">", j) + 2, s.indexOf("</a>", j));
+                i = s.indexOf("<td", i + 1);
+                c.startDate.setTime(dateFormat.parse(s.substring(s.indexOf(">",i)+1,s.indexOf("</td>",i))+" UTC"));
+                i = s.indexOf("<td", i+1);
+                c.endDate.setTime(dateFormat.parse(s.substring(s.indexOf(">",i)+1,s.indexOf("</td>",i))+" UTC"));
                 c.deadLine = Utils.timeConsts.DAY;
                 contests.add(c);
             }
         } catch (ParseException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         }
 
         return contests;
