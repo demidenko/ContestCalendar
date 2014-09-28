@@ -44,6 +44,7 @@ public class HackerRankParser implements SiteParser {
                 c.endDate.setTime(dateFormat.parse(Utils.trim(s.substring(i+9,j))));
                 boolean ok = c.endDate.getTimeInMillis()-c.startDate.getTimeInMillis()<Utils.timeConsts.DAY;
                 ok|=c.title.contains("Week");
+                ok|=c.title.contains("Infinitum");
                 if(!ok) continue;
                 contests.add(c);
             }

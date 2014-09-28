@@ -42,8 +42,9 @@ public class TopCoderParser implements SiteParser {
                         str = s.substring(s.indexOf("</strong>",i)+9,s.indexOf("</div>",i));
                         str = Utils.trimTags(str);
                         str = Utils.trim(str);
+
                         sp = str.split("["+Utils.whitespace+"]");
-                        for(String z : sp) if(z.matches("[0-9][0-9]:[0-9][0-9]")){
+                        for(String z : sp) if(z.matches("[0-9]?[0-9]:[0-9][0-9]")){
                             c.startDate.setTime(dateFormat.parse(day + " " + t + " " + z + " EDT"));
                             break;
                         }

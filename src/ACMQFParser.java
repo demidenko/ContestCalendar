@@ -11,7 +11,7 @@ public class ACMQFParser implements SiteParser{
         if(s==null) return null;
         int i = s.indexOf("Сезоны:");
         if(i<0) return null;
-        return "http:"+s.substring(s.indexOf("a href=\"", i)+8, s.indexOf("\">",i));
+        return "http://ikit.sfu-kras.ru"+s.substring(s.indexOf("a href=\"", i)+8, s.indexOf("\">",i));
     }
 
     public String mainPage() {
