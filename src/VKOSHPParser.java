@@ -11,7 +11,7 @@ public class VKOSHPParser implements SiteParser{
         if(s==null) return null;
         int i = s.indexOf("Сезоны:");
         if(i<0) return null;
-        return "http:"+s.substring(s.indexOf("a href=\"", i)+8, s.indexOf("\">",i));
+        return "http://ikit.sfu-kras.ru"+s.substring(s.indexOf("a href=\"", i)+8, s.indexOf("\">",i));
     }
 
     @Override
@@ -22,6 +22,7 @@ public class VKOSHPParser implements SiteParser{
     @Override
     public ArrayList<Contest> parse() {
         ArrayList<Contest> contests = new ArrayList<Contest>();
+        Main.writeln(contestsPage());
         String s = Utils.URLToString(contestsPage(), "UTF-8"); if(s==null) return contests;
         
         try{
