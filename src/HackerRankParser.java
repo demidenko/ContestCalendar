@@ -15,7 +15,7 @@ public class HackerRankParser implements SiteParser {
 
     @Override
     public String mainPage() {
-        return "www.hackerrank.com";
+        return "hackerrank.com";
     }
 
     @Override

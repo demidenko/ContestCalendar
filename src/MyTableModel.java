@@ -130,6 +130,7 @@ public class MyTableModel extends AbstractTableModel {
             for(Contest c : new ArrayList<Contest>(contests)) 
                 if(status(c, nowDate)>=0 && sources.contains(c.mainPage)) contests.remove(c);
             for(Contest c : newContests) if(status(c, nowDate)>=-1){
+                if(Utils.difference(c.endDate,c.startDate)>=Utils.timeConsts.YEAR) continue;
                 contests.add(c);
                 needRefresh = true;
                 refresh();

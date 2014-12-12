@@ -31,8 +31,8 @@ public class Main {
             new TopCoderParser(),
             new SnarkNewsSeriesParser(),
             new OpenCupParser(),
-            new ACMPParser(),
-            new ACMUParser(),
+            new ACMPParser("acmp"),
+            new ACMPParser("acmu"),
             new NEERCIFMOSchoolParser(),
             new CodeChefParser(),
             new GoogleCodeJamParser(),
@@ -40,13 +40,14 @@ public class Main {
             new IPSCParser(),
             new SIBSUIRegionalOlympiadParser(),
             new ACMQFParser(),
-            new ACMWFParser(),
+            //new ACMWFParser(),
             new VKOSHPParser(),
             new YandexAlgorithmParser(),
             new TimusParser(),
             new UVaOJParser(),
             new HackerRankParser(),
             new DLGSUParser(),
+            new COCIParser(),
             new UserContestsParser(),
             //new SnarkNewsContestsParser(),
             //new RussianCodeCupParser(),
@@ -324,7 +325,19 @@ public class Main {
         logText.setEditable(false);
         System.setErr(new MyPrintStream(System.err, logText));
         logText.setVisible(false);
+        JButton logClear = new JButton("clear");
+        logClear.setVisible(false);
+        logClear.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                logText.setText("");
+            }
+        });
+        JButton logStats = new JButton("stats");
+        logStats.setVisible(false);
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new MyKeyEventDispatcher(logText, KeyEvent.VK_L, KeyEvent.CTRL_MASK, KeyEvent.VK_L, KeyEvent.CTRL_MASK));
+        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new MyKeyEventDispatcher(logClear, KeyEvent.VK_L, KeyEvent.CTRL_MASK, KeyEvent.VK_L, KeyEvent.CTRL_MASK));
+        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new MyKeyEventDispatcher(logStats, KeyEvent.VK_L, KeyEvent.CTRL_MASK, KeyEvent.VK_L, KeyEvent.CTRL_MASK));
 
 
         infoPanel.add(findText, new GridBagConstraints(0,0,3,1,1,0,GridBagConstraints.CENTER,GridBagConstraints.HORIZONTAL,none,0,0));
@@ -332,7 +345,9 @@ public class Main {
         infoPanel.add(infoBigString, new GridBagConstraints(1,1,2,1,1,1,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0,5,0,0), 0,0));
         infoPanel.add(infoSmallString, new GridBagConstraints(1,2,1,1,1,1, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0,5,1,0), 0,0));
         infoPanel.add(infoTimer, new GridBagConstraints(2,2,1,1,0,1, GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(0,5,1,5), 0,0));
-        infoPanel.add(logText, new GridBagConstraints(0,3,3,1,1,1, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0,5,1,5), 0,0));
+        infoPanel.add(logText, new GridBagConstraints(1,3,2,2,1,1, GridBagConstraints.NORTHWEST, GridBagConstraints.NONE, new Insets(0,5,1,5), 0,0));
+        infoPanel.add(logClear, new GridBagConstraints(0,3,1,1,0,1, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0,5,5,5), 0,0));
+        infoPanel.add(logStats, new GridBagConstraints(0,4,1,1,0,1, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0,5,5,5), 0,0));
 
 
         window.add(new JScrollPane(table), BorderLayout.CENTER);

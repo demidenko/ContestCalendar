@@ -8,16 +8,18 @@ import java.util.TimeZone;
 public class ACMPParser implements SiteParser {
     static final SimpleDateFormat dateFormat = new SimpleDateFormat("ddMMyyyy HH:mm:ss");
 
-    public ACMPParser(){
+    String title;
+    public ACMPParser(String title){
+        this.title = title;
         dateFormat.setTimeZone(TimeZone.getTimeZone("Europe/Moscow"));
     }
 
     public String contestsPage() {
-        return "http://acmp.ru/asp/champ/";
+        return "http://"+title+".ru/asp/champ/";
     }
 
     public String mainPage() {
-        return "acmp.ru";
+        return title+".ru";
     }
     
 
