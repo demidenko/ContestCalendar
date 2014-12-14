@@ -346,8 +346,8 @@ public class Main {
         infoPanel.add(infoSmallString, new GridBagConstraints(1,2,1,1,1,1, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0,5,1,0), 0,0));
         infoPanel.add(infoTimer, new GridBagConstraints(2,2,1,1,0,1, GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(0,5,1,5), 0,0));
         infoPanel.add(logText, new GridBagConstraints(1,3,2,2,1,1, GridBagConstraints.NORTHWEST, GridBagConstraints.NONE, new Insets(0,5,1,5), 0,0));
-        infoPanel.add(logClear, new GridBagConstraints(0,3,1,1,0,1, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0,5,5,5), 0,0));
-        infoPanel.add(logStats, new GridBagConstraints(0,4,1,1,0,1, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0,5,5,5), 0,0));
+        infoPanel.add(logClear, new GridBagConstraints(0,3,1,1,0,0, GridBagConstraints.NORTH, GridBagConstraints.NONE, new Insets(0,5,5,5), 0,0));
+        infoPanel.add(logStats, new GridBagConstraints(0,4,1,1,0,1, GridBagConstraints.NORTH, GridBagConstraints.NONE, new Insets(0,5,5,5), 0,0));
 
 
         window.add(new JScrollPane(table), BorderLayout.CENTER);

@@ -6,9 +6,9 @@ import java.util.TimeZone;
 
 
 public class ACMPParser implements SiteParser {
-    static final SimpleDateFormat dateFormat = new SimpleDateFormat("ddMMyyyy HH:mm:ss");
+    public SimpleDateFormat dateFormat = new SimpleDateFormat("ddMMyyyy HH:mm:ss");
 
-    String title;
+    public String title;
     public ACMPParser(String title){
         this.title = title;
         dateFormat.setTimeZone(TimeZone.getTimeZone("Europe/Moscow"));
@@ -64,6 +64,7 @@ public class ACMPParser implements SiteParser {
                 i = s.indexOf("<h4>", k);
             }
         } catch (ParseException e) {
+
             e.printStackTrace();
         }
 
