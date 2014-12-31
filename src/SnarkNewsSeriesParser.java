@@ -19,7 +19,7 @@ public class SnarkNewsSeriesParser implements SiteParser{
     }
 
     public String getActual(){
-        return "snss2014";
+        return "snws2015";
     }
 
     @Override

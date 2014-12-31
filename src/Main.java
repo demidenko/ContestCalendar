@@ -49,7 +49,7 @@ public class Main {
             new DLGSUParser(),
             new COCIParser(),
             new UserContestsParser(),
-            //new SnarkNewsContestsParser(),
+            new SnarkNewsContestsParser(),
             //new RussianCodeCupParser(),
     };
 
