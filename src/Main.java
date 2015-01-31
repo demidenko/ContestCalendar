@@ -28,7 +28,7 @@ public class Main {
     
     static SiteParser allParsers[] = {
             new CodeForcesParser(),
-            new TopCoderParser(),
+            //new TopCoderParser(),
             new SnarkNewsSeriesParser(),
             new OpenCupParser(),
             new ACMPParser("acmp"),
@@ -38,7 +38,7 @@ public class Main {
             new GoogleCodeJamParser(),
             new ICLParser(),
             new IPSCParser(),
-            new SIBSUIRegionalOlympiadParser(),
+            //new SIBSUIRegionalOlympiadParser(),
             new ACMQFParser(),
             //new ACMWFParser(),
             new VKOSHPParser(),

@@ -22,6 +22,7 @@ public class HackerRankParser implements SiteParser {
     public ArrayList<Contest> parse() {
         ArrayList<Contest> contests = new ArrayList<Contest>();
         String s = Utils.URLToString(contestsPage(), "UTF-8"); if(s==null) return contests;
+        s = s.replace("<url/>", "<url></url>");
         try{
             int i = 0, j;
             for(;;){

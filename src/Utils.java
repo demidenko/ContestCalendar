@@ -85,7 +85,7 @@ public class Utils {
             if (desktop.isSupported(Desktop.Action.BROWSE)){
                 URI uri;
                 try{
-                    uri = new URI(uriStr.indexOf("http://")==0 ? uriStr : "http://" + uriStr);
+                    uri = new URI(uriStr.indexOf("http://")==0 || uriStr.indexOf("https://")==0 ? uriStr : "http://" + uriStr);
                     desktop.browse(uri);
                 }catch (IOException ioe){
                     ioe.printStackTrace();
