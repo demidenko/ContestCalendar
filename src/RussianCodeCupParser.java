@@ -1,13 +1,14 @@
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 
 public class RussianCodeCupParser implements SiteParser{
-    static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss Z");
+    static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd MM yyyy HH:mm Z");
     
     public String contestsPage() {
-        return "http://russiancodecup.ru/ical";
+        return "http://russiancodecup.ru/about";
     }
 
     @Override
@@ -15,6 +16,40 @@ public class RussianCodeCupParser implements SiteParser{
         return "russiancodecup.ru";
     }
 
+    public ArrayList<Contest> parse() {
+        ArrayList<Contest> contests = new ArrayList<Contest>();
+        String s = Utils.URLToString(contestsPage(), "UTF-8"); if(s==null) return contests;
+
+        try{
+            int i=s.indexOf("<strong>"), j=0, k = s.indexOf("</table>", i);
+            for(;;){
+                i = s.indexOf("<tr>", i+1);
+                if(i<0 || i>=k) break;
+                i=s.indexOf("<td>", i+1);
+                Contest c = new Contest();
+                c.title = "Russian Code Cup "+s.substring(i+4, s.indexOf("</td",i));
+                i=s.indexOf("<td>", i + 1);
+                i=s.indexOf("<td>", i+1);
+                String str = s.substring(i+4, s.indexOf("</td",i)).replace(",","");
+                String sp[] = str.split(" ");
+                String t = sp[0]+" "+Utils.month.get(sp[1])+" "+Calendar.getInstance().get(Calendar.YEAR)+" ";
+                c.startDate.setTime(dateFormat.parse(t+(sp.length>4 ? sp[4] : "00:00")+" MSK"));
+                c.endDate.setTime(dateFormat.parse(t+(sp.length>6 ? sp[6] : "23:59")+" MSK"));
+                c.mainPage = mainPage();
+                c.deadLine = Utils.timeConsts.YEAR;
+                contests.add(c);
+            }
+        }catch (ParseException e){
+            e.printStackTrace();
+        }
+
+        return contests;
+    }
+    /*
+    static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss Z");
+    public String contestsPage() {
+        return "http://russiancodecup.ru/ical";
+    }
     public ArrayList<Contest> parse() {
         ArrayList<Contest> contests = new ArrayList<Contest>();
         String s = Utils.URLToString(contestsPage(), "UTF-8"); if(s==null) return contests;
@@ -40,5 +75,5 @@ public class RussianCodeCupParser implements SiteParser{
         }
 
         return contests;
-    }
+    }  */
 }

@@ -50,7 +50,7 @@ public class Main {
             new COCIParser(),
             new UserContestsParser(),
             new SnarkNewsContestsParser(),
-            //new RussianCodeCupParser(),
+            new RussianCodeCupParser(),
     };
 
     static SiteParser wishParsers[];

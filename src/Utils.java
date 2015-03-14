@@ -118,7 +118,7 @@ public class Utils {
     
     static Calendar sum(Calendar c1, Calendar c2){
         Calendar res = Calendar.getInstance();
-        res.setTimeInMillis(c1.getTimeInMillis());
+        res.setTimeInMillis(c1.getTimeInMillis()+c2.getTimeInMillis());
         res.add(Calendar.SECOND, c2.get(Calendar.SECOND));
         res.add(Calendar.MINUTE, c2.get(Calendar.MINUTE));
         res.add(Calendar.HOUR_OF_DAY, c2.get(Calendar.HOUR_OF_DAY));
