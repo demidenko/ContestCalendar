@@ -27,8 +27,7 @@ public class CodeForcesParser implements SiteParser{
         
         try{
             int i, j, k = s.indexOf("data-contestId="), end = s.indexOf("class=\"contests-table\"");
-            String str;
-            Calendar d = Calendar.getInstance();
+            String str, sp[];
             while(k<end){
                 Contest c = new Contest();
                 int id = Integer.parseInt(s.substring(k+16,s.indexOf("\"",k+16)));
@@ -45,8 +44,11 @@ public class CodeForcesParser implements SiteParser{
                 j = s.indexOf("</td>", i);
                 str = Utils.trim(s.substring(i + 4, j));
                 if(str.indexOf(':')==str.lastIndexOf(':')) str="0:"+str;
-                d.setTime(timeFormat.parse(str));
-                c.endDate = Utils.sum(c.startDate, d);
+                sp = str.split(":");
+                c.endDate.setTime(c.startDate.getTime());
+                c.endDate.add(Calendar.DAY_OF_YEAR, Integer.parseInt(sp[0]));
+                c.endDate.add(Calendar.HOUR_OF_DAY, Integer.parseInt(sp[1]));
+                c.endDate.add(Calendar.MINUTE, Integer.parseInt(sp[2]));
                 if(c.startDate.compareTo(Utils.getNowDate())<=0) c.contestPage = "http://codeforces.ru/contest/" + id;
                 else c.contestPage = "http://codeforces.ru/contestRegistration/" + id;
                 c.mainPage = mainPage();

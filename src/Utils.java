@@ -115,17 +115,6 @@ public class Utils {
 
         return res;
     }
-    
-    static Calendar sum(Calendar c1, Calendar c2){
-        Calendar res = Calendar.getInstance();
-        res.setTimeInMillis(c1.getTimeInMillis()+c2.getTimeInMillis());
-        res.add(Calendar.SECOND, c2.get(Calendar.SECOND));
-        res.add(Calendar.MINUTE, c2.get(Calendar.MINUTE));
-        res.add(Calendar.HOUR_OF_DAY, c2.get(Calendar.HOUR_OF_DAY));
-        res.add(Calendar.DAY_OF_YEAR, c2.get(Calendar.DAY_OF_YEAR));
-        res.add(Calendar.YEAR, c2.get(Calendar.YEAR)-1970);
-        return res;
-    }
 
     static String timeInfo(Calendar c, int cnt){
         String res = "";
