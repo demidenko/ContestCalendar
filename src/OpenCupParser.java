@@ -66,7 +66,7 @@ public class OpenCupParser implements SiteParser{
             s = Utils.URLToString("http://"+mainPage(), "windows-1251"); if(s==null) return contests;
             k = 0;
             for(;;){
-                k = s.indexOf("Enter contest", k+1);
+                k = s.indexOf("Enter ejudge", k+1);
                 if(k<0) break;
                 i = s.lastIndexOf("href=\"", k);
                 str = s.substring(i+6, s.indexOf("\"",i+6));

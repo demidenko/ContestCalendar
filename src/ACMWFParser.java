@@ -6,7 +6,7 @@ import java.util.*;
  * Created by demich on 6/20/14.
  */
 public class ACMWFParser implements SiteParser {
-    static final SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd yyyy HH:mm Z", Locale.ENGLISH);
+    static final SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd yyyy HH:mm", Locale.ENGLISH);
 
 
     @Override
@@ -51,8 +51,8 @@ public class ACMWFParser implements SiteParser {
         String s = Utils.URLToString(contestsPage(), "UTF-8"); if(s==null) return contests;
 
         int k,j,i = s.indexOf("hosted by");
-        String university = s.substring(i+10, s.indexOf("<",i+1));
-        String timezone = getTimeZone(university);
+        //String university = s.substring(i+10, s.indexOf("<",i+1));
+        //String timezone = getTimeZone(university);
 
 
         try {
@@ -92,8 +92,8 @@ public class ACMWFParser implements SiteParser {
                                 }
                                 break;
                             }
-                            c.startDate.setTime(dateFormat.parse(date + " " + year + " " + from + " " + timezone));
-                            c.endDate.setTime(dateFormat.parse(date + " " + year + " " + to + " " + timezone));
+                            c.startDate.setTime(dateFormat.parse(date + " " + year + " " + from));
+                            c.endDate.setTime(dateFormat.parse(date + " " + year + " " + to));
                             contests.add(c);
                         }
                     }

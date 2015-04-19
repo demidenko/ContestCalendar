@@ -6,7 +6,42 @@ import java.util.Locale;
 
 
 public class TopCoderParser implements SiteParser {
-    static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy HH:mm Z", Locale.ENGLISH);
+    static final SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd HH:mm Z", Locale.ENGLISH);
+    @Override
+    public String contestsPage() {
+        return "http://tco15.topcoder.com";
+        /*Calendar c = Calendar.getInstance();
+        return "http://tco"+(c.get(Calendar.YEAR)%100)+".topcoder.com/algorithm/schedule";        */
+    }
+
+    @Override
+    public String mainPage() {
+        return contestsPage();
+    }
+
+    @Override
+    public ArrayList<Contest> parse() {
+        ArrayList<Contest> contests = new ArrayList<Contest>();
+        String s = Utils.URLToString(contestsPage(), "UTF-8"); if(s==null) return contests;
+
+        try{
+            int i = s.indexOf("<main>"), j, k = s.lastIndexOf("<em>");
+            for(;;){
+                i = s.indexOf("<td", i+1);
+                if(i==-1 || i>k) break;
+                Contest c = new Contest();
+                c.title = Utils.trimTags(s.substring(s.indexOf(">",i)+1, s.indexOf("</td>",i)));
+                i = s.indexOf("<td", i+1);
+                String str = Utils.trimTags(s.substring(s.indexOf(">",i)+1, s.indexOf("</td>",i)));
+                Main.writeln(str);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return contests;
+    }
+    /*static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy HH:mm Z", Locale.ENGLISH);
     
     public String contestsPage() {
         return "http://community.topcoder.com/tc?module=Static&d1=calendar&d2=thisMonth";
@@ -68,4 +103,5 @@ public class TopCoderParser implements SiteParser {
 
         return contests;
     }
+    */
 }

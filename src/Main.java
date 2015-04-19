@@ -40,7 +40,7 @@ public class Main {
             new IPSCParser(),
             //new SIBSUIRegionalOlympiadParser(),
             new ACMQFParser(),
-            //new ACMWFParser(),
+            new ACMWFParser(),
             new VKOSHPParser(),
             new YandexAlgorithmParser(),
             new TimusParser(),
