@@ -1,6 +1,7 @@
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Locale;
 
 
@@ -9,7 +10,7 @@ public class YandexAlgorithmParser implements SiteParser {
 
     @Override
     public String contestsPage() {
-        return "http://algorithm.contest.yandex.ru/schedule/?lang=en";
+        return "https://contest.yandex.ru/algorithm"+(Calendar.getInstance().get(Calendar.YEAR))+"/schedule/?lang=en";
     }
 
     @Override
@@ -43,6 +44,7 @@ public class YandexAlgorithmParser implements SiteParser {
                 contests.add(c);
                 c.mainPage = mainPage();
                 c.deadLine = Utils.timeConsts.YEAR;
+                Main.writeln(c);
             }
         } catch (ParseException e) {
             e.printStackTrace();
