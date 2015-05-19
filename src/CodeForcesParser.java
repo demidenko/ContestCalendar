@@ -14,7 +14,7 @@ public class CodeForcesParser implements SiteParser{
     }
 
     public String contestsPage() {
-        return "http://codeforces.ru/contests?complete=true";
+        return "http://codeforces.com/contests?complete=true&locale=ru";
     }
 
     public String mainPage() {

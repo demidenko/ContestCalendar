@@ -24,7 +24,7 @@ public class CodeChefParser implements SiteParser {
             end = s.indexOf("Past",k);
             j = k;
             for(;;){
-                j = s.indexOf("<tr >", j+1);
+                j = s.indexOf("<tr", j+1);
                 if(j<0 || j>end) break;
                 Contest c = new Contest();
                 c.mainPage = mainPage();
