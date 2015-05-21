@@ -1,3 +1,5 @@
+import net.sf.image4j.codec.ico.ICODecoder;
+
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -5,8 +7,10 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.BufferedReader;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.URL;
 import java.util.*;
 import java.util.List;
 import java.util.Timer;
@@ -78,7 +82,22 @@ public class Main {
             }
         }, 1000-System.currentTimeMillis()%1000, 1000);
     }
-    
+
+
+    static void icotest(){
+        SiteParser parsers[] = allParsers;//new SiteParser[] {new YandexAlgorithmParser(), new CodeChefParser()};
+        JFrame window = new JFrame();
+
+        for(SiteParser p : parsers){
+            write(Utils.shortURL(p.mainPage()),": ");
+            BufferedImage icon = Utils.getFavIcon(p.mainPage());
+            if(icon!=null) write(icon.getWidth(),'x',icon.getHeight());
+            else write("null");
+            writeln();
+        }
+        window.setVisible(true);
+    }
+
     static threadCounter counter = new threadCounter();
     static void runParsers(final SiteParser[] parsers){
         new Thread(){
@@ -119,8 +138,8 @@ public class Main {
         }
         public void run() {
             List<Contest> c = parser.parse();
-            tableModel.addRows(c);
             synchronized (counter){
+                tableModel.addRows(c);
                 counter.increase();
             }
             System.out.println(parser.getClass().getName()+" updated"); System.out.flush();
@@ -202,7 +221,8 @@ public class Main {
         //infoPanel.setBorder(BorderFactory.createLineBorder(Color.red));
         //infoBigString.setBorder(BorderFactory.createLineBorder(Color.blue));
         //infoSmallString.setBorder(BorderFactory.createLineBorder(Color.blue));
-        
+        JLabel infoIcon = new JLabel();
+
         
         final String[] infoStrings = new String[]{"",""};
 
@@ -249,16 +269,18 @@ public class Main {
                     infoBigString.setText("");
                     infoSmallString.setText("");
                     infoTimer.setText("");
+                    infoIcon.setIcon(new ImageIcon(new BufferedImage(1,1,BufferedImage.TYPE_4BYTE_ABGR)));
                     return;
                 }
                 Contest c = tableModel.getValueAtRow(row);
 
                 infoBigString.setText(c.title);
-                infoSmallString.setText(c.mainPage);
+                infoSmallString.setText(Utils.shortURL(c.mainPage));
                 infoStrings[0] = c.contestPage;
                 infoStrings[1] = c.mainPage;
                 infoBigString.setCursor(Cursor.getPredefinedCursor(infoStrings[0].length() != 0 ? Cursor.HAND_CURSOR : Cursor.DEFAULT_CURSOR));
                 infoSmallString.setCursor(Cursor.getPredefinedCursor(infoStrings[1].length() != 0 ? Cursor.HAND_CURSOR : Cursor.DEFAULT_CURSOR));
+                infoIcon.setIcon(new ImageIcon(c.icon));
 
                 int status = ((MyTableModel)table.getModel()).status(c, Utils.getNowDate());
                 if(status<0) infoTimer.setText(""); else
@@ -340,15 +362,15 @@ public class Main {
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new MyKeyEventDispatcher(logStats, KeyEvent.VK_L, KeyEvent.CTRL_MASK, KeyEvent.VK_L, KeyEvent.CTRL_MASK));
 
 
-        infoPanel.add(findText, new GridBagConstraints(0,0,3,1,1,0,GridBagConstraints.CENTER,GridBagConstraints.HORIZONTAL,none,0,0));
+        infoPanel.add(findText, new GridBagConstraints(0,0,4,1,1,0,GridBagConstraints.CENTER,GridBagConstraints.HORIZONTAL,none,0,0));
         infoPanel.add(buttonUpdate, new GridBagConstraints(0,1,1,2,0,1, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(5,5,5,5), 0,0));
-        infoPanel.add(infoBigString, new GridBagConstraints(1,1,2,1,1,1,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0,5,0,0), 0,0));
-        infoPanel.add(infoSmallString, new GridBagConstraints(1,2,1,1,1,1, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0,5,1,0), 0,0));
-        infoPanel.add(infoTimer, new GridBagConstraints(2,2,1,1,0,1, GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(0,5,1,5), 0,0));
-        infoPanel.add(logText, new GridBagConstraints(1,3,2,2,1,1, GridBagConstraints.NORTHWEST, GridBagConstraints.NONE, new Insets(0,5,1,5), 0,0));
+        infoPanel.add(infoBigString, new GridBagConstraints(2,1,2,1,1,1,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0,5,0,0), 0,0));
+        infoPanel.add(infoSmallString, new GridBagConstraints(2,2,1,1,1,1, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0,5,1,0), 0,0));
+        infoPanel.add(infoTimer, new GridBagConstraints(3,2,1,1,0,1, GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(0,5,1,5), 0,0));
+        infoPanel.add(logText, new GridBagConstraints(1,3,3,2,1,1, GridBagConstraints.NORTHWEST, GridBagConstraints.NONE, new Insets(0,5,1,5), 0,0));
         infoPanel.add(logClear, new GridBagConstraints(0,3,1,1,0,0, GridBagConstraints.NORTH, GridBagConstraints.NONE, new Insets(0,5,5,5), 0,0));
         infoPanel.add(logStats, new GridBagConstraints(0,4,1,1,0,1, GridBagConstraints.NORTH, GridBagConstraints.NONE, new Insets(0,5,5,5), 0,0));
-
+        infoPanel.add(infoIcon, new GridBagConstraints(1,1,1,2,0,1, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0,5,5,5), 0,0));
 
         window.add(new JScrollPane(table), BorderLayout.CENTER);
         window.add(infoPanel, BorderLayout.SOUTH);
@@ -356,11 +378,7 @@ public class Main {
         return window;
     }
     
-    
-    
 
-    static PrintWriter out = new PrintWriter(System.out);
-    static Scanner in = new Scanner(System.in);
     static void write(Object ... w){ for(Object x:w) System.out.print(x); System.out.flush(); }
     static void writeln(Object ... w){ for(Object x:w) System.out.print(x); System.out.println(); System.out.flush(); }
 }

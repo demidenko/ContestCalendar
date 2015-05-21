@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 
-public class IPSCParser implements SiteParser {
+public class IPSCParser extends SiteParser {
     static final SimpleDateFormat dateFormat = new SimpleDateFormat("d MMMMM yyyy, HH:mm z", Locale.ENGLISH);
     
     public String contestsPage() {
@@ -12,7 +12,7 @@ public class IPSCParser implements SiteParser {
     }
 
     public String mainPage() {
-        return "ipsc.ksp.sk";
+        return "http://ipsc.ksp.sk/";
     }
 
     public ArrayList<Contest> parse() {
@@ -22,6 +22,7 @@ public class IPSCParser implements SiteParser {
         try{
             int i,j;
             Contest c = new Contest();
+            c.icon = getIcon();
             i = s.indexOf("<title>");
             String sp[] = s.substring(i+7, s.indexOf("</title>", i)).split(" ");
             c.title = sp[0]+" "+sp[1];

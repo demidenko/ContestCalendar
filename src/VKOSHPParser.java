@@ -3,11 +3,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 
-public class VKOSHPParser implements SiteParser{
+public class VKOSHPParser extends SiteParser{
     static SimpleDateFormat dateFormat = new SimpleDateFormat("dd MM yyyy HH mm ss z");
     @Override
     public String contestsPage() {
-        String s = Utils.URLToString("http://"+mainPage(), "UTF-8");
+        String s = Utils.URLToString(mainPage(), "UTF-8");
         if(s==null) return null;
         int i = s.indexOf("Сезоны:");
         if(i<0) return null;
@@ -16,7 +16,7 @@ public class VKOSHPParser implements SiteParser{
 
     @Override
     public String mainPage() {
-        return "ikit.sfu-kras.ru/olimp_shkola";
+        return "http://ikit.sfu-kras.ru/olimp_shkola";
     }
 
     @Override
@@ -31,6 +31,7 @@ public class VKOSHPParser implements SiteParser{
             i = s.indexOf("<b>", k);
             j = s.indexOf("</b>", k);
             Contest c = new Contest();
+            c.icon = getIcon();
             c.title = Utils.trim(Utils.trimTags(s.substring(i + 3, j).replace("\n"," ")));
             i = s.indexOf("<p>", j);
             j = s.indexOf("</p>", i);

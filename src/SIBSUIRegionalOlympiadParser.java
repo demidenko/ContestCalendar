@@ -3,7 +3,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 
-public class SIBSUIRegionalOlympiadParser implements SiteParser{
+public class SIBSUIRegionalOlympiadParser extends SiteParser{
     static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd MM yyyy HH mm ss z");
     
     @Override
@@ -28,6 +28,7 @@ public class SIBSUIRegionalOlympiadParser implements SiteParser{
             str = Utils.trim(s.substring(i+7, j-2));
             sp = str.split("[ -]");
             Contest c = new Contest();
+            c.icon = getIcon();
             c.title = "Региональная олимпиада по программированию, г. Новокузнецк";
             c.startDate.setTime(dateFormat.parse(sp[0] + " " + Utils.month.get(sp[2]) + " " + sp[3] + " 00 00 00 KRAT"));
             c.endDate.setTime(dateFormat.parse(sp[1] + " " + Utils.month.get(sp[2]) + " " + sp[3] + " 23 59 59 KRAT"));

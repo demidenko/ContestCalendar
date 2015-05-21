@@ -5,7 +5,7 @@ import java.util.Calendar;
 import java.util.TimeZone;
 
 
-public class CodeForcesParser implements SiteParser{
+public class CodeForcesParser extends SiteParser{
     static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm");
     static final SimpleDateFormat timeFormat = new SimpleDateFormat("dd:HH:mm");
 
@@ -18,7 +18,7 @@ public class CodeForcesParser implements SiteParser{
     }
 
     public String mainPage() {
-        return "codeforces.ru";
+        return "http://codeforces.com";
     }
 
     public ArrayList<Contest> parse(){
@@ -30,6 +30,7 @@ public class CodeForcesParser implements SiteParser{
             String str, sp[];
             while(k<end){
                 Contest c = new Contest();
+                c.icon = getIcon();
                 int id = Integer.parseInt(s.substring(k+16,s.indexOf("\"",k+16)));
                 i = s.indexOf("<td>", k);
                 j = s.indexOf("</td>", i);

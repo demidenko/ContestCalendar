@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 
-public class UserContestsParser implements SiteParser {
+public class UserContestsParser extends SiteParser {
     static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm Z");
     
     public String contestsPage() {
@@ -15,7 +15,7 @@ public class UserContestsParser implements SiteParser {
     }
 
     public String mainPage() {
-        return "";
+        return null;
     }
 
     public ArrayList<Contest> parse() {

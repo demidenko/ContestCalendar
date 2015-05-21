@@ -5,7 +5,7 @@ import java.util.Calendar;
 import java.util.Locale;
 
 
-public class GoogleCodeJamParser implements SiteParser{
+public class GoogleCodeJamParser extends SiteParser{
     static final SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, MMM dd, yyyy HH:mm Z", Locale.ENGLISH);
     
     
@@ -14,7 +14,7 @@ public class GoogleCodeJamParser implements SiteParser{
     }
 
     public String mainPage() {
-        return "code.google.com/codejam";
+        return "https://code.google.com/codejam";
     }
 
     public ArrayList<Contest> parse() {
@@ -28,6 +28,7 @@ public class GoogleCodeJamParser implements SiteParser{
                 k = s.indexOf("<tr>", k+1);
                 if(k>end || k<0) break;
                 Contest c = new Contest();
+                c.icon = getIcon();
                 c.mainPage = mainPage();
                 i = s.indexOf("<td class=\"date\">",k); j = s.indexOf("</td>",i);
                 str = s.substring(i,j);

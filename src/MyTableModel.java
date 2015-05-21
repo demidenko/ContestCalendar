@@ -28,10 +28,11 @@ public class MyTableModel extends AbstractTableModel {
 
     @Override
     public int getRowCount() {
-        //return list.size();
-        int size = 0;
-        for(Contest c : list) if(filterMatching(c)) ++size;
-        return size;
+        synchronized (contests){
+            int size = 0;
+            for(Contest c : list) if(filterMatching(c)) ++size;
+            return size;
+        }
     }
 
     @Override
@@ -46,12 +47,14 @@ public class MyTableModel extends AbstractTableModel {
 
     public Contest getValueAtRow(int rowIndex){
         //return list.get(rowIndex);
-        int size = 0;
-        for(Contest c : list) if(filterMatching(c)){
-            if(size==rowIndex) return c;
-            ++size;
+        synchronized (contests){
+            int size = 0;
+            for(Contest c : list) if(filterMatching(c)){
+                if(size==rowIndex) return c;
+                ++size;
+            }
+            return null;
         }
-        return null;
     }
 
     boolean filterMatching(Contest c){

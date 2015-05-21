@@ -3,7 +3,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 
-public class SnarkNewsContestsParser implements SiteParser {
+public class SnarkNewsContestsParser extends SiteParser {
     static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm z");
     
     public String contestsPage() {
@@ -11,7 +11,7 @@ public class SnarkNewsContestsParser implements SiteParser {
     }
 
     public String mainPage() {
-        return "contests.snarknews.info";
+        return "http://contests.snarknews.info/";
     }
 
     public String getActual(){
@@ -28,6 +28,7 @@ public class SnarkNewsContestsParser implements SiteParser {
                 k = s.indexOf("<tr>", k+1);
                 if(k>l || k<0) break;
                 Contest c = new Contest();
+                c.icon = getIcon();
                 c.mainPage = mainPage();
                 i = s.indexOf("<td>", k);
                 c.title = Utils.trim(s.substring(i+4, s.indexOf("</td>",i+1)));

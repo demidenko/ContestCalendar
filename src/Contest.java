@@ -1,3 +1,4 @@
+import java.awt.image.BufferedImage;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
@@ -11,6 +12,7 @@ public class Contest implements Comparable<Contest> {
     public Calendar startDate;
     public Calendar endDate;
     public long deadLine;
+    public BufferedImage icon;
 
     public Contest(){
         title = "";
@@ -19,6 +21,7 @@ public class Contest implements Comparable<Contest> {
         startDate = Calendar.getInstance();
         endDate = Calendar.getInstance();
         deadLine = Utils.timeConsts.DAY;
+        icon = new BufferedImage(1,1,BufferedImage.TYPE_4BYTE_ABGR);
     }
 
     public String toString(){

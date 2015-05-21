@@ -6,17 +6,17 @@ import java.util.Calendar;
 /**
  * Created by demich on 12/12/14.
  */
-public class COCIParser implements SiteParser {
+public class COCIParser extends SiteParser {
     static SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy.HH:mm z");
 
     @Override
     public String contestsPage() {
-        return "http://hsin.hr/coci/";
+        return "http://hsin.hr/coci";
     }
 
     @Override
     public String mainPage() {
-        return "hsin.hr/coci";
+        return "http://hsin.hr/coci/";
     }
 
     @Override
@@ -30,6 +30,7 @@ public class COCIParser implements SiteParser {
                 k = s.indexOf("timeanddate", k+1);
                 if(k<0) break;
                 Contest c = new Contest();
+                c.icon = getIcon();
                 i = s.lastIndexOf("naslov", k);
                 c.title = s.substring(i + 8, s.indexOf("</", i));
                 c.contestPage = mainPage();

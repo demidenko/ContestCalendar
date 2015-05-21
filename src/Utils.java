@@ -1,6 +1,8 @@
+import net.sf.image4j.codec.ico.ICODecoder;
+
 import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.awt.*;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -11,6 +13,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.Calendar;
 import java.util.TreeMap;
+import java.util.List;
 
 
 public class Utils {
@@ -76,6 +79,16 @@ public class Utils {
         return null;
     }
 
+    static String shortURL(String url){
+        if(url==null) return null;
+        if(url.startsWith("http://")) url = url.substring(7);
+        if(url.startsWith("https://")) url = url.substring(8);
+        if(url.startsWith("www.")) url = url.substring(4);
+        if(url.startsWith("/")) url = url.substring(1);
+        if(url.endsWith("/")) url = url.substring(0,url.length()-1);
+        return url;
+    }
+
     static void launchBrowser(String uriStr){
         if(uriStr==null || uriStr.length()==0) return;
         uriStr = trim(uriStr);
@@ -95,7 +108,94 @@ public class Utils {
             }
         }
     }
-    
+
+    static BufferedImage getFavIcon(String URL){
+        String page = URLToString(URL, "UTF-8");
+        if(page==null) return null;
+        int i = page!=null ? page.toLowerCase().indexOf("shortcut icon") : -1;
+        String iconURL;
+        if(i!=-1){
+            int l = page.lastIndexOf('<',i);
+            int r = page.indexOf('>', i);
+            String str = page.substring(l, r + 1);
+            i = str.toLowerCase().indexOf("href=");
+            iconURL = str.substring(i+6,str.indexOf("\"",i+6));
+        }else iconURL = "favicon.ico";
+
+        if(!iconURL.startsWith("http")){
+            if(URL.endsWith("/")) URL = URL.substring(0,URL.length()-1);
+            if(!iconURL.startsWith("/")) iconURL = "/" + iconURL;
+            String picURL = null;
+            for(;;){
+                String link = URL + iconURL;
+                if(link.indexOf("//")==-1) break;
+                try {
+                    new URL(link).openStream();
+                    picURL = link;
+                    break;
+                } catch (Exception e){}
+                i = URL.lastIndexOf("/");
+                if(i==-1) break;
+                URL = URL.substring(0, i);
+            }
+            iconURL = picURL;
+        }
+
+        try {
+            new URL(iconURL).openStream();
+        } catch (Exception e){
+            return null;
+        }
+
+        for(;;){
+            String str = null;
+            try {
+                str = new URL(iconURL).openConnection().getHeaderField("Location");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            if(str==null) break;
+            iconURL = str;
+        }
+
+        int dot = iconURL.lastIndexOf('.');
+        for(i=dot+1;i<iconURL.length() && Character.isAlphabetic(iconURL.codePointAt(i));++i);
+        String type = iconURL.substring(dot+1,i).toLowerCase();
+        BufferedImage res = null;
+        if(type.equals("ico")){
+            try {
+                List<BufferedImage> imgs = ICODecoder.read(new URL(iconURL).openStream());
+                for(BufferedImage img : imgs) if(res==null || res.getWidth()*res.getHeight()<img.getWidth()*img.getHeight()){
+                    res = img;
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }else
+        if(type.equals("png") || type.equals("gif")){
+            try {
+                res = ImageIO.read(new URL(iconURL).openStream());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }else{
+            return null;
+        }
+
+        return res;
+    }
+
+    public static BufferedImage resize(BufferedImage img, int newW, int newH) {
+        Image tmp = img.getScaledInstance(newW, newH, Image.SCALE_SMOOTH);
+        BufferedImage dimg = new BufferedImage(newW, newH, BufferedImage.TYPE_INT_ARGB);
+
+        Graphics2D g2d = dimg.createGraphics();
+        g2d.drawImage(tmp, 0, 0, null);
+        g2d.dispose();
+
+        return dimg;
+    }
+
     static long difference(Calendar c1, Calendar c2){
         return c1.getTimeInMillis() - c2.getTimeInMillis();
     }

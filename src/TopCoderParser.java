@@ -5,7 +5,7 @@ import java.util.Calendar;
 import java.util.Locale;
 
 
-public class TopCoderParser implements SiteParser {
+public class TopCoderParser extends SiteParser {
     static final SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd HH:mm Z", Locale.ENGLISH);
     @Override
     public String contestsPage() {
@@ -30,6 +30,7 @@ public class TopCoderParser implements SiteParser {
                 i = s.indexOf("<td", i+1);
                 if(i==-1 || i>k) break;
                 Contest c = new Contest();
+                c.icon = getIcon();
                 c.title = Utils.trimTags(s.substring(s.indexOf(">",i)+1, s.indexOf("</td>",i)));
                 i = s.indexOf("<td", i+1);
                 String str = Utils.trimTags(s.substring(s.indexOf(">",i)+1, s.indexOf("</td>",i)));

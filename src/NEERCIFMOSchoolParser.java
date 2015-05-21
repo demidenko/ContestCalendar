@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 
 
-public class NEERCIFMOSchoolParser implements SiteParser{
+public class NEERCIFMOSchoolParser extends SiteParser{
     static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd MM yyyy HH-mm z");
 
     public String contestsPage() {
@@ -13,7 +13,7 @@ public class NEERCIFMOSchoolParser implements SiteParser{
     }
 
     public String mainPage() {
-        return "neerc.ifmo.ru/school/io";
+        return "http://neerc.ifmo.ru/school/io/";
     }
 
 
@@ -28,6 +28,7 @@ public class NEERCIFMOSchoolParser implements SiteParser{
             j = k1;
             for(;;){
                 Contest c = new Contest();
+                c.icon = getIcon();
                 i = s.indexOf("class=\"date\"",j);
                 if(i<0) break;
                 j = s.indexOf("class=\"time\"", i);

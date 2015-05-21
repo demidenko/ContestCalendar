@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 
-public class ACMUParser implements SiteParser {
+public class ACMUParser extends SiteParser {
     static final SimpleDateFormat dateFormat = new SimpleDateFormat("ddMMyyyy HH:mm:ss Z");
 
     public String contestsPage() {
@@ -26,6 +26,7 @@ public class ACMUParser implements SiteParser {
             i = s.indexOf("<h4>", k);
             for(;i>=0;){
                 Contest c = new Contest();
+                c.icon = getIcon();
                 c.mainPage = mainPage();
                 j = s.indexOf("</h4>",i);
                 str = Utils.trim(s.substring(i+4, j)).replace("&nbsp;", " ");

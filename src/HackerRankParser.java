@@ -5,7 +5,7 @@ import java.util.ArrayList;
 /**
  * Created by demich on 6/19/14.
  */
-public class HackerRankParser implements SiteParser {
+public class HackerRankParser extends SiteParser {
     static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z");
 
     @Override
@@ -15,7 +15,7 @@ public class HackerRankParser implements SiteParser {
 
     @Override
     public String mainPage() {
-        return "hackerrank.com";
+        return "https://www.hackerrank.com/";
     }
 
     @Override
@@ -31,6 +31,7 @@ public class HackerRankParser implements SiteParser {
                 i = s.indexOf("<title>", i);
                 j = s.indexOf("</title>", i+1);
                 Contest c = new Contest();
+                c.icon = getIcon();
                 c.mainPage = mainPage();
                 c.title = Utils.replaceHTMLSymbols(Utils.trim(s.substring(i+7,j)));
                 i = s.indexOf("<url>", j+1);

@@ -5,7 +5,7 @@ import java.util.*;
 /**
  * Created by demich on 6/20/14.
  */
-public class ACMWFParser implements SiteParser {
+public class ACMWFParser extends SiteParser {
     static final SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd yyyy HH:mm", Locale.ENGLISH);
 
 
@@ -16,7 +16,7 @@ public class ACMWFParser implements SiteParser {
 
     @Override
     public String mainPage() {
-        return "icpc.baylor.edu/worldfinals";
+        return "http://icpc.baylor.edu/worldfinals";
     }
 
 
@@ -80,6 +80,7 @@ public class ACMWFParser implements SiteParser {
                     if(j>=0){
                         if(title.substring(j+4).toLowerCase().contains("badges")){
                             Contest c = new Contest();
+                            c.icon = getIcon();
                             c.mainPage = mainPage();
                             c.deadLine = Utils.timeConsts.YEAR;
                             c.title = title.substring(0,j);

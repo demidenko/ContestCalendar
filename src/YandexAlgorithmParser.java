@@ -5,7 +5,7 @@ import java.util.Calendar;
 import java.util.Locale;
 
 
-public class YandexAlgorithmParser implements SiteParser {
+public class YandexAlgorithmParser extends SiteParser {
     static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyy, HH:mm z", Locale.ENGLISH);
 
     @Override
@@ -15,7 +15,7 @@ public class YandexAlgorithmParser implements SiteParser {
 
     @Override
     public String mainPage() {
-        return "algorithm.contest.yandex.ru";
+        return "https://contest.yandex.ru/";
     }
 
 
@@ -32,6 +32,7 @@ public class YandexAlgorithmParser implements SiteParser {
                 i=s.indexOf("<tr>",i+1);
                 if(i==-1 || i>l) break;
                 Contest c = new Contest();
+                c.icon = getIcon();
                 i=s.indexOf("<td>",i+1);
                 c.title = Utils.trimTags(s.substring(i+4, s.indexOf("</td",i+1)));
                 i = s.indexOf("<td>", i+1);
@@ -44,7 +45,6 @@ public class YandexAlgorithmParser implements SiteParser {
                 contests.add(c);
                 c.mainPage = mainPage();
                 c.deadLine = Utils.timeConsts.YEAR;
-                Main.writeln(c);
             }
         } catch (ParseException e) {
             e.printStackTrace();

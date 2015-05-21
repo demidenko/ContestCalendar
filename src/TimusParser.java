@@ -2,7 +2,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 
-public class TimusParser implements SiteParser {
+public class TimusParser extends SiteParser {
     static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd MM yyyy HH:mm Z");
 
     @Override
@@ -12,7 +12,7 @@ public class TimusParser implements SiteParser {
 
     @Override
     public String mainPage() {
-        return "acm.timus.ru";
+        return "http://acm.timus.ru/";
     }
 
     @Override
@@ -28,6 +28,7 @@ public class TimusParser implements SiteParser {
                 if(i==-1) break;
                 j=s.indexOf("<A HREF", i+1);
                 Contest c = new Contest();
+                c.icon = getIcon();
                 c.title = s.substring(s.indexOf("\">", j+1)+2, s.indexOf("</A>", j+1));
                 c.deadLine = Utils.timeConsts.WEEK;
                 c.mainPage = mainPage();

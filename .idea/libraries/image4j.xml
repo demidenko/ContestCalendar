@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="image4j">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/image4j" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="file://$PROJECT_DIR$/image4j/docs/javadocs" />
+    </JAVADOC>
+    <SOURCES />
+    <jarDirectory url="file://$PROJECT_DIR$/image4j" recursive="false" />
+  </library>
+</component>

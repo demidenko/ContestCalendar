@@ -3,7 +3,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 
-public class ICLParser implements SiteParser{
+public class ICLParser extends SiteParser{
     static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z");
     
     public String contestsPage() {
@@ -11,7 +11,7 @@ public class ICLParser implements SiteParser{
     }
 
     public String mainPage() {
-        return "icl.ru/turnir";
+        return "http://icl.ru/turnir/";
     }
 
     public ArrayList<Contest> parse() {
@@ -25,6 +25,7 @@ public class ICLParser implements SiteParser{
                 k = s.indexOf("<tr", k+1);
                 if(k<0 || k>l) break;
                 Contest c = new Contest();
+                c.icon = getIcon();
                 c.mainPage = mainPage();
                 i = s.indexOf("<td",k+1);
                 i = s.indexOf("<td",i+1);

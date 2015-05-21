@@ -3,7 +3,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 
-public class UVaOJParser implements SiteParser {
+public class UVaOJParser extends SiteParser {
     static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z");
 
     @Override
@@ -13,7 +13,7 @@ public class UVaOJParser implements SiteParser {
 
     @Override
     public String mainPage() {
-        return "uva.onlinejudge.org";
+        return "http://uva.onlinejudge.org/";
     }
 
 
@@ -26,6 +26,7 @@ public class UVaOJParser implements SiteParser {
             i = 0;
             for(;;){
                 Contest c = new Contest();
+                c.icon = getIcon();
                 i = s.indexOf("sectiontableentry",i+1);
                 if(i<0 || i>l) break;
                 i = s.indexOf("<td", i+1);

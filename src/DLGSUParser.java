@@ -5,7 +5,7 @@ import java.util.ArrayList;
 /**
  * Created by demich on 8/1/14.
  */
-public class DLGSUParser implements SiteParser{
+public class DLGSUParser extends SiteParser{
     static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss Z");
 
     @Override
@@ -15,7 +15,7 @@ public class DLGSUParser implements SiteParser{
 
     @Override
     public String mainPage() {
-        return "dl.gsu.by";
+        return "http://dl.gsu.by";
     }
 
     @Override
@@ -28,6 +28,7 @@ public class DLGSUParser implements SiteParser{
             j = s.indexOf("</tr>", k);
             for(;;){
                 Contest c = new Contest();
+                c.icon = getIcon();
                 c.mainPage = mainPage();
                 c.contestPage = "http://dl.gsu.by/desk.asp";
                 i = s.indexOf("<tr>", j);

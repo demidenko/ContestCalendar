@@ -5,7 +5,7 @@ import java.util.ArrayList;
 /**
  * Created by demich on 8/14/14.
  */
-public class SnarkNewsSeriesParser implements SiteParser{
+public class SnarkNewsSeriesParser extends SiteParser{
     static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd MM yyyy, HH:mm z");
 
     @Override
@@ -15,10 +15,11 @@ public class SnarkNewsSeriesParser implements SiteParser{
 
     @Override
     public String mainPage() {
-        return "contest.yandex.ru/"+getActual();
+        return "https://contest.yandex.ru/";
     }
 
     public String getActual(){
+        //TODO
         return "snws2015";
     }
 
@@ -35,6 +36,7 @@ public class SnarkNewsSeriesParser implements SiteParser{
                 i = s.indexOf("<td>", i+1);
                 j = s.indexOf("</td>", i+1);
                 Contest c = new Contest();
+                c.icon = getIcon();
                 c.mainPage = mainPage();
                 if(s.indexOf("<a href", i)<j){
                     c.contestPage = "contest.yandex.ru" + s.substring(s.indexOf("\"",i)+1, s.indexOf("\">",i));

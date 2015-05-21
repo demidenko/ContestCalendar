@@ -5,7 +5,7 @@ import java.util.Calendar;
 import java.util.TimeZone;
 
 
-public class ACMPParser implements SiteParser {
+public class ACMPParser extends SiteParser {
     public SimpleDateFormat dateFormat = new SimpleDateFormat("ddMMyyyy HH:mm:ss");
 
     public String title;
@@ -19,7 +19,7 @@ public class ACMPParser implements SiteParser {
     }
 
     public String mainPage() {
-        return title+".ru";
+        return "http://"+title+".ru";
     }
     
 
@@ -33,6 +33,7 @@ public class ACMPParser implements SiteParser {
             i = s.indexOf("<h4>", k);
             for(;i>=0;){
                 Contest c = new Contest();
+                c.icon = getIcon();
                 c.mainPage = mainPage();
                 j = s.indexOf("</h4>",i);
                 str = Utils.trim(s.substring(i+4, j)).replace("&nbsp;", " ");

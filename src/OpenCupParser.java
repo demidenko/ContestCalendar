@@ -6,21 +6,21 @@ import java.util.Calendar;
 import java.util.List;
 
 
-public class OpenCupParser implements SiteParser{
+public class OpenCupParser extends SiteParser{
     static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm z");
     
     @Override
     public String contestsPage() {
-        String s = Utils.URLToString("http://"+mainPage(), "windows-1251");
+        String s = Utils.URLToString(mainPage(), "windows-1251");
         if(s==null) return null;
         int i = s.indexOf("schedule");
         if(i<0) return "";
-        return "http://"+mainPage()+"/"+s.substring(s.lastIndexOf("\"",i)+1, s.indexOf("\"",i));
+        return mainPage()+s.substring(s.lastIndexOf("\"",i)+1, s.indexOf("\"",i));
     }
 
     @Override
     public String mainPage() {
-        return "opencup.ru";
+        return "http://opencup.ru/";
     }
 
     @Override
@@ -34,6 +34,7 @@ public class OpenCupParser implements SiteParser{
             String str, ds;
             for(;k<l;){
                 Contest c = new Contest();
+                c.icon = getIcon();
                 i = s.indexOf("<td>", k);
                 j = s.indexOf("</td>", i);
                 str = Utils.trim(s.substring(i+4,j));
@@ -63,7 +64,7 @@ public class OpenCupParser implements SiteParser{
                 k = s.indexOf("<tr>", k+1);
             }
 
-            s = Utils.URLToString("http://"+mainPage(), "windows-1251"); if(s==null) return contests;
+            s = Utils.URLToString(mainPage(), "windows-1251"); if(s==null) return contests;
             k = 0;
             for(;;){
                 k = s.indexOf("Enter ejudge", k+1);

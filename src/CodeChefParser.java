@@ -3,7 +3,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 
-public class CodeChefParser implements SiteParser {
+public class CodeChefParser extends SiteParser {
     static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
     
     public String contestsPage() {
@@ -11,7 +11,7 @@ public class CodeChefParser implements SiteParser {
     }
 
     public String mainPage() {
-        return "codechef.com";
+        return "http://www.codechef.com";
     }
 
     public ArrayList<Contest> parse() {
@@ -27,6 +27,7 @@ public class CodeChefParser implements SiteParser {
                 j = s.indexOf("<tr", j+1);
                 if(j<0 || j>end) break;
                 Contest c = new Contest();
+                c.icon = getIcon();
                 c.mainPage = mainPage();
                 i = s.indexOf("<td", j+1);
                 i = s.indexOf("<td", i+1);

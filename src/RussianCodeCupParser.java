@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 
-public class RussianCodeCupParser implements SiteParser{
+public class RussianCodeCupParser extends SiteParser{
     static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd MM yyyy HH:mm Z");
     
     public String contestsPage() {
@@ -13,7 +13,7 @@ public class RussianCodeCupParser implements SiteParser{
 
     @Override
     public String mainPage() {
-        return "russiancodecup.ru";
+        return "http://russiancodecup.ru/";
     }
 
     public ArrayList<Contest> parse() {
@@ -27,6 +27,7 @@ public class RussianCodeCupParser implements SiteParser{
                 if(i<0 || i>=k) break;
                 i=s.indexOf("<td>", i+1);
                 Contest c = new Contest();
+                c.icon = getIcon();
                 c.title = "Russian Code Cup "+s.substring(i+4, s.indexOf("</td",i));
                 i=s.indexOf("<td>", i + 1);
                 i=s.indexOf("<td>", i+1);
