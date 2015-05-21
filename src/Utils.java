@@ -54,6 +54,8 @@ public class Utils {
         try {
             URL url = new URL(urlName);
             URLConnection con = url.openConnection();
+            con.addRequestProperty("User-Agent","ContestCalendar");
+            //con.connect();
             InputStream is = con.getInputStream();
             DataInputStream dis = new DataInputStream(is);
             byte bytes[] = new byte[1<<17];

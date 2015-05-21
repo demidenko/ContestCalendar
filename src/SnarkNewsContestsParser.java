@@ -1,6 +1,7 @@
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 
 public class SnarkNewsContestsParser extends SiteParser {
@@ -14,8 +15,13 @@ public class SnarkNewsContestsParser extends SiteParser {
         return "http://contests.snarknews.info/";
     }
 
+    static final String gs = "wwwwssssssww";
+    static final int gm[] = new int[]{0,0,0,0,0,0,0,0,0,0,1,1};
     public String getActual(){
-        return "snws15";
+        Calendar c = Calendar.getInstance();
+        int m = c.get(Calendar.MONTH);
+        int y = c.get(Calendar.YEAR);
+        return "sn"+gs.charAt(m)+"s"+((y+gm[m])%100);
     }
 
     public ArrayList<Contest> parse(){

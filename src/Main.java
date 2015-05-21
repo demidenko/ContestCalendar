@@ -42,7 +42,7 @@ public class Main {
             new GoogleCodeJamParser(),
             new ICLParser(),
             new IPSCParser(),
-            //new SIBSUIRegionalOlympiadParser(),
+            new SIBSUIRegionalOlympiadParser(),
             new ACMQFParser(),
             new ACMWFParser(),
             new VKOSHPParser(),
@@ -63,7 +63,6 @@ public class Main {
     
     public static void main(String[] args) {
         //System.exit(0);
-
 
         window = initWindow();
         window.setVisible(true);

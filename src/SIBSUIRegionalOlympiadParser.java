@@ -13,7 +13,7 @@ public class SIBSUIRegionalOlympiadParser extends SiteParser{
 
     @Override
     public String mainPage() {
-        return "www.sibsiu.ru/olymp/programming";
+        return "http://www.sibsiu.ru/olymp/programming";
     }
 
     @Override

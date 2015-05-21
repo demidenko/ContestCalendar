@@ -6,12 +6,12 @@ import java.util.Locale;
 
 
 public class TopCoderParser extends SiteParser {
-    static final SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd HH:mm Z", Locale.ENGLISH);
+    static final int timeOfSRM = 75 + 5 + 15;
+    static final SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd yyyy HH:mm z", Locale.ENGLISH);
     @Override
     public String contestsPage() {
-        return "http://tco15.topcoder.com";
-        /*Calendar c = Calendar.getInstance();
-        return "http://tco"+(c.get(Calendar.YEAR)%100)+".topcoder.com/algorithm/schedule";        */
+        Calendar c = Calendar.getInstance();
+        return "http://tco"+(c.get(Calendar.YEAR)%100)+".topcoder.com/algorithm/schedule";
     }
 
     @Override
@@ -27,14 +27,30 @@ public class TopCoderParser extends SiteParser {
         try{
             int i = s.indexOf("<main>"), j, k = s.lastIndexOf("<em>");
             for(;;){
+                i = s.indexOf("<tr", i+1);
                 i = s.indexOf("<td", i+1);
                 if(i==-1 || i>k) break;
                 Contest c = new Contest();
-                c.icon = getIcon();
                 c.title = Utils.trimTags(s.substring(s.indexOf(">",i)+1, s.indexOf("</td>",i)));
                 i = s.indexOf("<td", i+1);
                 String str = Utils.trimTags(s.substring(s.indexOf(">",i)+1, s.indexOf("</td>",i)));
+                str = str.substring(str.indexOf(',')+2);
+                str = str.replace(" at", "");
+                str = str.replace(",", "");
+                str+=" EDT";
                 Main.writeln(str);
+                try{
+                    c.startDate.setTime(dateFormat.parse(str));
+                }catch (ParseException e){
+                    //e.printStackTrace();
+                    continue;
+                }
+                c.endDate.setTime(c.startDate.getTime());
+                c.endDate.add(Calendar.MINUTE, timeOfSRM);
+                c.deadLine = c.title.contains("SRM") ? Utils.timeConsts.DAY*2 : Utils.timeConsts.YEAR;
+                c.icon = getIcon();
+                contests.add(c);
+                Main.writeln(c);
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -85,7 +101,7 @@ public class TopCoderParser extends SiteParser {
                             break;
                         }
                         c.endDate.setTime(c.startDate.getTime());
-                        c.endDate.add(Calendar.MINUTE, 75 + 5 + 15);
+                        c.endDate.add(Calendar.MINUTE, timeOfSRM);
                         c.deadLine = c.title.contains("SRM") ? Utils.timeConsts.DAY*2 : Utils.timeConsts.YEAR;
                         contests.add(c);
                     }
