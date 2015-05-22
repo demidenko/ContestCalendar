@@ -55,6 +55,7 @@ public class Main {
             new UserContestsParser(),
             new SnarkNewsContestsParser(),
             new RussianCodeCupParser(),
+            new ZaochParser(),
     };
 
     static SiteParser wishParsers[];

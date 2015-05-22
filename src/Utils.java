@@ -19,7 +19,6 @@ import java.util.List;
 public class Utils {
     static Calendar getNowDate(){
         Calendar c = Calendar.getInstance();
-        //c.add(Calendar.HOUR_OF_DAY, 1);
         return c;
     }
     
@@ -30,7 +29,10 @@ public class Utils {
         int i=0, j=c.length-1;
         while(i<=j && whitespace.indexOf(c[i])>=0) ++i;
         while(i<=j && whitespace.indexOf(c[j])>=0) --j;
-        return new String(c, i, j-i+1);
+        s = new String(c, i, j-i+1);
+        s = s.replace("\n","");
+        s = s.replace("\r","");
+        return s;
     }
     
     static String trimTags(String s){
