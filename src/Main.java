@@ -1,5 +1,7 @@
 import net.sf.image4j.codec.ico.ICODecoder;
 
+import javax.imageio.ImageIO;
+import javax.rmi.CORBA.Util;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -8,9 +10,9 @@ import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.*;
 import java.util.List;
 import java.util.Timer;
@@ -56,6 +58,7 @@ public class Main {
             new SnarkNewsContestsParser(),
             new RussianCodeCupParser(),
             new ZaochParser(),
+            new HackerEarthParser(),
     };
 
     static SiteParser wishParsers[];

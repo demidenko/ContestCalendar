@@ -7,10 +7,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.net.URLConnection;
+import java.net.*;
 import java.util.Calendar;
 import java.util.TreeMap;
 import java.util.List;
@@ -50,14 +47,23 @@ public class Utils {
         }
         return s;
     }
-    
-    static String URLToString(String urlName, String code){
-        if(urlName==null) return null;
+
+    static URLConnection getConnection(String urlName){
         try {
             URL url = new URL(urlName);
             URLConnection con = url.openConnection();
             con.addRequestProperty("User-Agent","ContestCalendar");
-            //con.connect();
+            return con;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    static String URLToString(String urlName, String code){
+        if(urlName==null) return null;
+        try {
+            URLConnection con = getConnection(urlName);
             InputStream is = con.getInputStream();
             DataInputStream dis = new DataInputStream(is);
             byte bytes[] = new byte[1<<17];
@@ -73,6 +79,8 @@ public class Utils {
         }
         return null;
     }
+
+
     
     static BufferedImage loadImage(String url){
         try {
@@ -178,7 +186,7 @@ public class Utils {
         }else
         if(type.equals("png") || type.equals("gif")){
             try {
-                res = ImageIO.read(new URL(iconURL).openStream());
+                res = ImageIO.read(getConnection(iconURL).getInputStream());
             } catch (IOException e) {
                 e.printStackTrace();
             }
