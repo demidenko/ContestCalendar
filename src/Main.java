@@ -61,7 +61,8 @@ public class Main {
             new ZaochParser(),
             new HackerEarthParser(),
             new IOIParser(),
-            new USACOParser()
+            new USACOParser(),
+            new FacebookHackerCupParser()
     };
 
     static SiteParser wishParsers[];

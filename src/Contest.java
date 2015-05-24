@@ -25,7 +25,7 @@ public class Contest implements Comparable<Contest> {
     }
 
     public String toString(){
-        return dateFormat.format(startDate.getTime())+" - "+ dateFormat.format(endDate.getTime())+" - "+ title;
+        return dateFormat.format(startDate.getTime())+" - "+ dateFormat.format(endDate.getTime())+" - " + title + "["+contestPage+"]";
     }
 
     public int compareTo(Contest o) {
