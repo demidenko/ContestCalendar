@@ -11,6 +11,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.*;
@@ -59,6 +60,7 @@ public class Main {
             new RussianCodeCupParser(),
             new ZaochParser(),
             new HackerEarthParser(),
+            new IOIParser(),
     };
 
     static SiteParser wishParsers[];
@@ -88,7 +90,8 @@ public class Main {
 
 
     static void icotest(){
-        SiteParser parsers[] = allParsers;//new SiteParser[] {new YandexAlgorithmParser(), new CodeChefParser()};
+        SiteParser parsers[] = allParsers;
+        //parsers = new SiteParser[] {new IOIParser()};
         JFrame window = new JFrame();
 
         for(SiteParser p : parsers){
@@ -98,6 +101,7 @@ public class Main {
             else write("null");
             writeln();
         }
+        //HackerEarth - bad file ??
         window.setVisible(true);
     }
 

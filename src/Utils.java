@@ -48,16 +48,11 @@ public class Utils {
         return s;
     }
 
-    static URLConnection getConnection(String urlName){
-        try {
-            URL url = new URL(urlName);
-            URLConnection con = url.openConnection();
-            con.addRequestProperty("User-Agent","ContestCalendar");
-            return con;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
+    static URLConnection getConnection(String urlName) throws Exception{
+        URL url = new URL(urlName);
+        URLConnection con = url.openConnection();
+        con.addRequestProperty("User-Agent","ContestCalendar");
+        return con;
     }
 
     static String URLToString(String urlName, String code){
@@ -121,40 +116,43 @@ public class Utils {
         }
     }
 
-    static BufferedImage getFavIcon(String URL){
-        String page = URLToString(URL, "UTF-8");
+    static BufferedImage getFavIcon(String url){
+        String page = URLToString(url, "UTF-8");
         if(page==null) return null;
-        int i = page!=null ? page.toLowerCase().indexOf("shortcut icon") : -1;
-        String iconURL;
+        int i = -1;
+        i = page.toLowerCase().indexOf("\"shortcut icon\"");
+        if(i==-1) i = page.toLowerCase().indexOf("\"icon\"");
+        String iconUrl;
         if(i!=-1){
             int l = page.lastIndexOf('<',i);
             int r = page.indexOf('>', i);
             String str = page.substring(l, r + 1);
             i = str.toLowerCase().indexOf("href=");
-            iconURL = str.substring(i+6,str.indexOf("\"",i+6));
-        }else iconURL = "favicon.ico";
+            iconUrl = str.substring(i+6,str.indexOf("\"",i+6));
+        }else iconUrl = "favicon.ico";
 
-        if(!iconURL.startsWith("http")){
-            if(URL.endsWith("/")) URL = URL.substring(0,URL.length()-1);
-            if(!iconURL.startsWith("/")) iconURL = "/" + iconURL;
+        if(!iconUrl.startsWith("http")){
+            if(url.endsWith("/")) url = url.substring(0,url.length()-1);
+            if(!iconUrl.startsWith("/")) iconUrl = "/" + iconUrl;
             String picURL = null;
             for(;;){
-                String link = URL + iconURL;
+                String link = url + iconUrl;
                 if(link.indexOf("//")==-1) break;
                 try {
-                    new URL(link).openStream();
+                    getConnection(link).getInputStream();
                     picURL = link;
                     break;
-                } catch (Exception e){}
-                i = URL.lastIndexOf("/");
+                } catch (Exception e){
+                }
+                i = url.lastIndexOf("/");
                 if(i==-1) break;
-                URL = URL.substring(0, i);
+                url = url.substring(0, i);
             }
-            iconURL = picURL;
+            iconUrl = picURL;
         }
 
         try {
-            new URL(iconURL).openStream();
+            getConnection(iconUrl).getInputStream();
         } catch (Exception e){
             return null;
         }
@@ -162,32 +160,32 @@ public class Utils {
         for(;;){
             String str = null;
             try {
-                str = new URL(iconURL).openConnection().getHeaderField("Location");
-            } catch (IOException e) {
+                str = getConnection(iconUrl).getHeaderField("Location");
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             if(str==null) break;
-            iconURL = str;
+            iconUrl = str;
         }
 
-        int dot = iconURL.lastIndexOf('.');
-        for(i=dot+1;i<iconURL.length() && Character.isAlphabetic(iconURL.codePointAt(i));++i);
-        String type = iconURL.substring(dot+1,i).toLowerCase();
+        int dot = iconUrl.lastIndexOf('.');
+        for(i=dot+1;i<iconUrl.length() && Character.isAlphabetic(iconUrl.codePointAt(i));++i);
+        String type = iconUrl.substring(dot+1,i).toLowerCase();
         BufferedImage res = null;
         if(type.equals("ico")){
             try {
-                List<BufferedImage> imgs = ICODecoder.read(new URL(iconURL).openStream());
+                List<BufferedImage> imgs = ICODecoder.read(getConnection(iconUrl).getInputStream());
                 for(BufferedImage img : imgs) if(res==null || res.getWidth()*res.getHeight()<img.getWidth()*img.getHeight()){
                     res = img;
                 }
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }else
         if(type.equals("png") || type.equals("gif")){
             try {
-                res = ImageIO.read(getConnection(iconURL).getInputStream());
-            } catch (IOException e) {
+                res = ImageIO.read(getConnection(iconUrl).getInputStream());
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }else{
