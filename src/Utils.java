@@ -38,6 +38,7 @@ public class Utils {
     }
     
     static String replaceHTMLSymbols(String s){
+        s = s.replace("&amp;", "&");
         for(;;){
             int i = s.indexOf("&#");
             if(i<0) break;
@@ -120,8 +121,8 @@ public class Utils {
         String page = URLToString(url, "UTF-8");
         if(page==null) return null;
         int i = -1;
-        i = page.toLowerCase().indexOf("\"shortcut icon\"");
-        if(i==-1) i = page.toLowerCase().indexOf("\"icon\"");
+        i = page.toLowerCase().indexOf("rel=\"shortcut icon\"");
+        if(i==-1) i = page.toLowerCase().indexOf("rel=\"icon\"");
         String iconUrl;
         if(i!=-1){
             int l = page.lastIndexOf('<',i);
@@ -129,7 +130,15 @@ public class Utils {
             String str = page.substring(l, r + 1);
             i = str.toLowerCase().indexOf("href=");
             iconUrl = str.substring(i+6,str.indexOf("\"",i+6));
-        }else iconUrl = "favicon.ico";
+        }else{
+            iconUrl = "favicon.ico";
+            try {
+                URL address = new URL(url);
+                iconUrl = address.getProtocol() + "://" + address.getHost() + "/favicon.ico";
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+        }
 
         if(!iconUrl.startsWith("http")){
             if(url.endsWith("/")) url = url.substring(0,url.length()-1);

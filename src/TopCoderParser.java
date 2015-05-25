@@ -3,20 +3,21 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
+import java.util.TimeZone;
 
 
 public class TopCoderParser extends SiteParser {
     static final int timeOfSRM = 75 + 5 + 15;
-    static final SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd yyyy HH:mm z", Locale.ENGLISH);
+    static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss Z", Locale.ENGLISH);
+
     @Override
     public String contestsPage() {
-        Calendar c = Calendar.getInstance();
-        return "http://tco"+(c.get(Calendar.YEAR)%100)+".topcoder.com/algorithm/schedule";
+        return "https://www.google.com/calendar/htmlembed?src=appirio.com_bhga3musitat85mhdrng9035jg@group.calendar.google.com";// + "&ctz=" + TimeZone.getDefault().getID();
     }
 
     @Override
     public String mainPage() {
-        return contestsPage();
+        return "http://community.topcoder.com/tc";
     }
 
     @Override
@@ -25,32 +26,43 @@ public class TopCoderParser extends SiteParser {
         String s = Utils.URLToString(contestsPage(), "UTF-8"); if(s==null) return contests;
 
         try{
-            int i = s.indexOf("<main>"), j, k = s.lastIndexOf("<em>");
-            for(;;){
-                i = s.indexOf("<tr", i+1);
-                i = s.indexOf("<td", i+1);
-                if(i==-1 || i>k) break;
-                Contest c = new Contest();
-                c.title = Utils.trimTags(s.substring(s.indexOf(">",i)+1, s.indexOf("</td>",i)));
-                i = s.indexOf("<td", i+1);
-                String str = Utils.trimTags(s.substring(s.indexOf(">",i)+1, s.indexOf("</td>",i)));
-                str = str.substring(str.indexOf(',')+2);
-                str = str.replace(" at", "");
-                str = str.replace(",", "");
-                str+=" EDT";
-                Main.writeln(str);
-                try{
-                    c.startDate.setTime(dateFormat.parse(str));
-                }catch (ParseException e){
-                    //e.printStackTrace();
-                    continue;
+            for(int cnt=0;s!=null && cnt<5;++cnt){
+                int i = 0;
+                for(;;){
+                    i = s.indexOf("event-link",i+1);
+                    if(i==-1) break;
+                    int k = s.indexOf("event-summary",i);
+                    Contest c = new Contest();
+                    c.title = Utils.trimTags(s.substring(s.lastIndexOf("<",k), s.indexOf("</",k)));
+                    if(c.title.contains("SRM")) c.deadLine = Utils.timeConsts.DAY*2;
+                    else if(c.title.contains("TCO")) c.deadLine = Utils.timeConsts.YEAR;
+                    else continue;
+                    k = s.indexOf("href=",i);
+                    String link = "https://www.google.com/calendar/" + s.substring(k+6, s.indexOf("\"",k+6));
+                    String t = Utils.URLToString(link, "UTF-8"), str;
+                    try{
+                        k = t.indexOf("\"startDate\"");
+                        k = t.indexOf("datetime", k);
+                        k = t.indexOf("\"", k);
+                        str = t.substring(k+1, t.indexOf("\"",k+1)).replaceAll("[TZ]","") + " GMT";
+                        c.startDate.setTime(dateFormat.parse(str));
+                        k = t.indexOf("\"endDate\"");
+                        k = t.indexOf("datetime", k);
+                        k = t.indexOf("\"", k);
+                        str = t.substring(k+1, t.indexOf("\"",k+1)).replaceAll("[TZ]","") + " GMT";
+                        c.endDate.setTime(dateFormat.parse(str));
+                        c.mainPage = mainPage();
+                        c.icon = getIcon();
+                        contests.add(c);
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
                 }
-                c.endDate.setTime(c.startDate.getTime());
-                c.endDate.add(Calendar.MINUTE, timeOfSRM);
-                c.deadLine = c.title.contains("SRM") ? Utils.timeConsts.DAY*2 : Utils.timeConsts.YEAR;
-                c.icon = getIcon();
-                contests.add(c);
-                Main.writeln(c);
+                i = s.indexOf("btn_next");
+                i = s.lastIndexOf("href=",i);
+                i = s.indexOf("\"",i);
+                s = Utils.replaceHTMLSymbols(s.substring(i+1,s.indexOf("\"",i+1)));
+                s = Utils.URLToString(s, "UTF-8");
             }
         }catch (Exception e){
             e.printStackTrace();

@@ -7,6 +7,8 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.net.URL;
 import java.util.*;
 import java.util.List;
 import java.util.Timer;
@@ -30,7 +32,7 @@ public class Main {
     
     static SiteParser allParsers[] = {
             new CodeForcesParser(),
-            //new TopCoderParser(),
+            new TopCoderParser(),
             new SnarkNewsSeriesParser(),
             new OpenCupParser(),
             new ACMPParser("acmp"),
@@ -88,7 +90,7 @@ public class Main {
 
     static void icotest(){
         SiteParser parsers[] = allParsers;
-        //parsers = new SiteParser[] {new IOIParser()};
+        //parsers = new SiteParser[] {new TopCoderParser()};
         JFrame window = new JFrame();
 
         for(SiteParser p : parsers){
@@ -149,7 +151,7 @@ public class Main {
                 tableModel.addRows(c);
                 counter.done(parser);
             }
-            writeln(parser.getClass().getName() + " updated");
+            //writeln(parser.getClass().getName() + " updated");
         }
     }
     
@@ -157,17 +159,24 @@ public class Main {
         int count, current;
         SiteParser parsers[];
         int status[];
+        long time[];
 
-        public void init(SiteParser parsers[]){
-            count = parsers.length;
-            this.parsers = parsers.clone();
+        public void init(SiteParser newparsers[]){
+            count = newparsers.length;
+            parsers = newparsers.clone();
+            Arrays.sort(parsers, new Comparator<SiteParser>() {
+                @Override
+                public int compare(SiteParser o1, SiteParser o2) {
+                    return o1.getClass().getName().compareTo(o2.getClass().getName());
+                }
+            });
             status = new int[count];
+            time = new long[count];
             DefaultTableModel tm = ((DefaultTableModel)monitorTable.getModel());
             tm.setRowCount(count);
             tm.setColumnCount(2);
-            monitorTable.setModel(tm);
             for(int i=0;i<count;++i){
-                monitorTable.setValueAt(parsers[i].getClass().toString(),i,0);
+                monitorTable.setValueAt(parsers[i].getClass().getName(),i,0);
                 monitorTable.setValueAt("none",i,1);
             }
             current = 0;
@@ -178,6 +187,7 @@ public class Main {
             int i = -1;
             for(int k=0;k<parsers.length;++k) if(parser==parsers[k]) i=k;
             status[i] = 2;
+            time[i] = System.currentTimeMillis();
             monitorTable.setValueAt("running",i,1);
         }
 
@@ -185,7 +195,7 @@ public class Main {
             int i = -1;
             for(int k=0;k<parsers.length;++k) if(parser==parsers[k]) i=k;
             status[i] = 1;
-            monitorTable.setValueAt("done",i,1);
+            monitorTable.setValueAt("done " + (System.currentTimeMillis()-time[i])+" ms",i,1);
             ++current;
             buttonUpdate.setText(current+"/"+count);
             if(current==count) notifyAll();
@@ -402,6 +412,12 @@ public class Main {
             }
         });
         monitorTable = new JTable();
+        monitorTable.setModel(new DefaultTableModel(){
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        });
+
         monitor.add(monitorTable);
 
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new MyKeyEventDispatcher(logTextScroll, KeyEvent.VK_L, KeyEvent.CTRL_MASK, KeyEvent.VK_L, KeyEvent.CTRL_MASK));

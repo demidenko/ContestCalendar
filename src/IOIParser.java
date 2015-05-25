@@ -33,7 +33,6 @@ public class IOIParser extends SiteParser {
             c.title = "IOI" + t.substring(0,i);
             c.mainPage = mainPage();
             c.deadLine = Utils.timeConsts.YEAR;
-            Main.writeln(c.title);
             t = t.substring(i+3);
             String sp[] = t.split(" ");
             if(sp[0].indexOf("/")==-1) sp[0]+="/"+sp[0];
