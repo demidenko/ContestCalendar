@@ -1,19 +1,12 @@
-import net.sf.image4j.codec.ico.ICODecoder;
-
-import javax.imageio.ImageIO;
-import javax.rmi.CORBA.Util;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
-import java.io.*;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.*;
 import java.util.List;
 import java.util.Timer;
@@ -23,6 +16,8 @@ import java.util.Timer;
  */
 public class Main {
     static JFrame window;
+    static JFrame monitor;
+    static JTable monitorTable;
     static MyTableModel tableModel;
 //    static SystemTray systemTray = SystemTray.getSystemTray();
 //    static TrayIcon trayIcon;
@@ -43,6 +38,7 @@ public class Main {
             new NEERCIFMOSchoolParser(),
             new CodeChefParser(),
             new GoogleCodeJamParser(),
+            new FacebookHackerCupParser(),
             new ICLParser(),
             new IPSCParser(),
             new SIBSUIRegionalOlympiadParser(),
@@ -62,7 +58,6 @@ public class Main {
             new HackerEarthParser(),
             new IOIParser(),
             new USACOParser(),
-            new FacebookHackerCupParser()
     };
 
     static SiteParser wishParsers[];
@@ -115,7 +110,7 @@ public class Main {
                 System.out.print("parse... ");
                 if(timerUpdateData!=null) timerUpdateData.cancel();
                 buttonUpdate.setEnabled(false);
-                counter.init(parsers.length);
+                counter.init(parsers);
                 for(SiteParser parser : parsers){
                     Thread t = new ParserThread(parser);
                     t.start();
@@ -146,25 +141,51 @@ public class Main {
             parser = p;
         }
         public void run() {
+            synchronized (counter){
+                counter.started(parser);
+            }
             List<Contest> c = parser.parse();
             synchronized (counter){
                 tableModel.addRows(c);
-                counter.increase();
+                counter.done(parser);
             }
-            System.out.println(parser.getClass().getName()+" updated"); System.out.flush();
+            writeln(parser.getClass().getName() + " updated");
         }
     }
     
     public static class threadCounter{
         int count, current;
-        
-        public void init(int count){
-            this.count = count;
+        SiteParser parsers[];
+        int status[];
+
+        public void init(SiteParser parsers[]){
+            count = parsers.length;
+            this.parsers = parsers.clone();
+            status = new int[count];
+            DefaultTableModel tm = ((DefaultTableModel)monitorTable.getModel());
+            tm.setRowCount(count);
+            tm.setColumnCount(2);
+            monitorTable.setModel(tm);
+            for(int i=0;i<count;++i){
+                monitorTable.setValueAt(parsers[i].getClass().toString(),i,0);
+                monitorTable.setValueAt("none",i,1);
+            }
             current = 0;
             buttonUpdate.setText(0+"/"+count);
         }
-        
-        public void increase(){
+
+        public void started(SiteParser parser){
+            int i = -1;
+            for(int k=0;k<parsers.length;++k) if(parser==parsers[k]) i=k;
+            status[i] = 2;
+            monitorTable.setValueAt("running",i,1);
+        }
+
+        public void done(SiteParser parser){
+            int i = -1;
+            for(int k=0;k<parsers.length;++k) if(parser==parsers[k]) i=k;
+            status[i] = 1;
+            monitorTable.setValueAt("done",i,1);
             ++current;
             buttonUpdate.setText(current+"/"+count);
             if(current==count) notifyAll();
@@ -355,7 +376,6 @@ public class Main {
         logText = new JTextArea();
         logText.setEditable(false);
         System.setErr(new MyPrintStream(System.err, logText));
-        logText.setVisible(false);
         JButton logClear = new JButton("clear");
         logClear.setVisible(false);
         logClear.addActionListener(new ActionListener() {
@@ -364,21 +384,38 @@ public class Main {
                 logText.setText("");
             }
         });
-        JButton logStats = new JButton("stats");
-        logStats.setVisible(false);
-        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new MyKeyEventDispatcher(logText, KeyEvent.VK_L, KeyEvent.CTRL_MASK, KeyEvent.VK_L, KeyEvent.CTRL_MASK));
-        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new MyKeyEventDispatcher(logClear, KeyEvent.VK_L, KeyEvent.CTRL_MASK, KeyEvent.VK_L, KeyEvent.CTRL_MASK));
-        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new MyKeyEventDispatcher(logStats, KeyEvent.VK_L, KeyEvent.CTRL_MASK, KeyEvent.VK_L, KeyEvent.CTRL_MASK));
+        JScrollPane logTextScroll = new JScrollPane(logText);
+        logTextScroll.setPreferredSize(new Dimension(100, 100));
+        logTextScroll.getHorizontalScrollBar().setPreferredSize(new Dimension(Integer.MAX_VALUE, 10));
+        logTextScroll.getVerticalScrollBar().setPreferredSize(new Dimension(10, Integer.MAX_VALUE));
+        logTextScroll.setVisible(false);
 
+        monitor = new JFrame("::Monitor::");
+        monitor.setSize(300, 500);
+        monitor.setLocationRelativeTo(null);
+        JButton logMonitor = new JButton("monitor");
+        logMonitor.setVisible(false);
+        logMonitor.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                monitor.setVisible(true);
+            }
+        });
+        monitorTable = new JTable();
+        monitor.add(monitorTable);
+
+        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new MyKeyEventDispatcher(logTextScroll, KeyEvent.VK_L, KeyEvent.CTRL_MASK, KeyEvent.VK_L, KeyEvent.CTRL_MASK));
+        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new MyKeyEventDispatcher(logClear, KeyEvent.VK_L, KeyEvent.CTRL_MASK, KeyEvent.VK_L, KeyEvent.CTRL_MASK));
+        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new MyKeyEventDispatcher(logMonitor, KeyEvent.VK_L, KeyEvent.CTRL_MASK, KeyEvent.VK_L, KeyEvent.CTRL_MASK));
 
         infoPanel.add(findText, new GridBagConstraints(0,0,4,1,1,0,GridBagConstraints.CENTER,GridBagConstraints.HORIZONTAL,none,0,0));
         infoPanel.add(buttonUpdate, new GridBagConstraints(0,1,1,2,0,1, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(5,5,5,5), 0,0));
         infoPanel.add(infoBigString, new GridBagConstraints(2,1,2,1,1,1,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0,5,0,0), 0,0));
         infoPanel.add(infoSmallString, new GridBagConstraints(2,2,1,1,1,1, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0,5,1,0), 0,0));
         infoPanel.add(infoTimer, new GridBagConstraints(3,2,1,1,0,1, GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(0,5,1,5), 0,0));
-        infoPanel.add(logText, new GridBagConstraints(1,3,3,2,1,1, GridBagConstraints.NORTHWEST, GridBagConstraints.NONE, new Insets(0,5,1,5), 0,0));
-        infoPanel.add(logClear, new GridBagConstraints(0,3,1,1,0,0, GridBagConstraints.NORTH, GridBagConstraints.NONE, new Insets(0,5,5,5), 0,0));
-        infoPanel.add(logStats, new GridBagConstraints(0,4,1,1,0,1, GridBagConstraints.NORTH, GridBagConstraints.NONE, new Insets(0,5,5,5), 0,0));
+        infoPanel.add(logTextScroll, new GridBagConstraints(1,3,3,2,1,1, GridBagConstraints.NORTHWEST, GridBagConstraints.BOTH, new Insets(0,5,1,5), 0,0));
+        infoPanel.add(logMonitor, new GridBagConstraints(0,3,1,1,0,1, GridBagConstraints.SOUTH, GridBagConstraints.NONE, new Insets(0,5,5,5), 0,0));
+        infoPanel.add(logClear, new GridBagConstraints(0,4,1,1,0,0, GridBagConstraints.SOUTH, GridBagConstraints.NONE, new Insets(0,5,5,5), 0,0));
         infoPanel.add(infoIcon, new GridBagConstraints(1,1,1,2,0,1, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0,5,5,5), 0,0));
 
         window.add(new JScrollPane(table), BorderLayout.CENTER);
