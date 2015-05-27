@@ -12,7 +12,15 @@ public class TopCoderParser extends SiteParser {
 
     @Override
     public String contestsPage() {
-        return "https://www.google.com/calendar/htmlembed?src=appirio.com_bhga3musitat85mhdrng9035jg@group.calendar.google.com";// + "&ctz=" + TimeZone.getDefault().getID();
+        Calendar c = Calendar.getInstance();
+        int m = c.get(Calendar.MONTH);
+        int y = c.get(Calendar.YEAR);
+        int mBefore = m, yBefore = y;
+        if(m==1){
+            mBefore = 12;
+            yBefore--;
+        }else mBefore--;
+        return "https://www.google.com/calendar/htmlembed?src=appirio.com_bhga3musitat85mhdrng9035jg@group.calendar.google.com" + "&dates="+String.format("%04d%02d%02d/%04d%02d%02d",yBefore,mBefore,1,y,m,1);
     }
 
     @Override
@@ -51,6 +59,11 @@ public class TopCoderParser extends SiteParser {
                         k = t.indexOf("\"", k);
                         str = t.substring(k+1, t.indexOf("\"",k+1)).replaceAll("[TZ]","") + " GMT";
                         c.endDate.setTime(dateFormat.parse(str));
+                        k = t.indexOf("\"_blank\"");
+                        k = t.lastIndexOf("\"",k-1);
+                        str = t.substring(t.lastIndexOf("\"",k-1)+1,k);
+                        str = str.substring(str.indexOf("q=")+2);
+                        c.contestPage = Utils.replaceHTMLSymbols(str);
                         c.mainPage = mainPage();
                         c.icon = getIcon();
                         contests.add(c);

@@ -46,6 +46,13 @@ public class Utils {
             int code = Integer.parseInt(s.substring(i+2, j));
             s = s.replace(s.substring(i, j+1), ((char)code)+"");
         }
+        for(;;){
+            int i = s.indexOf("%");
+            if(i<0) break;
+            int j = i+3;
+            int code = Integer.parseInt(s.substring(i+1, j), 16);
+            s = s.replace(s.substring(i, j), ((char)code)+"");
+        }
         return s;
     }
 
