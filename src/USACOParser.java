@@ -1,3 +1,4 @@
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -31,29 +32,35 @@ public class USACOParser extends SiteParser{
             String sp[] = str.split("<br>");
             for(String z : sp){
                 str = Utils.trim(z);
+                i = str.indexOf(":");
+                Contest c = new Contest();
+                c.title = str.substring(i+2);
+                c.contestPage = c.mainPage = mainPage();
+                c.deadLine = Utils.timeConsts.WEEK;
+                String t = str.substring(0,i);
+                String tp[] = t.split("[ -]");
+                t = tp[1] + " " + tp[0] + " 00:00";
                 try{
-                    i = str.indexOf(":");
-                    Contest c = new Contest();
-                    c.title = str.substring(i+2);
-                    c.contestPage = c.mainPage = mainPage();
-                    c.deadLine = Utils.timeConsts.WEEK;
-                    String t = str.substring(0,i);
-                    String tp[] = t.split("[ -]");
-                    t = tp[1] + " " + tp[0] + " 00:00";
                     c.startDate.setTime(dateFormat.parse(t));
-                    m2 = c.startDate.get(Calendar.MONTH);
-                    if(m2<m) ++y; m = m2;
-                    c.startDate.set(Calendar.YEAR, y);
-                    t = (tp.length==3 ? tp[2] + " " + tp[0] : tp[3] + " " + tp[2]) + " 23:59";
-                    c.endDate.setTime(dateFormat.parse(t));
-                    m2 = c.endDate.get(Calendar.MONTH);
-                    if(m2<m) ++y; m = m2;
-                    c.endDate.set(Calendar.YEAR, y);
-                    c.icon = getIcon();
-                    contests.add(c);
-                }catch (Exception e){
+                }catch (ParseException e){
                     e.printStackTrace();
+                    continue;
                 }
+                m2 = c.startDate.get(Calendar.MONTH);
+                if(m2<m) ++y; m = m2;
+                c.startDate.set(Calendar.YEAR, y);
+                t = (tp.length==3 ? tp[2] + " " + tp[0] : tp[3] + " " + tp[2]) + " 23:59";
+                try{
+                    c.endDate.setTime(dateFormat.parse(t));
+                }catch (ParseException e){
+                    e.printStackTrace();
+                    continue;
+                }
+                m2 = c.endDate.get(Calendar.MONTH);
+                if(m2<m) ++y; m = m2;
+                c.endDate.set(Calendar.YEAR, y);
+                c.icon = getIcon();
+                contests.add(c);
             }
         }catch (Exception e){
             e.printStackTrace();

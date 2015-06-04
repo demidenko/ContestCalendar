@@ -7,7 +7,7 @@ import java.util.Calendar;
  * Created by demich on 12/12/14.
  */
 public class COCIParser extends SiteParser {
-    static SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy.HH:mm z");
+    static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy.HH:mm z");
 
     @Override
     public String contestsPage() {
@@ -30,18 +30,23 @@ public class COCIParser extends SiteParser {
                 k = s.indexOf("timeanddate", k+1);
                 if(k<0) break;
                 Contest c = new Contest();
-                c.icon = getIcon();
                 i = s.lastIndexOf("naslov", k);
                 c.title = s.substring(i + 8, s.indexOf("</", i));
                 c.contestPage = mainPage();
                 c.mainPage = mainPage();
-                c.startDate.setTime(dateFormat.parse(s.substring(s.indexOf("\">",k)+2,s.indexOf("</a>",k)).replace("<br />", "")));
+                try{
+                    c.startDate.setTime(dateFormat.parse(s.substring(s.indexOf("\">",k)+2,s.indexOf("</a>",k)).replace("<br />", "")));
+                }catch (ParseException e){
+                    e.printStackTrace();
+                    continue;
+                }
                 c.endDate.setTime(c.startDate.getTime());
                 c.endDate.set(Calendar.HOUR, c.startDate.get(Calendar.HOUR) + 3);
                 c.deadLine = Utils.timeConsts.DAY;
+                c.icon = getIcon();
                 contests.add(c);
             }
-        }catch (ParseException e){
+        }catch (Exception e){
             e.printStackTrace();
         }
 

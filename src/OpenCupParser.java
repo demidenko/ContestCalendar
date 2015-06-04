@@ -28,13 +28,14 @@ public class OpenCupParser extends SiteParser{
         ArrayList<Contest> contests = new ArrayList<Contest>();
         String s = Utils.URLToString(contestsPage(), "windows-1251"); if(s==null) return contests;
 
+        try{
             int i, j, k = s.indexOf("<td class=\"maintext\">"), l = s.indexOf("</table>", k);
             String number = s.substring(s.indexOf("<h3>")+4, s.indexOf("</h3>")).split(" ")[2];
-            k = s.indexOf("<tr>",k);
             String str, ds;
-            for(;k<l;){
+            for(;;){
+                k = s.indexOf("<tr>",k+1);
+                if(k==-1 || k>l) break;
                 Contest c = new Contest();
-                c.icon = getIcon();
                 i = s.indexOf("<td>", k);
                 j = s.indexOf("</td>", i);
                 str = Utils.trim(s.substring(i+4,j));
@@ -44,24 +45,21 @@ public class OpenCupParser extends SiteParser{
                 i = s.indexOf("<td>", j);
                 j = s.indexOf("</td>", i);
                 ds = ds + " " + Utils.trim(s.substring(i + 4, j)).replace("<b>","").replace("</b>","")+" MSK";
-                boolean valid = true;
                 try {
                     c.startDate.setTime(dateFormat.parse(ds));
                 } catch (ParseException e) {
                     e.printStackTrace(); 
-                    valid = false;
+                    continue;
                 }
-                if(valid){
-                    c.endDate.setTime(c.startDate.getTime());
-                    c.endDate.add(Calendar.HOUR_OF_DAY, 5);
-                    i = s.indexOf("<td>", j);
-                    j = s.indexOf("</td>", i);
-                    c.title = "Open Cup " +number + " " + Utils.trim(s.substring(i+4,j));
-                    c.mainPage = mainPage();
-                    c.deadLine = Utils.timeConsts.WEEK;
-                    if(!str.equals("-")) contests.add(c);
-                }
-                k = s.indexOf("<tr>", k+1);
+                c.endDate.setTime(c.startDate.getTime());
+                c.endDate.add(Calendar.HOUR_OF_DAY, 5);
+                i = s.indexOf("<td>", j);
+                j = s.indexOf("</td>", i);
+                c.title = "Open Cup " +number + " " + Utils.trim(s.substring(i+4,j));
+                c.mainPage = mainPage();
+                c.deadLine = Utils.timeConsts.WEEK;
+                c.icon = getIcon();
+                if(!str.equals("-")) contests.add(c);
             }
 
             s = Utils.URLToString(mainPage(), "windows-1251"); if(s==null) return contests;
@@ -86,7 +84,10 @@ public class OpenCupParser extends SiteParser{
                 }
                 if(best!=null && cbest>1) best.contestPage = str;
             }
-        
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
         return contests;
     }
 }

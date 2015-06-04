@@ -45,7 +45,12 @@ public class ACMPParser extends SiteParser {
                 j = s.indexOf("</li>",i);
                 str = s.substring(i+4,j).split(" ")[1];
                 t += " "+str;
-                c.startDate.setTime(dateFormat.parse(t));
+                try{
+                    c.startDate.setTime(dateFormat.parse(t));
+                }catch (ParseException e){
+                    e.printStackTrace();
+                    continue;
+                }
                 i = s.indexOf("<li>",j);
                 j = s.indexOf("</li>",i);
                 str = s.substring(i+4,j).split(" ")[1];
@@ -64,8 +69,7 @@ public class ACMPParser extends SiteParser {
                 contests.add(c);
                 i = s.indexOf("<h4>", k);
             }
-        } catch (ParseException e) {
-
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

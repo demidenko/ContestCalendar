@@ -32,21 +32,26 @@ public class YandexAlgorithmParser extends SiteParser {
                 i=s.indexOf("<tr>",i+1);
                 if(i==-1 || i>l) break;
                 Contest c = new Contest();
-                c.icon = getIcon();
                 i=s.indexOf("<td>",i+1);
                 c.title = Utils.trimTags(s.substring(i+4, s.indexOf("</td",i+1)));
                 i = s.indexOf("<td>", i+1);
-                str = Utils.trimTags(s.substring(i+4, s.indexOf("</td",i+1))).replace("&nbsp;"," ")+" MSK";
-                c.startDate.setTime(dateFormat.parse(str));
+                try{
+                    str = Utils.trimTags(s.substring(i+4, s.indexOf("</td",i+1))).replace("&nbsp;"," ")+" MSK";
+                    c.startDate.setTime(dateFormat.parse(str));
+                    i = s.indexOf("<td>", i+1);
+                    str = Utils.trimTags(s.substring(i+4, s.indexOf("</td",i+1))).replace("&nbsp;"," ")+" MSK";
+                    c.endDate.setTime(dateFormat.parse(str));
+                }catch (ParseException e){
+                    e.printStackTrace();
+                    continue;
+                }
                 i = s.indexOf("<td>", i+1);
-                str = Utils.trimTags(s.substring(i+4, s.indexOf("</td",i+1))).replace("&nbsp;"," ")+" MSK";
-                c.endDate.setTime(dateFormat.parse(str));
-                i = s.indexOf("<td>", i+1);
-                contests.add(c);
                 c.mainPage = mainPage();
                 c.deadLine = Utils.timeConsts.YEAR;
+                c.icon = getIcon();
+                contests.add(c);
             }
-        } catch (ParseException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

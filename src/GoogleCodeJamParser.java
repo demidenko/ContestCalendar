@@ -28,7 +28,6 @@ public class GoogleCodeJamParser extends SiteParser{
                 k = s.indexOf("<tr>", k+1);
                 if(k>end || k<0) break;
                 Contest c = new Contest();
-                c.icon = getIcon();
                 c.mainPage = mainPage();
                 i = s.indexOf("<td class=\"date\">",k); j = s.indexOf("</td>",i);
                 str = s.substring(i,j);
@@ -38,9 +37,15 @@ public class GoogleCodeJamParser extends SiteParser{
                 i = s.indexOf("<td class=\"time\">",k); j = s.indexOf("</td>",i);
                 str = s.substring(i,j);
                 while(str.contains("<")) str = str.substring(0,str.indexOf("<"))+str.substring(str.indexOf(">")+1);
+                str = Utils.trim(str);
                 if(str.equals("TBD")) str = "00:00 UTC";
-                t += " "+Utils.trim(str);
-                c.startDate.setTime(dateFormat.parse(t));
+                t += " "+str;
+                try{
+                    c.startDate.setTime(dateFormat.parse(t));
+                }catch (ParseException e){
+                    e.printStackTrace();
+                    continue;
+                }
                 i = s.indexOf("<td class=\"duration\">",k); j = s.indexOf("</td>",i);
                 str = s.substring(i,j);
                 while(str.contains("<")) str = str.substring(0,str.indexOf("<"))+str.substring(str.indexOf(">")+1);
@@ -57,9 +62,10 @@ public class GoogleCodeJamParser extends SiteParser{
                 while(str.indexOf("<")>=0) str = str.substring(0,str.indexOf("<"))+str.substring(str.indexOf(">")+1);
                 c.title = Utils.trim(str);
                 c.deadLine = Utils.timeConsts.YEAR;
+                c.icon = getIcon();
                 contests.add(c);
             }
-        }catch (ParseException e){
+        }catch (Exception e){
             e.printStackTrace();
         }
         return contests;

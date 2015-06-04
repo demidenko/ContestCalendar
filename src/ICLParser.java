@@ -25,7 +25,6 @@ public class ICLParser extends SiteParser{
                 k = s.indexOf("<tr", k+1);
                 if(k<0 || k>l) break;
                 Contest c = new Contest();
-                c.icon = getIcon();
                 c.mainPage = mainPage();
                 i = s.indexOf("<td",k+1);
                 i = s.indexOf("<td",i+1);
@@ -33,14 +32,20 @@ public class ICLParser extends SiteParser{
                 str = Utils.trimTags(s.substring(s.indexOf(">",i)+1,j));
                 c.title = Utils.trim(str);
                 i = s.indexOf("<td",i+1);
-                c.startDate.setTime(dateFormat.parse(s.substring(i + 4, s.indexOf("</td>", i)) + " MSK"));
-                i = s.indexOf("<td",i+1);
-                c.endDate.setTime(dateFormat.parse(s.substring(i + 4, s.indexOf("</td>", i)) + " MSK"));
+                try{
+                    c.startDate.setTime(dateFormat.parse(s.substring(i + 4, s.indexOf("</td>", i)) + " MSK"));
+                    i = s.indexOf("<td",i+1);
+                    c.endDate.setTime(dateFormat.parse(s.substring(i + 4, s.indexOf("</td>", i)) + " MSK"));
+                }catch (ParseException e){
+                    e.printStackTrace();
+                    continue;
+                }
                 if(c.title.equalsIgnoreCase("архив задач")) continue;
                 c.deadLine = Utils.timeConsts.YEAR;
+                c.icon = getIcon();
                 contests.add(c);
             }
-        }catch (ParseException e){
+        }catch (Exception e){
             e.printStackTrace();
         }
         return contests;

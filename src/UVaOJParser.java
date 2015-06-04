@@ -8,12 +8,12 @@ public class UVaOJParser extends SiteParser {
 
     @Override
     public String contestsPage() {
-        return "http://uva.onlinejudge.org/index.php?option=com_onlinejudge&Itemid=12";
+        return "https://uva.onlinejudge.org/index.php?option=com_onlinejudge&Itemid=12";
     }
 
     @Override
     public String mainPage() {
-        return "http://uva.onlinejudge.org/";
+        return "https://uva.onlinejudge.org";
     }
 
 
@@ -26,7 +26,6 @@ public class UVaOJParser extends SiteParser {
             i = 0;
             for(;;){
                 Contest c = new Contest();
-                c.icon = getIcon();
                 i = s.indexOf("sectiontableentry",i+1);
                 if(i<0 || i>l) break;
                 i = s.indexOf("<td", i+1);
@@ -37,13 +36,19 @@ public class UVaOJParser extends SiteParser {
                 c.mainPage = mainPage();
                 c.title = s.substring(s.indexOf("\">", j) + 2, s.indexOf("</a>", j));
                 i = s.indexOf("<td", i + 1);
-                c.startDate.setTime(dateFormat.parse(s.substring(s.indexOf(">",i)+1,s.indexOf("</td>",i))+" UTC"));
-                i = s.indexOf("<td", i+1);
-                c.endDate.setTime(dateFormat.parse(s.substring(s.indexOf(">",i)+1,s.indexOf("</td>",i))+" UTC"));
+                try{
+                    c.startDate.setTime(dateFormat.parse(s.substring(s.indexOf(">",i)+1,s.indexOf("</td>",i))+" UTC"));
+                    i = s.indexOf("<td", i+1);
+                    c.endDate.setTime(dateFormat.parse(s.substring(s.indexOf(">",i)+1,s.indexOf("</td>",i))+" UTC"));
+                }catch (ParseException e){
+                    e.printStackTrace();
+                    continue;
+                }
                 c.deadLine = Utils.timeConsts.DAY;
+                c.icon = getIcon();
                 contests.add(c);
             }
-        } catch (ParseException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

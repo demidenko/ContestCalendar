@@ -1,3 +1,4 @@
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
@@ -28,7 +29,6 @@ public class TimusParser extends SiteParser {
                 if(i==-1) break;
                 j=s.indexOf("<A HREF", i+1);
                 Contest c = new Contest();
-                c.icon = getIcon();
                 c.title = s.substring(s.indexOf("\">", j+1)+2, s.indexOf("</A>", j+1));
                 c.deadLine = Utils.timeConsts.WEEK;
                 c.mainPage = mainPage();
@@ -38,10 +38,16 @@ public class TimusParser extends SiteParser {
                 t=Utils.URLToString(str, "UTF-8");
                 k=t.indexOf("<B>");
                 str = Utils.replaceMonth(t.substring(k+3, t.indexOf("</B>", k))) + " YEKT";
-                c.startDate.setTime(dateFormat.parse(str));
-                k=t.indexOf("<B>", k+1);
-                str = Utils.replaceMonth(t.substring(k + 3, t.indexOf("</B>", k))) + " YEKT";
-                c.endDate.setTime(dateFormat.parse(str));
+                try{
+                    c.startDate.setTime(dateFormat.parse(str));
+                    k=t.indexOf("<B>", k+1);
+                    str = Utils.replaceMonth(t.substring(k + 3, t.indexOf("</B>", k))) + " YEKT";
+                    c.endDate.setTime(dateFormat.parse(str));
+                }catch (ParseException e){
+                    e.printStackTrace();
+                    continue;
+                }
+                c.icon = getIcon();
                 contests.add(c);
             }
         } catch (Exception e) {

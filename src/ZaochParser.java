@@ -1,3 +1,4 @@
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -35,8 +36,12 @@ public class ZaochParser extends SiteParser {
             c.mainPage = mainPage();
             int i = s.indexOf("<li>");
             String sp[] = Utils.trimTags(s.substring(s.indexOf("<b",i+1),s.indexOf("</b>",i+1))).toLowerCase().split(" ");
-            c.startDate.setTime(dateFormat.parse(sp[1] + " " + Utils.month.get(sp[2]) + " " + sp[3] + " 00:00 MSK"));
-            c.endDate.setTime(dateFormat.parse(sp[6] + " " + Utils.month.get(sp[7]) + " " + sp[8] + " 23:59 MSK"));
+            try{
+                c.startDate.setTime(dateFormat.parse(sp[1] + " " + Utils.month.get(sp[2]) + " " + sp[3] + " 00:00 MSK"));
+                c.endDate.setTime(dateFormat.parse(sp[6] + " " + Utils.month.get(sp[7]) + " " + sp[8] + " 23:59 MSK"));
+            }catch (ParseException e){
+                e.printStackTrace();
+            }
             c.icon = getIcon();
             contests.add(c);
         }catch (Exception e){

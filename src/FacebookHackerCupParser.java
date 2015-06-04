@@ -1,3 +1,4 @@
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -61,7 +62,7 @@ public class FacebookHackerCupParser extends SiteParser {
                         String str = tp[j-2] + " " + tp[j-3] + " " + tp[j-1] + " " + tp[j+1] + " " + tp[j+2] + " " + tp[j+3];
                         try{
                             c.startDate.setTime(dateFormat.parse(str));
-                        }catch (Exception e){
+                        }catch (ParseException e){
                             continue;
                         }
                         c.endDate.setTime(c.startDate.getTime());

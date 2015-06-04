@@ -27,20 +27,25 @@ public class RussianCodeCupParser extends SiteParser{
                 if(i<0 || i>=k) break;
                 i=s.indexOf("<td>", i+1);
                 Contest c = new Contest();
-                c.icon = getIcon();
                 c.title = "Russian Code Cup "+s.substring(i+4, s.indexOf("</td",i));
                 i=s.indexOf("<td>", i + 1);
                 i=s.indexOf("<td>", i+1);
                 String str = s.substring(i+4, s.indexOf("</td",i)).replace(",","");
                 String sp[] = str.split(" ");
                 String t = sp[0]+" "+Utils.month.get(sp[1])+" "+Calendar.getInstance().get(Calendar.YEAR)+" ";
-                c.startDate.setTime(dateFormat.parse(t+(sp.length>4 ? sp[4] : "00:00")+" MSK"));
-                c.endDate.setTime(dateFormat.parse(t+(sp.length>6 ? sp[6] : "23:59")+" MSK"));
+                try{
+                    c.startDate.setTime(dateFormat.parse(t+(sp.length>4 ? sp[4] : "00:00")+" MSK"));
+                    c.endDate.setTime(dateFormat.parse(t+(sp.length>6 ? sp[6] : "23:59")+" MSK"));
+                }catch (ParseException e){
+                    e.printStackTrace();
+                    continue;
+                }
                 c.mainPage = mainPage();
                 c.deadLine = Utils.timeConsts.YEAR;
+                c.icon = getIcon();
                 contests.add(c);
             }
-        }catch (ParseException e){
+        }catch (Exception e){
             e.printStackTrace();
         }
 

@@ -30,7 +30,6 @@ public class CodeForcesParser extends SiteParser{
             String str, sp[];
             while(k<end){
                 Contest c = new Contest();
-                c.icon = getIcon();
                 int id = Integer.parseInt(s.substring(k+16,s.indexOf("\"",k+16)));
                 i = s.indexOf("<td>", k);
                 j = s.indexOf("</td>", i);
@@ -40,7 +39,12 @@ public class CodeForcesParser extends SiteParser{
                 i = s.indexOf(">", s.indexOf(">", j + 5) + 1);
                 j = s.indexOf("<", i);
                 str = Utils.trim(s.substring(i + 1, j));
-                c.startDate.setTime(dateFormat.parse(str));
+                try{
+                    c.startDate.setTime(dateFormat.parse(str));
+                }catch (ParseException e){
+                    e.printStackTrace();
+                    continue;
+                }
                 i = s.indexOf("<td>", j);
                 j = s.indexOf("</td>", i);
                 str = Utils.trim(s.substring(i + 4, j));
@@ -55,10 +59,11 @@ public class CodeForcesParser extends SiteParser{
                 c.mainPage = mainPage();
                 if(!c.title.contains("Codeforces")) c.deadLine = Utils.timeConsts.YEAR;
                 else c.deadLine = Utils.timeConsts.DAY*2;
+                c.icon = getIcon();
                 contests.add(c);
                 k = s.indexOf("data-contestId=",k+1);
             }
-        } catch (ParseException e) {
+        } catch (Exception e) {
             e.printStackTrace(); 
         }
         

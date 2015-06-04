@@ -22,7 +22,6 @@ public class IPSCParser extends SiteParser {
         try{
             int i,j;
             Contest c = new Contest();
-            c.icon = getIcon();
             i = s.indexOf("<title>");
             String sp[] = s.substring(i+7, s.indexOf("</title>", i)).split(" ");
             c.title = sp[0]+" "+sp[1];
@@ -30,13 +29,18 @@ public class IPSCParser extends SiteParser {
             c.mainPage = mainPage();
             i = s.indexOf("\">", i+1);
             j = s.indexOf("</a>", i);
-            c.startDate.setTime(dateFormat.parse(s.substring(i + 2, j)));
-            i = s.indexOf("\">", j);
-            j = s.indexOf("</a>", i);
-            c.endDate.setTime(dateFormat.parse(s.substring(i + 2, j)));
+            try{
+                c.startDate.setTime(dateFormat.parse(s.substring(i + 2, j)));
+                i = s.indexOf("\">", j);
+                j = s.indexOf("</a>", i);
+                c.endDate.setTime(dateFormat.parse(s.substring(i + 2, j)));
+            }catch (ParseException e){
+                e.printStackTrace();
+            }
             c.deadLine = Utils.timeConsts.YEAR;
+            c.icon = getIcon();
             contests.add(c);
-        } catch (ParseException e) {
+        } catch (Exception e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
 

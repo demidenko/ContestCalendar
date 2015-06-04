@@ -32,16 +32,16 @@ public class ACMQFParser extends SiteParser{
             str = Utils.trim(s.substring(i + 2, j));
             sp = str.split(" ");
             Contest c = new Contest();
-            c.icon = getIcon();
             c.title = "1/4 ACM ICPC";
             c.startDate.setTime(dateFormat.parse(sp[1] + " " + Utils.month.get(sp[4]) + " " + sp[5] + " 00 00 00 KRAT"));
             c.endDate.setTime(dateFormat.parse(sp[3] + " " + Utils.month.get(sp[4]) + " " + sp[5] + " 23 59 59 KRAT"));
             c.deadLine = Utils.timeConsts.YEAR;
             c.mainPage = mainPage();
             c.contestPage = contestsPage();
+            c.icon = getIcon();
             contests.add(c);
         } catch (ParseException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         }
         return contests;
     }

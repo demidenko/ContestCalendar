@@ -28,14 +28,18 @@ public class SIBSUIRegionalOlympiadParser extends SiteParser{
             str = Utils.trim(s.substring(i+7, j-2));
             sp = str.split("[ -]");
             Contest c = new Contest();
-            c.icon = getIcon();
             c.title = "Региональная олимпиада по программированию, г. Новокузнецк";
-            c.startDate.setTime(dateFormat.parse(sp[0] + " " + Utils.month.get(sp[2]) + " " + sp[3] + " 00 00 00 KRAT"));
-            c.endDate.setTime(dateFormat.parse(sp[1] + " " + Utils.month.get(sp[2]) + " " + sp[3] + " 23 59 59 KRAT"));
+            try{
+                c.startDate.setTime(dateFormat.parse(sp[0] + " " + Utils.month.get(sp[2]) + " " + sp[3] + " 00 00 00 KRAT"));
+                c.endDate.setTime(dateFormat.parse(sp[1] + " " + Utils.month.get(sp[2]) + " " + sp[3] + " 23 59 59 KRAT"));
+            }catch (ParseException e){
+                e.printStackTrace();
+            }
             c.mainPage = mainPage();
             c.deadLine = Utils.timeConsts.YEAR;
+            c.icon = getIcon();
             contests.add(c);
-        } catch (ParseException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return contests;

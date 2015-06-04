@@ -34,19 +34,24 @@ public class SnarkNewsContestsParser extends SiteParser {
                 k = s.indexOf("<tr>", k+1);
                 if(k>l || k<0) break;
                 Contest c = new Contest();
-                c.icon = getIcon();
                 c.mainPage = mainPage();
                 i = s.indexOf("<td>", k);
                 c.title = Utils.trim(s.substring(i+4, s.indexOf("</td>",i+1)));
                 if(c.title.length()==0) continue;
                 i = s.indexOf("<td>", i+1);
-                c.startDate.setTime(dateFormat.parse(Utils.trim(Utils.trimTags(s.substring(i+4, s.indexOf("</td>",i+1))))+" MSK"));
-                i = s.indexOf("<td>", i+1);
-                c.endDate.setTime(dateFormat.parse(Utils.trim(Utils.trimTags(s.substring(i+4, s.indexOf("</td>",i+1))))+" MSK"));
+                try{
+                    c.startDate.setTime(dateFormat.parse(Utils.trim(Utils.trimTags(s.substring(i+4, s.indexOf("</td>",i+1))))+" MSK"));
+                    i = s.indexOf("<td>", i+1);
+                    c.endDate.setTime(dateFormat.parse(Utils.trim(Utils.trimTags(s.substring(i+4, s.indexOf("</td>",i+1))))+" MSK"));
+                }catch (ParseException e){
+                    e.printStackTrace();
+                    continue;
+                }
                 c.deadLine = Utils.timeConsts.WEEK;
+                c.icon = getIcon();
                 contests.add(c);
             }
-        } catch (ParseException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

@@ -80,7 +80,6 @@ public class ACMWFParser extends SiteParser {
                     if(j>=0){
                         if(title.substring(j+4).toLowerCase().contains("badges")){
                             Contest c = new Contest();
-                            c.icon = getIcon();
                             c.mainPage = mainPage();
                             c.deadLine = Utils.timeConsts.YEAR;
                             c.title = title.substring(0,j);
@@ -93,8 +92,14 @@ public class ACMWFParser extends SiteParser {
                                 }
                                 break;
                             }
-                            c.startDate.setTime(dateFormat.parse(date + " " + year + " " + from));
-                            c.endDate.setTime(dateFormat.parse(date + " " + year + " " + to));
+                            try{
+                                c.startDate.setTime(dateFormat.parse(date + " " + year + " " + from));
+                                c.endDate.setTime(dateFormat.parse(date + " " + year + " " + to));
+                            }catch (ParseException e){
+                                e.printStackTrace();
+                                continue;
+                            }
+                            c.icon = getIcon();
                             contests.add(c);
                         }
                     }
@@ -102,7 +107,7 @@ public class ACMWFParser extends SiteParser {
 
                 i = k;
             }
-        } catch (ParseException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

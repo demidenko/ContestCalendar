@@ -90,7 +90,7 @@ public class Main {
 
     static void icotest(){
         SiteParser parsers[] = allParsers;
-        //parsers = new SiteParser[] {new TopCoderParser()};
+        parsers = new SiteParser[] {new UVaOJParser()};
         JFrame window = new JFrame();
 
         for(SiteParser p : parsers){
@@ -149,7 +149,7 @@ public class Main {
             List<Contest> c = parser.parse();
             synchronized (counter){
                 tableModel.addRows(c);
-                counter.done(parser);
+                counter.done(parser, c);
             }
             //writeln(parser.getClass().getName() + " updated");
         }
@@ -191,11 +191,11 @@ public class Main {
             monitorTable.setValueAt("running",i,1);
         }
 
-        public void done(SiteParser parser){
+        public void done(SiteParser parser, List<Contest> contests){
             int i = -1;
             for(int k=0;k<parsers.length;++k) if(parser==parsers[k]) i=k;
             status[i] = 1;
-            monitorTable.setValueAt("done " + (System.currentTimeMillis()-time[i])+" ms",i,1);
+            monitorTable.setValueAt("OK "+(System.currentTimeMillis()-time[i])+" ms. +"+(contests==null?0:contests.size()),i,1);
             ++current;
             buttonUpdate.setText(current+"/"+count);
             if(current==count) notifyAll();

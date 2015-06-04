@@ -28,7 +28,6 @@ public class DLGSUParser extends SiteParser{
             j = s.indexOf("</tr>", k);
             for(;;){
                 Contest c = new Contest();
-                c.icon = getIcon();
                 c.mainPage = mainPage();
                 c.contestPage = "http://dl.gsu.by/desk.asp";
                 i = s.indexOf("<tr>", j);
@@ -38,12 +37,18 @@ public class DLGSUParser extends SiteParser{
                 c.title = Utils.trim(s.substring(k + 4, s.indexOf("</td>", k)));
                 k = s.indexOf("<td", k + 1);
                 k = s.indexOf("<td",k+1);
-                c.startDate.setTime(dateFormat.parse(Utils.trim(s.substring(s.indexOf(">", k) + 1, s.indexOf("</td>", k)) + " GMT+03:00")));
-                k = s.indexOf("<td", k + 1);
-                c.endDate.setTime(dateFormat.parse(Utils.trim(s.substring(s.indexOf(">", k) + 1, s.indexOf("</td>", k)) + " GMT+03:00")));
+                try{
+                    c.startDate.setTime(dateFormat.parse(Utils.trim(s.substring(s.indexOf(">", k) + 1, s.indexOf("</td>", k)) + " GMT+03:00")));
+                    k = s.indexOf("<td", k + 1);
+                    c.endDate.setTime(dateFormat.parse(Utils.trim(s.substring(s.indexOf(">", k) + 1, s.indexOf("</td>", k)) + " GMT+03:00")));
+                }catch (ParseException e){
+                    e.printStackTrace();
+                    continue;
+                }
+                c.icon = getIcon();
                 contests.add(c);
             }
-        }catch (ParseException e){
+        }catch (Exception e){
             e.printStackTrace();
         }
         return contests;

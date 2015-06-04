@@ -1,3 +1,4 @@
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Locale;
@@ -48,13 +49,18 @@ public class HackerEarthParser extends SiteParser {
                 i = s.indexOf("<div", i + 1);
                 i = s.indexOf("<div", i + 1);
                 t = Utils.trimTags(s.substring(i, s.indexOf("</div>", i + 1)));
-                c.startDate.setTime(dateFormat.parse(str + " " + t.substring(0,t.indexOf("-")-1) + z));
-                i = s.indexOf("Closes on", i+1);
-                i = s.indexOf("<div",i+1);
-                str = Utils.trimTags(s.substring(i, s.indexOf("</div>", i + 1)));
-                i = s.indexOf("<div", i + 1);
-                str+=" "+Utils.trimTags(s.substring(i,s.indexOf("</div>",i+1)));
-                c.endDate.setTime(dateFormat.parse(str + " " + t.substring(t.indexOf("-")+2) + z));
+                try{
+                    c.startDate.setTime(dateFormat.parse(str + " " + t.substring(0,t.indexOf("-")-1) + z));
+                    i = s.indexOf("Closes on", i+1);
+                    i = s.indexOf("<div",i+1);
+                    str = Utils.trimTags(s.substring(i, s.indexOf("</div>", i + 1)));
+                    i = s.indexOf("<div", i + 1);
+                    str+=" "+Utils.trimTags(s.substring(i,s.indexOf("</div>",i+1)));
+                    c.endDate.setTime(dateFormat.parse(str + " " + t.substring(t.indexOf("-")+2) + z));
+                }catch (ParseException e){
+                    e.printStackTrace();
+                    continue;
+                }
                 c.icon = getIcon();
                 contests.add(c);
             }

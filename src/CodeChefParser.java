@@ -27,21 +27,26 @@ public class CodeChefParser extends SiteParser {
                 j = s.indexOf("<tr", j+1);
                 if(j<0 || j>end) break;
                 Contest c = new Contest();
-                c.icon = getIcon();
                 c.mainPage = mainPage();
                 i = s.indexOf("<td", j+1);
                 i = s.indexOf("<td", i+1);
                 c.contestPage = "http://www.codechef.com" + s.substring(s.indexOf("href=\"",i)+6, s.indexOf("\">",i));
                 c.title = s.substring(s.indexOf("\">",i)+2, s.indexOf("</a",i));
                 i = s.indexOf("<td", i+1);
-                c.startDate.setTime(dateFormat.parse(Utils.trim(s.substring(s.indexOf(">", i) + 1, s.indexOf("</", i))) + " India Standard Time"));
-                i = s.indexOf("<td", i+1);
-                c.endDate.setTime(dateFormat.parse(Utils.trim(s.substring(s.indexOf(">", i) + 1, s.indexOf("</", i))) + " India Standard Time"));
+                try{
+                    c.startDate.setTime(dateFormat.parse(Utils.trim(s.substring(s.indexOf(">", i) + 1, s.indexOf("</", i))) + " India Standard Time"));
+                    i = s.indexOf("<td", i+1);
+                    c.endDate.setTime(dateFormat.parse(Utils.trim(s.substring(s.indexOf(">", i) + 1, s.indexOf("</", i))) + " India Standard Time"));
+                }catch (ParseException e){
+                    e.printStackTrace();
+                    continue;
+                }
+                c.icon = getIcon();
                 contests.add(c);
                 j = i;
             }
-        } catch (ParseException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         return contests;

@@ -28,7 +28,6 @@ public class NEERCIFMOSchoolParser extends SiteParser{
             j = k1;
             for(;;){
                 Contest c = new Contest();
-                c.icon = getIcon();
                 i = s.indexOf("class=\"date\"",j);
                 if(i<0) break;
                 j = s.indexOf("class=\"time\"", i);
@@ -36,7 +35,12 @@ public class NEERCIFMOSchoolParser extends SiteParser{
                 t = sp[0]+" "+Utils.month.get(sp[1].toLowerCase())+" "+sp[2]+" ";
                 sp = s.substring(j+13, s.indexOf("</td>",j)).split(",");
                 t += sp[0]+" MSK";
-                c.startDate.setTime(dateFormat.parse(t));
+                try{
+                    c.startDate.setTime(dateFormat.parse(t));
+                }catch (ParseException e){
+                    e.printStackTrace();
+                    continue;
+                }
                 c.endDate.setTime(c.startDate.getTime());
                 c.endDate.add(Calendar.HOUR_OF_DAY, 5);
                 if(i<k2) c.title = "Командная олимпиада школьников";
@@ -54,10 +58,11 @@ public class NEERCIFMOSchoolParser extends SiteParser{
                 for(i=0;i<sp.length;++i) c.title +=", "+sp[i];
                 c.mainPage = mainPage();
                 c.contestPage = "http://neerc.ifmo.ru/testing/index.jsp";
+                c.icon = getIcon();
                 contests.add(c);
             }
-        } catch (ParseException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         return contests;

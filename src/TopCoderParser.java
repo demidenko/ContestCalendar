@@ -48,28 +48,34 @@ public class TopCoderParser extends SiteParser {
                     k = s.indexOf("href=",i);
                     String link = "https://www.google.com/calendar/" + s.substring(k+6, s.indexOf("\"",k+6));
                     String t = Utils.URLToString(link, "UTF-8"), str;
-                    try{
-                        k = t.indexOf("\"startDate\"");
-                        k = t.indexOf("datetime", k);
-                        k = t.indexOf("\"", k);
-                        str = t.substring(k+1, t.indexOf("\"",k+1)).replaceAll("[TZ]","") + " GMT";
+                    k = t.indexOf("\"startDate\"");
+                    k = t.indexOf("datetime", k);
+                    k = t.indexOf("\"", k);
+                    str = t.substring(k+1, t.indexOf("\"",k+1)).replaceAll("[TZ]","") + " GMT";
+                    try {
                         c.startDate.setTime(dateFormat.parse(str));
-                        k = t.indexOf("\"endDate\"");
-                        k = t.indexOf("datetime", k);
-                        k = t.indexOf("\"", k);
-                        str = t.substring(k+1, t.indexOf("\"",k+1)).replaceAll("[TZ]","") + " GMT";
-                        c.endDate.setTime(dateFormat.parse(str));
-                        k = t.indexOf("\"_blank\"");
-                        k = t.lastIndexOf("\"",k-1);
-                        str = t.substring(t.lastIndexOf("\"",k-1)+1,k);
-                        str = str.substring(str.indexOf("q=")+2);
-                        c.contestPage = Utils.replaceHTMLSymbols(str);
-                        c.mainPage = mainPage();
-                        c.icon = getIcon();
-                        contests.add(c);
-                    }catch (Exception e){
+                    } catch (ParseException e) {
                         e.printStackTrace();
+                        continue;
                     }
+                    k = t.indexOf("\"endDate\"");
+                    k = t.indexOf("datetime", k);
+                    k = t.indexOf("\"", k);
+                    str = t.substring(k+1, t.indexOf("\"",k+1)).replaceAll("[TZ]","") + " GMT";
+                    try {
+                        c.endDate.setTime(dateFormat.parse(str));
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                        continue;
+                    }
+                    k = t.indexOf("\"_blank\"");
+                    k = t.lastIndexOf("\"",k-1);
+                    str = t.substring(t.lastIndexOf("\"",k-1)+1,k);
+                    str = str.substring(str.indexOf("q=")+2);
+                    c.contestPage = Utils.replaceHTMLSymbols(str);
+                    c.mainPage = mainPage();
+                    c.icon = getIcon();
+                    contests.add(c);
                 }
                 i = s.indexOf("btn_next");
                 i = s.lastIndexOf("href=",i);

@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -41,7 +42,6 @@ public class SnarkNewsSeriesParser extends SiteParser{
                 i = s.indexOf("<td>", i+1);
                 j = s.indexOf("</td>", i+1);
                 Contest c = new Contest();
-                c.icon = getIcon();
                 c.mainPage = mainPage();
                 if(s.indexOf("<a href", i)<j){
                     c.contestPage = "contest.yandex.ru" + s.substring(s.indexOf("\"",i)+1, s.indexOf("\">",i));
@@ -57,7 +57,12 @@ public class SnarkNewsSeriesParser extends SiteParser{
                     t+=" ";
                 }
                 t+=" MSK";
-                c.startDate.setTime(dateFormat.parse(t));
+                try {
+                    c.startDate.setTime(dateFormat.parse(t));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                    continue;
+                }
                 i = s.indexOf("<td>", i);
                 i = s.indexOf("\">",i+1);
                 t = "";
@@ -67,7 +72,13 @@ public class SnarkNewsSeriesParser extends SiteParser{
                     t+=" ";
                 }
                 t+=" MSK";
-                c.endDate.setTime(dateFormat.parse(t));
+                try {
+                    c.endDate.setTime(dateFormat.parse(t));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                    continue;
+                }
+                c.icon = getIcon();
                 contests.add(c);
             }
         } catch (Exception e) {

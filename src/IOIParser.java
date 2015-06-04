@@ -1,3 +1,4 @@
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Locale;
@@ -36,10 +37,15 @@ public class IOIParser extends SiteParser {
             t = t.substring(i+3);
             String sp[] = t.split(" ");
             if(sp[0].indexOf("/")==-1) sp[0]+="/"+sp[0];
-            t = sp[1].substring(0,sp[1].indexOf('-')) + " " + sp[0].substring(0,sp[0].indexOf('/')) + " " + y + " 00:00";
-            c.startDate.setTime(dateFormat.parse(t));
-            t = sp[1].substring(sp[1].indexOf('-')+1) + " " + sp[0].substring(sp[0].indexOf('/')+1) + " " + y + " 23:59";
-            c.endDate.setTime(dateFormat.parse(t));
+            try{
+                t = sp[1].substring(0,sp[1].indexOf('-')) + " " + sp[0].substring(0,sp[0].indexOf('/')) + " " + y + " 00:00";
+                c.startDate.setTime(dateFormat.parse(t));
+                t = sp[1].substring(sp[1].indexOf('-')+1) + " " + sp[0].substring(sp[0].indexOf('/')+1) + " " + y + " 23:59";
+                c.endDate.setTime(dateFormat.parse(t));
+            }catch (ParseException e){
+                e.printStackTrace();
+
+            }
             i = str.indexOf("href=");
             if(i!=-1){
                 s = Utils.URLToString("http://www.ioinformatics.org/" + str.substring(i+6,str.indexOf("\">",i)), "UTF-8");
