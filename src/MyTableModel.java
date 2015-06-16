@@ -57,6 +57,17 @@ public class MyTableModel extends AbstractTableModel {
         }
     }
 
+    public int getRowWith(Contest contest){
+        synchronized (contests){
+            int size = 0;
+            for(Contest c : list) if(filterMatching(c)){
+                if(c==contest) return size;
+                ++size;
+            }
+            return -1;
+        }
+    }
+
     boolean filterMatching(Contest c){
         return
                 c.title.toLowerCase().contains(filter) |

@@ -7,8 +7,6 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.net.URL;
 import java.util.*;
 import java.util.List;
 import java.util.Timer;
@@ -18,7 +16,7 @@ import java.util.Timer;
  */
 public class Main {
     static JFrame window;
-    static JFrame monitor;
+    static JFrame monitorWindow;
     static JTable monitorTable;
     static MyTableModel tableModel;
 //    static SystemTray systemTray = SystemTray.getSystemTray();
@@ -303,33 +301,35 @@ public class Main {
 
         table.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
             public void valueChanged(ListSelectionEvent e){
-                int row = table.getSelectedRow();
-                if(row==-1){
-                    infoStrings[0] = infoStrings[1] = "";
-                    infoBigString.setText("");
-                    infoSmallString.setText("");
-                    infoTimer.setText("");
-                    infoIcon.setIcon(new ImageIcon(new BufferedImage(1,1,BufferedImage.TYPE_4BYTE_ABGR)));
-                    return;
+                synchronized (tableModel.contests){
+                    int row = table.getSelectedRow();
+                    if(row==-1){
+                        infoStrings[0] = infoStrings[1] = "";
+                        infoBigString.setText("");
+                        infoSmallString.setText("");
+                        infoTimer.setText("");
+                        infoIcon.setIcon(new ImageIcon(SiteParser.defaultIcon));
+                        return;
+                    }
+                    Contest c = tableModel.getValueAtRow(row);
+
+                    infoBigString.setText(c.title);
+                    infoSmallString.setText(Utils.shortURL(c.mainPage));
+                    infoStrings[0] = c.contestPage;
+                    infoStrings[1] = c.mainPage;
+                    infoBigString.setCursor(Cursor.getPredefinedCursor(infoStrings[0].length() != 0 ? Cursor.HAND_CURSOR : Cursor.DEFAULT_CURSOR));
+                    infoSmallString.setCursor(Cursor.getPredefinedCursor(infoStrings[1].length() != 0 ? Cursor.HAND_CURSOR : Cursor.DEFAULT_CURSOR));
+                    infoIcon.setIcon(new ImageIcon(c.icon));
+
+                    int status = ((MyTableModel)table.getModel()).status(c, Utils.getNowDate());
+                    if(status<0) infoTimer.setText(""); else
+                    if(status==0)
+                        infoTimer.setText("ends in "+Utils.differenceToString(Calendar.getInstance(), c.endDate));
+                    else
+                        infoTimer.setText("starts in "+Utils.differenceToString(Calendar.getInstance(), c.startDate));
+
+                    table.repaint();
                 }
-                Contest c = tableModel.getValueAtRow(row);
-
-                infoBigString.setText(c.title);
-                infoSmallString.setText(Utils.shortURL(c.mainPage));
-                infoStrings[0] = c.contestPage;
-                infoStrings[1] = c.mainPage;
-                infoBigString.setCursor(Cursor.getPredefinedCursor(infoStrings[0].length() != 0 ? Cursor.HAND_CURSOR : Cursor.DEFAULT_CURSOR));
-                infoSmallString.setCursor(Cursor.getPredefinedCursor(infoStrings[1].length() != 0 ? Cursor.HAND_CURSOR : Cursor.DEFAULT_CURSOR));
-                infoIcon.setIcon(new ImageIcon(c.icon));
-
-                int status = ((MyTableModel)table.getModel()).status(c, Utils.getNowDate());
-                if(status<0) infoTimer.setText(""); else
-                if(status==0)
-                    infoTimer.setText("ends in "+Utils.differenceToString(Calendar.getInstance(), c.endDate));
-                else
-                    infoTimer.setText("starts in "+Utils.differenceToString(Calendar.getInstance(), c.startDate));
-
-                table.repaint();
             }
         });
 
@@ -338,19 +338,19 @@ public class Main {
         timerInfo.schedule(new TimerTask() {
             public void run() {
                 int row = table.getSelectedRow();
-                if(row==-1){
+                if (row == -1) {
                     infoTimer.setText("");
                     return;
                 }
                 Contest c = tableModel.getValueAtRow(row);
-                int status = ((MyTableModel)table.getModel()).status(c, Utils.getNowDate());
-                if(status<0) infoTimer.setText(""); else
-                if(status==0)
-                    infoTimer.setText("ends in "+Utils.differenceToString(Calendar.getInstance(), c.endDate));
+                int status = ((MyTableModel) table.getModel()).status(c, Utils.getNowDate());
+                if (status < 0) infoTimer.setText("");
+                else if (status == 0)
+                    infoTimer.setText("ends in " + Utils.differenceToString(Calendar.getInstance(), c.endDate));
                 else
-                    infoTimer.setText("starts in "+Utils.differenceToString(Calendar.getInstance(), c.startDate));
+                    infoTimer.setText("starts in " + Utils.differenceToString(Calendar.getInstance(), c.startDate));
             }
-        }, 1000-System.currentTimeMillis()%1000, 1000);
+        }, 1000 - System.currentTimeMillis() % 1000, 1000);
 
 
 
@@ -400,25 +400,25 @@ public class Main {
         logTextScroll.getVerticalScrollBar().setPreferredSize(new Dimension(10, Integer.MAX_VALUE));
         logTextScroll.setVisible(false);
 
-        monitor = new JFrame("::Monitor::");
-        monitor.setSize(300, 500);
-        monitor.setLocationRelativeTo(null);
+        monitorWindow = new JFrame("::Monitor::");
+        monitorWindow.setSize(300, 500);
+        monitorWindow.setLocationRelativeTo(null);
         JButton logMonitor = new JButton("monitor");
         logMonitor.setVisible(false);
         logMonitor.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                monitor.setVisible(true);
+                monitorWindow.setVisible(true);
             }
         });
         monitorTable = new JTable();
-        monitorTable.setModel(new DefaultTableModel(){
+        monitorTable.setModel(new DefaultTableModel() {
             public boolean isCellEditable(int row, int column) {
                 return false;
             }
         });
 
-        monitor.add(monitorTable);
+        monitorWindow.add(monitorTable);
 
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new MyKeyEventDispatcher(logTextScroll, KeyEvent.VK_L, KeyEvent.CTRL_MASK, KeyEvent.VK_L, KeyEvent.CTRL_MASK));
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new MyKeyEventDispatcher(logClear, KeyEvent.VK_L, KeyEvent.CTRL_MASK, KeyEvent.VK_L, KeyEvent.CTRL_MASK));

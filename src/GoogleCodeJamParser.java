@@ -1,8 +1,7 @@
+import javax.rmi.CORBA.Util;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Locale;
+import java.util.*;
 
 
 public class GoogleCodeJamParser extends SiteParser{
@@ -58,12 +57,29 @@ public class GoogleCodeJamParser extends SiteParser{
                     if(x.contains("min")) c.endDate.add(Calendar.MINUTE, Integer.parseInt(x.replace("min","")));
                 }
                 i = s.indexOf("<td class=\"desc\">",k); j = s.indexOf("</td>",i);
-                str = s.substring(i,j);
-                while(str.indexOf("<")>=0) str = str.substring(0,str.indexOf("<"))+str.substring(str.indexOf(">")+1);
+                str = Utils.trimTags(s.substring(i,j));
                 c.title = Utils.trim(str);
                 c.deadLine = Utils.timeConsts.YEAR;
                 c.icon = getIcon();
                 contests.add(c);
+            }
+            Collections.sort(contests, new Comparator<Contest>() {
+                @Override
+                public int compare(Contest o1, Contest o2) {
+                    return o1.startDate.compareTo(o2.startDate);
+                }
+            });
+            Calendar nowDate = Utils.getNowDate();
+            for(Contest c : contests) if(MyTableModel.status(c, nowDate)>=0){
+                str = Utils.URLToString("https://code.google.com/codejam/contest/microsite-info","UTF-8");
+                if(str!=null){
+                    i = str.indexOf("contestId");
+                    if(i!=-1){
+                        str = Utils.trim(str.substring(str.indexOf(":",i)+1,str.indexOf(",",i)));
+                        c.contestPage = "https://code.google.com/codejam/contest/" + str + "/dashboard";
+                    }
+                }
+                break;
             }
         }catch (Exception e){
             e.printStackTrace();

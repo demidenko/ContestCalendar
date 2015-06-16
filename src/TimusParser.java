@@ -33,7 +33,7 @@ public class TimusParser extends SiteParser {
                 c.deadLine = Utils.timeConsts.WEEK;
                 c.mainPage = mainPage();
                 str=s.substring(j + 9, s.indexOf("\">", j + 1));
-                str = "http://" + mainPage() + "/" + str + "&locale=ru";
+                str = mainPage() + str + "&locale=ru";
                 c.contestPage = str;
                 t=Utils.URLToString(str, "UTF-8");
                 k=t.indexOf("<B>");

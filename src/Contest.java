@@ -21,7 +21,7 @@ public class Contest implements Comparable<Contest> {
         startDate = Calendar.getInstance();
         endDate = Calendar.getInstance();
         deadLine = Utils.timeConsts.DAY;
-        icon = new BufferedImage(1,1,BufferedImage.TYPE_4BYTE_ABGR);
+        icon = SiteParser.defaultIcon;
     }
 
     public String toString(){

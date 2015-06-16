@@ -3,12 +3,13 @@ import java.util.ArrayList;
 
 
 public abstract class SiteParser{
+    static final BufferedImage defaultIcon = new BufferedImage(1,1,BufferedImage.TYPE_4BYTE_ABGR);
     public BufferedImage icon = null;
     public BufferedImage getIcon(){
         if(icon!=null) return icon;
         icon = Utils.getFavIcon(mainPage());
         if(icon==null){
-            icon = new BufferedImage(1,1,BufferedImage.TYPE_4BYTE_ABGR);
+            icon = defaultIcon;
         }else{
             icon = Utils.resize(icon,(int)Math.round(16.0*icon.getWidth()/icon.getHeight()),16);
         }

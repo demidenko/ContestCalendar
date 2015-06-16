@@ -48,9 +48,9 @@ public class HackerRankParser extends SiteParser {
                     e.printStackTrace();
                     continue;
                 }
-                boolean ok = c.endDate.getTimeInMillis()-c.startDate.getTimeInMillis()<Utils.timeConsts.DAY;
-                ok|=c.title.contains("Week");
-                ok|=c.title.contains("Infinitum");
+                boolean ok = c.endDate.getTimeInMillis()-c.startDate.getTimeInMillis()<Utils.timeConsts.DAY*10;
+                //ok|=c.title.contains("Week");
+                //ok|=c.title.contains("Infinitum");
                 if(!ok) continue;
                 c.icon = getIcon();
                 contests.add(c);
