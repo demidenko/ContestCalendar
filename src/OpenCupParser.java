@@ -14,7 +14,7 @@ public class OpenCupParser extends SiteParser{
         String s = Utils.URLToString(mainPage(), "windows-1251");
         if(s==null) return null;
         int i = s.indexOf("schedule");
-        if(i<0) return "";
+        if(i<0) return null;
         return mainPage()+s.substring(s.lastIndexOf("\"",i)+1, s.indexOf("\"",i));
     }
 

@@ -99,7 +99,7 @@ public class MyTableModel extends AbstractTableModel {
         return 2;
     }
 
-    public boolean needRefresh;
+    public boolean needRefresh = true;
     public void refresh(){
         final Calendar nowDate = Utils.getNowDate();
         
@@ -147,8 +147,8 @@ public class MyTableModel extends AbstractTableModel {
                 if(Utils.difference(c.endDate,c.startDate)>=Utils.timeConsts.YEAR) continue;
                 contests.add(c);
                 needRefresh = true;
-                refresh();
             }
+            if(needRefresh) refresh();
         }
     }
 }

@@ -10,12 +10,12 @@ public class YandexAlgorithmParser extends SiteParser {
 
     @Override
     public String contestsPage() {
-        return "https://contest.yandex.ru/algorithm"+(Calendar.getInstance().get(Calendar.YEAR))+"/schedule/?lang=en";
+        return mainPage()+"/schedule/?lang=en";
     }
 
     @Override
     public String mainPage() {
-        return "https://contest.yandex.ru/";
+        return "https://contest.yandex.ru/algorithm"+(Calendar.getInstance().get(Calendar.YEAR));
     }
 
 

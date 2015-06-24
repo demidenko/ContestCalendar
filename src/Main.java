@@ -58,6 +58,7 @@ public class Main {
             new HackerEarthParser(),
             new IOIParser(),
             new USACOParser(),
+            new EOlympParser()
     };
 
     static SiteParser wishParsers[];
@@ -88,7 +89,7 @@ public class Main {
 
     static void icotest(){
         SiteParser parsers[] = allParsers;
-        parsers = new SiteParser[] {new UVaOJParser()};
+        parsers = new SiteParser[] {new EOlympParser()};
         JFrame window = new JFrame();
 
         for(SiteParser p : parsers){
@@ -301,35 +302,33 @@ public class Main {
 
         table.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
             public void valueChanged(ListSelectionEvent e){
-                synchronized (tableModel.contests){
-                    int row = table.getSelectedRow();
-                    if(row==-1){
-                        infoStrings[0] = infoStrings[1] = "";
-                        infoBigString.setText("");
-                        infoSmallString.setText("");
-                        infoTimer.setText("");
-                        infoIcon.setIcon(new ImageIcon(SiteParser.defaultIcon));
-                        return;
-                    }
-                    Contest c = tableModel.getValueAtRow(row);
-
-                    infoBigString.setText(c.title);
-                    infoSmallString.setText(Utils.shortURL(c.mainPage));
-                    infoStrings[0] = c.contestPage;
-                    infoStrings[1] = c.mainPage;
-                    infoBigString.setCursor(Cursor.getPredefinedCursor(infoStrings[0].length() != 0 ? Cursor.HAND_CURSOR : Cursor.DEFAULT_CURSOR));
-                    infoSmallString.setCursor(Cursor.getPredefinedCursor(infoStrings[1].length() != 0 ? Cursor.HAND_CURSOR : Cursor.DEFAULT_CURSOR));
-                    infoIcon.setIcon(new ImageIcon(c.icon));
-
-                    int status = ((MyTableModel)table.getModel()).status(c, Utils.getNowDate());
-                    if(status<0) infoTimer.setText(""); else
-                    if(status==0)
-                        infoTimer.setText("ends in "+Utils.differenceToString(Calendar.getInstance(), c.endDate));
-                    else
-                        infoTimer.setText("starts in "+Utils.differenceToString(Calendar.getInstance(), c.startDate));
-
-                    table.repaint();
+                int row = table.getSelectedRow();
+                if(row==-1){
+                    infoStrings[0] = infoStrings[1] = "";
+                    infoBigString.setText("");
+                    infoSmallString.setText("");
+                    infoTimer.setText("");
+                    infoIcon.setIcon(new ImageIcon(SiteParser.defaultIcon));
+                    return;
                 }
+                Contest c = tableModel.getValueAtRow(row);
+
+                infoBigString.setText(c.title);
+                infoSmallString.setText(Utils.shortURL(c.mainPage));
+                infoStrings[0] = c.contestPage;
+                infoStrings[1] = c.mainPage;
+                infoBigString.setCursor(Cursor.getPredefinedCursor(infoStrings[0].length() != 0 ? Cursor.HAND_CURSOR : Cursor.DEFAULT_CURSOR));
+                infoSmallString.setCursor(Cursor.getPredefinedCursor(infoStrings[1].length() != 0 ? Cursor.HAND_CURSOR : Cursor.DEFAULT_CURSOR));
+                infoIcon.setIcon(new ImageIcon(c.icon));
+
+                int status = ((MyTableModel)table.getModel()).status(c, Utils.getNowDate());
+                if(status<0) infoTimer.setText(""); else
+                if(status==0)
+                    infoTimer.setText("ends in "+Utils.differenceToString(Calendar.getInstance(), c.endDate));
+                else
+                    infoTimer.setText("starts in "+Utils.differenceToString(Calendar.getInstance(), c.startDate));
+
+                table.repaint();
             }
         });
 
@@ -401,7 +400,7 @@ public class Main {
         logTextScroll.setVisible(false);
 
         monitorWindow = new JFrame("::Monitor::");
-        monitorWindow.setSize(300, 500);
+        monitorWindow.setSize(300, 550);
         monitorWindow.setLocationRelativeTo(null);
         JButton logMonitor = new JButton("monitor");
         logMonitor.setVisible(false);
