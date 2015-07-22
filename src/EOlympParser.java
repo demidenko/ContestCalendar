@@ -24,20 +24,21 @@ public class EOlympParser extends SiteParser{
         String s = Utils.URLToString(contestsPage(), "UTF-8"); if(s==null) return contests;
 
         try{
-            int k = s.indexOf("<table"), i = k;
+            int k = s.indexOf("main-content"), i = k;
             for(;;){
-                k = s.indexOf("<tr", i+1);
+                k = s.indexOf("\"list-group-item\"", i+1);
                 if(k==-1) break;
-                i = s.indexOf("<a href",k);
+                i = s.indexOf("href",k);
                 Contest c = new Contest();
-                c.contestPage = mainPage() + s.substring(i+9, s.indexOf("\"",i+9));
-                c.title = Utils.trim(s.substring(s.indexOf(">",i+1)+1,s.indexOf("</a",i+1)));
-                i = s.indexOf("<td", i+1);
+                c.contestPage = mainPage() + s.substring(i+6, s.indexOf("\"",i+6));
+                i = s.indexOf("<h5", i+1);
+                c.title = Utils.trim(s.substring(s.indexOf(">",i+1)+1,s.indexOf("</h5",i+1)));
+                i = s.indexOf("<div ", i+1);
                 try{
                     String str = Utils.trim(s.substring(s.indexOf(">", i + 1) + 1, s.indexOf("<br", i + 1))) + " EEST";
                     c.startDate.setTime(dateFormat.parse(str));
                     i = s.indexOf("<br",i+1);
-                    str = Utils.trim(s.substring(s.indexOf(">", i + 1) + 1, s.indexOf("</td", i + 1))) + " EEST";
+                    str = Utils.trim(s.substring(s.indexOf(">", i + 1) + 1, s.indexOf("</div", i + 1))) + " EEST";
                     c.endDate.setTime(dateFormat.parse(str));
                 }catch (ParseException e){
                     e.printStackTrace();

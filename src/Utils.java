@@ -66,7 +66,13 @@ public class Utils {
     static String URLToString(String urlName, String code){
         if(urlName==null) return null;
         try {
-            URLConnection con = getConnection(urlName);
+            URLConnection con;
+            for(;;){
+                con = getConnection(urlName);
+                String loc = con.getHeaderField("Location");
+                if(loc==null) break;
+                urlName = loc;
+            }
             InputStream is = con.getInputStream();
             DataInputStream dis = new DataInputStream(is);
             byte bytes[] = new byte[1<<17];
