@@ -36,8 +36,10 @@ public class CodeForcesParser extends SiteParser{
                 str = s.substring(i + 4, j);
                 while((i=str.indexOf("<br"))>=0) str = str.substring(0,i);
                 c.title = Utils.trim(Utils.replaceHTMLSymbols(str));
-                i = s.indexOf(">", s.indexOf(">", j + 5) + 1);
-                j = s.indexOf("<", i);
+                j = s.indexOf("</td>", j+1);
+                j = s.indexOf("<span", j+1);
+                i = s.indexOf(">",j+1);
+                j = s.indexOf("</",j+1);
                 str = Utils.trim(s.substring(i + 1, j));
                 try{
                     c.startDate.setTime(dateFormat.parse(str));

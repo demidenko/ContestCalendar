@@ -35,6 +35,7 @@ public class VKOSHPParser extends SiteParser{
             i = s.indexOf("<p>", j);
             j = s.indexOf("</p>", i);
             str = Utils.trim(s.substring(i+3, j));
+            str = Utils.trimTags(str);
             sp = str.split(" ");
             for(int l=0; l<sp.length; ++l) if(sp[l].contains("–")){
                 int ind = sp[l].indexOf('–');

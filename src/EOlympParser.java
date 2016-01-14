@@ -10,7 +10,7 @@ public class EOlympParser extends SiteParser{
 
     @Override
     public String contestsPage() {
-        return "http://www.e-olymp.com/ru/competitions/";
+        return "http://www.e-olymp.com/ru/contests";
     }
 
     @Override
@@ -24,28 +24,38 @@ public class EOlympParser extends SiteParser{
         String s = Utils.URLToString(contestsPage(), "UTF-8"); if(s==null) return contests;
 
         try{
-            int k = s.indexOf("main-content"), i = k;
+            int k = s.indexOf("eo-list"), i = k, ke = s.indexOf("eo-pagination");
             for(;;){
-                k = s.indexOf("\"list-group-item\"", i+1);
-                if(k==-1) break;
-                i = s.indexOf("href",k);
+                if(k==-1 || k>ke) break;
+                k = i = s.indexOf("href",k+1);
                 Contest c = new Contest();
                 c.contestPage = mainPage() + s.substring(i+6, s.indexOf("\"",i+6));
-                i = s.indexOf("<h5", i+1);
-                c.title = Utils.trim(s.substring(s.indexOf(">",i+1)+1,s.indexOf("</h5",i+1)));
-                i = s.indexOf("<div ", i+1);
+                c.title = Utils.trim(s.substring(s.indexOf(">",i+1)+1,s.indexOf("<span",i+1)));
+                i = s.indexOf("<div", i+1);
+                i = s.indexOf("<div", i+1);
                 try{
-                    String str = Utils.trim(s.substring(s.indexOf(">", i + 1) + 1, s.indexOf("<br", i + 1))) + " EEST";
-                    c.startDate.setTime(dateFormat.parse(str));
-                    i = s.indexOf("<br",i+1);
-                    str = Utils.trim(s.substring(s.indexOf(">", i + 1) + 1, s.indexOf("</div", i + 1))) + " EEST";
-                    c.endDate.setTime(dateFormat.parse(str));
+                    String s1 = s.substring(s.indexOf(">",i+1)+1, s.indexOf("</div",i+1));
+                    i = s.indexOf("<div", i+1);
+                    String s2 = s.substring(s.indexOf(">",i+1)+1, s.indexOf("</div",i+1));
+                    s1 = Utils.trimTags(s1);
+                    s2 = Utils.trimTags(s2);
+                    int j = s2.indexOf("-");
+                    if(j!=-1){
+                        String tmp = s1;
+                        s1+=" "+s2.substring(0,j-1);
+                        s2 = tmp+" "+s2.substring(j+2);
+                    }
+                    s1+=" EEST";
+                    s2+=" EEST";
+                    c.startDate.setTime(dateFormat.parse(s1));
+                    c.endDate.setTime(dateFormat.parse(s2));
                 }catch (ParseException e){
                     e.printStackTrace();
                     continue;
                 }
                 c.mainPage = mainPage();
                 c.icon = getIcon();
+                Main.writeln(c);
                 contests.add(c);
             }
         }catch (Exception e){

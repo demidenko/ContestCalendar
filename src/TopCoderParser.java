@@ -1,38 +1,44 @@
+import java.awt.image.BufferedImage;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
-import java.util.TimeZone;
 
 
 public class TopCoderParser extends SiteParser {
     static final int timeOfSRM = 75 + 5 + 15;
     static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss Z", Locale.ENGLISH);
 
+
+
     @Override
     public String contestsPage() {
         Calendar c = Calendar.getInstance();
-        int m = c.get(Calendar.MONTH);
+        int m = c.get(Calendar.MONTH)+1;
         int y = c.get(Calendar.YEAR);
         int mBefore = m, yBefore = y;
         if(m==1){
             mBefore = 12;
             yBefore--;
         }else mBefore--;
-        return "https://www.google.com/calendar/htmlembed?src=appirio.com_bhga3musitat85mhdrng9035jg@group.calendar.google.com" + "&dates="+String.format("%04d%02d%02d/%04d%02d%02d",yBefore,mBefore,1,y,m,1);
+        return "https://calendar.google.com/calendar/htmlembed?src=appirio.com_bhga3musitat85mhdrng9035jg@group.calendar.google.com" + "&dates="+String.format("%04d%02d%02d/%04d%02d%02d",yBefore,mBefore,1,y,m,1);
     }
 
     @Override
     public String mainPage() {
-        return "http://community.topcoder.com/tc";
+        return "https://www.topcoder.com";
+        //return "http://community.topcoder.com/tc";
+    }
+
+    public BufferedImage getIcon(){
+        return Utils.getImage("https://www.topcoder.com/images/favicon.ico");
     }
 
     @Override
     public ArrayList<Contest> parse() {
         ArrayList<Contest> contests = new ArrayList<Contest>();
         String s = Utils.URLToString(contestsPage(), "UTF-8"); if(s==null) return contests;
-
         try{
             for(int cnt=0;s!=null && cnt<5;++cnt){
                 int i = 0;
@@ -68,11 +74,12 @@ public class TopCoderParser extends SiteParser {
                         e.printStackTrace();
                         continue;
                     }
-                    k = t.indexOf("\"_blank\"");
-                    k = t.lastIndexOf("\"",k-1);
-                    str = t.substring(t.lastIndexOf("\"",k-1)+1,k);
-                    str = str.substring(str.indexOf("q=")+2);
-                    c.contestPage = Utils.replaceHTMLSymbols(str);
+                    if((k = t.indexOf("\"_blank\""))!=-1){
+                        k = t.lastIndexOf("\"",k-1);
+                        str = t.substring(t.lastIndexOf("\"",k-1)+1,k);
+                        str = str.substring(str.indexOf("q=")+2);
+                        c.contestPage = Utils.replaceHTMLSymbols(str);
+                    }
                     c.mainPage = mainPage();
                     c.icon = getIcon();
                     contests.add(c);

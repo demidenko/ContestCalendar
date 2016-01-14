@@ -58,7 +58,7 @@ public class Main {
             new HackerEarthParser(),
             new IOIParser(),
             new USACOParser(),
-            new EOlympParser()
+            //new EOlympParser()
     };
 
     static SiteParser wishParsers[];

@@ -142,40 +142,33 @@ public class Utils {
             int r = page.indexOf('>', i);
             String str = page.substring(l, r + 1);
             i = str.toLowerCase().indexOf("href=");
-            iconUrl = str.substring(i+6,str.indexOf("\"",i+6));
+            iconUrl = str.substring(i + 6, str.indexOf("\"", i + 6));
         }else{
-            iconUrl = "favicon.ico";
-            try {
-                URL address = new URL(url);
-                iconUrl = address.getProtocol() + "://" + address.getHost() + "/favicon.ico";
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            }
+            iconUrl = "/favicon.ico";
         }
 
         if(!iconUrl.startsWith("http")){
-            if(url.endsWith("/")) url = url.substring(0,url.length()-1);
-            if(!iconUrl.startsWith("/")) iconUrl = "/" + iconUrl;
-            String picURL = null;
-            for(;;){
-                String link = url + iconUrl;
-                if(link.indexOf("//")==-1) break;
+            if(iconUrl.startsWith("/")){
+                URL address = null;
                 try {
-                    getConnection(link).getInputStream();
-                    picURL = link;
-                    break;
-                } catch (Exception e){
+                    address = new URL(url);
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
                 }
-                i = url.lastIndexOf("/");
-                if(i==-1) break;
-                url = url.substring(0, i);
+                iconUrl = address.getProtocol() + "://" + address.getHost() + iconUrl;
+            }else{
+                iconUrl = url + iconUrl;
             }
-            iconUrl = picURL;
         }
 
+        return getImage(iconUrl);
+    }
+
+    public static BufferedImage getImage(String iconUrl){
         try {
             getConnection(iconUrl).getInputStream();
         } catch (Exception e){
+            //e.printStackTrace();
             return null;
         }
 
@@ -190,28 +183,21 @@ public class Utils {
             iconUrl = str;
         }
 
-        int dot = iconUrl.lastIndexOf('.');
-        for(i=dot+1;i<iconUrl.length() && Character.isAlphabetic(iconUrl.codePointAt(i));++i);
-        String type = iconUrl.substring(dot+1,i).toLowerCase();
         BufferedImage res = null;
-        if(type.equals("ico")){
-            try {
-                List<BufferedImage> imgs = ICODecoder.read(getConnection(iconUrl).getInputStream());
-                for(BufferedImage img : imgs) if(res==null || res.getWidth()*res.getHeight()<img.getWidth()*img.getHeight()){
+
+        try {
+            List<BufferedImage> imgs = ICODecoder.read(getConnection(iconUrl).getInputStream());
+            for(BufferedImage img : imgs)
+                if(res==null || res.getWidth()*res.getHeight()<img.getWidth()*img.getHeight()){
                     res = img;
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }else
-        if(type.equals("png") || type.equals("gif")){
+        } catch (Exception e1) {
+            //e1.printStackTrace();
             try {
                 res = ImageIO.read(getConnection(iconUrl).getInputStream());
-            } catch (Exception e) {
-                e.printStackTrace();
+            } catch (Exception e2) {
+                //e2.printStackTrace();
             }
-        }else{
-            return null;
         }
 
         return res;

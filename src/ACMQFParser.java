@@ -30,17 +30,22 @@ public class ACMQFParser extends SiteParser{
             j = s.indexOf("</b>", k);
             i = s.lastIndexOf("/>", j);
             str = Utils.trim(s.substring(i + 2, j));
+            str = Utils.trimTags(str);
             sp = str.split(" ");
             Contest c = new Contest();
             c.title = "1/4 ACM ICPC";
-            c.startDate.setTime(dateFormat.parse(sp[1] + " " + Utils.month.get(sp[4]) + " " + sp[5] + " 00 00 00 KRAT"));
-            c.endDate.setTime(dateFormat.parse(sp[3] + " " + Utils.month.get(sp[4]) + " " + sp[5] + " 23 59 59 KRAT"));
+            try{
+                c.startDate.setTime(dateFormat.parse(sp[1] + " " + Utils.month.get(sp[4]) + " " + sp[5] + " 00 00 00 KRAT"));
+                c.endDate.setTime(dateFormat.parse(sp[3] + " " + Utils.month.get(sp[4]) + " " + sp[5] + " 23 59 59 KRAT"));
+            }catch (ParseException e){
+                e.printStackTrace();
+            }
             c.deadLine = Utils.timeConsts.YEAR;
             c.mainPage = mainPage();
             c.contestPage = contestsPage();
             c.icon = getIcon();
             contests.add(c);
-        } catch (ParseException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return contests;
