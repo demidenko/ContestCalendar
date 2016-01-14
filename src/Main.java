@@ -39,9 +39,9 @@ public class Main {
             new CodeChefParser(),
             new GoogleCodeJamParser(),
             new FacebookHackerCupParser(),
-            new ICLParser(),
+            //new ICLParser(),
             new IPSCParser(),
-            new SIBSUIRegionalOlympiadParser(),
+            //new SIBSUIRegionalOlympiadParser(),
             new ACMQFParser(),
             new ACMWFParser(),
             new VKOSHPParser(),
@@ -58,6 +58,7 @@ public class Main {
             new HackerEarthParser(),
             new IOIParser(),
             new USACOParser(),
+            new Deadline24Parser(),
             //new EOlympParser()
     };
 
