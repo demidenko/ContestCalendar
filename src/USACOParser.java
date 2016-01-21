@@ -8,7 +8,7 @@ import java.util.Locale;
  * Created by demich on 24.05.15.
  */
 public class USACOParser extends SiteParser{
-    static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMMM HH:mm", Locale.ENGLISH);
+    static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMMM HH:mm Z", Locale.ENGLISH);
 
     @Override
     public String contestsPage() {
@@ -35,11 +35,12 @@ public class USACOParser extends SiteParser{
                 i = str.indexOf(":");
                 Contest c = new Contest();
                 c.title = str.substring(i+2);
-                c.contestPage = c.mainPage = mainPage();
+                c.mainPage = mainPage();
+                c.contestPage = "http://usaco.org/index.php?page=viewcontest";
                 c.deadLine = Utils.timeConsts.WEEK;
                 String t = str.substring(0,i);
                 String tp[] = t.split("[ -]");
-                t = tp[1] + " " + tp[0] + " 00:00";
+                t = tp[1] + " " + tp[0] + " 00:00 -1200";
                 try{
                     c.startDate.setTime(dateFormat.parse(t));
                 }catch (ParseException e){
@@ -49,7 +50,7 @@ public class USACOParser extends SiteParser{
                 m2 = c.startDate.get(Calendar.MONTH);
                 if(m2<m) ++y; m = m2;
                 c.startDate.set(Calendar.YEAR, y);
-                t = (tp.length==3 ? tp[2] + " " + tp[0] : tp[3] + " " + tp[2]) + " 23:59";
+                t = (tp.length==3 ? tp[2] + " " + tp[0] : tp[3] + " " + tp[2]) + " 24:00 -1200";
                 try{
                     c.endDate.setTime(dateFormat.parse(t));
                 }catch (ParseException e){

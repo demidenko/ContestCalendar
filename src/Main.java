@@ -43,15 +43,16 @@ public class Main {
             new IPSCParser(),
             //new SIBSUIRegionalOlympiadParser(),
             new ACMQFParser(),
+            new ACMSFNEERCParser(),
             new ACMWFParser(),
-            new VKOSHPParser(),
+            //TODO new VKOSHPParser(),
             new YandexAlgorithmParser(),
             new TimusParser(),
             new UVaOJParser(),
             new HackerRankParser(),
             new DLGSUParser(),
             new COCIParser(),
-            new UserContestsParser(),
+            //new UserContestsParser(),
             new SnarkNewsContestsParser(),
             new RussianCodeCupParser(),
             new ZaochParser(),
@@ -90,7 +91,6 @@ public class Main {
 
     static void icotest(){
         SiteParser parsers[] = allParsers;
-        parsers = new SiteParser[] {new EOlympParser()};
         JFrame window = new JFrame();
 
         for(SiteParser p : parsers){
@@ -174,10 +174,11 @@ public class Main {
             time = new long[count];
             DefaultTableModel tm = ((DefaultTableModel)monitorTable.getModel());
             tm.setRowCount(count);
-            tm.setColumnCount(2);
+            tm.setColumnCount(3);
+            monitorTable.getColumnModel().getColumn(0).setPreferredWidth(20);
             for(int i=0;i<count;++i){
-                monitorTable.setValueAt(parsers[i].getClass().getName(),i,0);
-                monitorTable.setValueAt("none",i,1);
+                monitorTable.setValueAt(parsers[i].getClass().getName(),i,1);
+                monitorTable.setValueAt("none",i,2);
             }
             current = 0;
             buttonUpdate.setText(0+"/"+count);
@@ -188,14 +189,15 @@ public class Main {
             for(int k=0;k<parsers.length;++k) if(parser==parsers[k]) i=k;
             status[i] = 2;
             time[i] = System.currentTimeMillis();
-            monitorTable.setValueAt("running",i,1);
+            monitorTable.setValueAt("running",i,2);
         }
 
         public void done(SiteParser parser, List<Contest> contests){
             int i = -1;
             for(int k=0;k<parsers.length;++k) if(parser==parsers[k]) i=k;
             status[i] = 1;
-            monitorTable.setValueAt("OK "+(System.currentTimeMillis()-time[i])+" ms. +"+(contests==null?0:contests.size()),i,1);
+            monitorTable.setValueAt("OK "+(System.currentTimeMillis()-time[i])+" ms. +"+(contests==null?0:contests.size()),i,2);
+            monitorTable.setValueAt(new ImageIcon(parser.getIcon()), i, 0);
             ++current;
             buttonUpdate.setText(current+"/"+count);
             if(current==count) notifyAll();
@@ -415,6 +417,10 @@ public class Main {
         monitorTable.setModel(new DefaultTableModel() {
             public boolean isCellEditable(int row, int column) {
                 return false;
+            }
+            public Class getColumnClass(int col){
+                if(col==0) return ImageIcon.class;
+                return String.class;
             }
         });
 

@@ -35,6 +35,7 @@ public class SnarkNewsContestsParser extends SiteParser {
                 if(k>l || k<0) break;
                 Contest c = new Contest();
                 c.mainPage = mainPage();
+                c.contestPage = contestsPage();
                 i = s.indexOf("<td>", k);
                 c.title = Utils.trim(s.substring(i+4, s.indexOf("</td>",i+1)));
                 if(c.title.length()==0) continue;

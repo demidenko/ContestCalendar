@@ -39,6 +39,7 @@ public class Utils {
     
     static String replaceHTMLSymbols(String s){
         s = s.replace("&amp;", "&");
+        s = s.replace("&nbsp;", " ");
         for(;;){
             int i = s.indexOf("&#");
             if(i<0) break;
