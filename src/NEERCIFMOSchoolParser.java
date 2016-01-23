@@ -1,7 +1,6 @@
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 
 
@@ -57,7 +56,7 @@ public class NEERCIFMOSchoolParser extends SiteParser{
                 if(z.isEmpty()) sp = new String[0]; else sp = z.split(",");
                 for(i=0;i<sp.length;++i) c.title +=", "+sp[i];
                 c.mainPage = mainPage();
-                c.contestPage = "http://neerc.ifmo.ru/testing/index.jsp";
+                c.contestPage = "http://neerc.ifmo.ru/pcms2client/login.jsp";
                 c.icon = getIcon();
                 contests.add(c);
             }
