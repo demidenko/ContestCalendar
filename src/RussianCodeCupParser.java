@@ -35,7 +35,7 @@ public class RussianCodeCupParser extends SiteParser{
                 String t = sp[0]+" "+Utils.month.get(sp[1])+" "+Calendar.getInstance().get(Calendar.YEAR)+" ";
                 try{
                     c.startDate.setTime(dateFormat.parse(t+(sp.length>4 ? sp[4] : "00:00")+" MSK"));
-                    c.endDate.setTime(dateFormat.parse(t+(sp.length>6 ? sp[6] : "23:59")+" MSK"));
+                    c.endDate.setTime(dateFormat.parse(t+(sp.length>6 ? sp[6] : "24:00")+" MSK"));
                 }catch (ParseException e){
                     e.printStackTrace();
                     continue;

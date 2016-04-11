@@ -125,7 +125,8 @@ public class MyTableModel extends AbstractTableModel {
                     int cmp1 = Integer.signum(status(o1, nowDate));
                     int cmp2 = Integer.signum(status(o2, nowDate));
                     if(cmp1!=cmp2) return Integer.signum(cmp1-cmp2);
-                    return comparatorTime.compare(o1, o2);
+                    if(cmp1>0) return o1.startDate.compareTo(o2.startDate);
+                    return o1.endDate.compareTo(o2.endDate);
                 }
             });
             oldStatus = new ArrayList<Integer>();
@@ -150,5 +151,10 @@ public class MyTableModel extends AbstractTableModel {
             }
             if(needRefresh) refresh();
         }
+    }
+
+    public void addContest(Contest contest){
+        if(contest==null) return ;
+
     }
 }

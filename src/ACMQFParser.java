@@ -39,6 +39,7 @@ public class ACMQFParser extends SiteParser{
                 c.endDate.setTime(dateFormat.parse(sp[3] + " " + Utils.month.get(sp[4]) + " " + sp[5] + " 23 59 59 KRAT"));
             }catch (ParseException e){
                 e.printStackTrace();
+                return null;
             }
             c.deadLine = Utils.timeConsts.YEAR;
             c.mainPage = mainPage();

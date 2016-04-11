@@ -40,7 +40,7 @@ public class IOIParser extends SiteParser {
             try{
                 t = sp[1].substring(0,sp[1].indexOf('-')) + " " + sp[0].substring(0,sp[0].indexOf('/')) + " " + y + " 00:00";
                 c.startDate.setTime(dateFormat.parse(t));
-                t = sp[1].substring(sp[1].indexOf('-')+1) + " " + sp[0].substring(sp[0].indexOf('/')+1) + " " + y + " 23:59";
+                t = sp[1].substring(sp[1].indexOf('-')+1) + " " + sp[0].substring(sp[0].indexOf('/')+1) + " " + y + " 24:00";
                 c.endDate.setTime(dateFormat.parse(t));
             }catch (ParseException e){
                 e.printStackTrace();

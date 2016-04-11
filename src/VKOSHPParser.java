@@ -1,4 +1,3 @@
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
@@ -38,7 +37,7 @@ public class VKOSHPParser extends SiteParser{
             str = Utils.replaceHTMLSymbols(str);
             str = Utils.trimTags(str);
             Main.writeln(str);
-            sp = str.split(" ");
+            sp = str.split("[^0-9а-я]");/*
             for(int l=0; l<sp.length; ++l) if(sp[l].contains("–")){
                 int ind = sp[l].indexOf('–');
                 if(ind==-1) continue;
@@ -54,7 +53,7 @@ public class VKOSHPParser extends SiteParser{
                 contests.add(c);
                 c.icon = getIcon();
                 break;
-            }
+            }*/
         } catch (Exception e) {
             e.printStackTrace();
         }

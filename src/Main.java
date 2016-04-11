@@ -13,6 +13,13 @@ import java.util.Timer;
 
 /**
  * 17.12.12 20:27
+ *
+ * TODO Main list:
+ * 1. форма добавления usercontests.
+ * 2. несбрасываемое выделение контеста.
+ * 3. добавление контестов по одному, а не пачкой, от парсеров.
+ * ...
+ * ???. android-version :)
  */
 public class Main {
     static JFrame window;
@@ -46,13 +53,14 @@ public class Main {
             new ACMSFNEERCParser(),
             new ACMWFParser(),
             //TODO new VKOSHPParser(),
+            new ISITPersonalParser(),
             new YandexAlgorithmParser(),
             new TimusParser(),
             new UVaOJParser(),
             new HackerRankParser(),
             new DLGSUParser(),
             new COCIParser(),
-            //new UserContestsParser(),
+            new UserContestsParser(),
             new SnarkNewsContestsParser(),
             new RussianCodeCupParser(),
             new ZaochParser(),
@@ -175,7 +183,8 @@ public class Main {
             DefaultTableModel tm = ((DefaultTableModel)monitorTable.getModel());
             tm.setRowCount(count);
             tm.setColumnCount(3);
-            monitorTable.getColumnModel().getColumn(0).setPreferredWidth(20);
+            monitorTable.getColumnModel().getColumn(0).setMinWidth(45);
+            monitorTable.getColumnModel().getColumn(0).setMaxWidth(45);
             for(int i=0;i<count;++i){
                 monitorTable.setValueAt(parsers[i].getClass().getName(),i,1);
                 monitorTable.setValueAt("none",i,2);
@@ -218,8 +227,11 @@ public class Main {
         final JTable table = new JTable(tableModel);
         table.setDefaultRenderer(Object.class, cellRenderer);
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        table.getColumnModel().getColumn(0).setPreferredWidth(50);
-        table.getColumnModel().getColumn(1).setPreferredWidth(50);
+        int dateColumnWidth = 180;
+        table.getColumnModel().getColumn(0).setMinWidth(dateColumnWidth);
+        table.getColumnModel().getColumn(0).setMaxWidth(dateColumnWidth);
+        table.getColumnModel().getColumn(1).setMinWidth(dateColumnWidth);
+        table.getColumnModel().getColumn(1).setMaxWidth(dateColumnWidth);
 
         /*
         try {
@@ -403,7 +415,7 @@ public class Main {
         logTextScroll.setVisible(false);
 
         monitorWindow = new JFrame("::Monitor::");
-        monitorWindow.setSize(300, 550);
+        monitorWindow.setSize(315, 550);
         monitorWindow.setLocationRelativeTo(null);
         JButton logMonitor = new JButton("monitor");
         logMonitor.setVisible(false);

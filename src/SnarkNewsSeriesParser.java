@@ -1,4 +1,3 @@
-import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -26,7 +25,7 @@ public class SnarkNewsSeriesParser extends SiteParser{
         Calendar c = Calendar.getInstance();
         int m = c.get(Calendar.MONTH);
         int y = c.get(Calendar.YEAR);
-        return "sn"+gs.charAt(m)+"s"+((y+gm[m]));
+        return "sn"+gs.charAt(m)+"s"+(y+gm[m]);
     }
 
     @Override
