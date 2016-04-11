@@ -18,6 +18,7 @@ import java.util.Timer;
  * 1. форма добавления usercontests.
  * 2. несбрасываемое выделение контеста.
  * 3. добавление контестов по одному, а не пачкой, от парсеров.
+ * 4. треды в очереди с ограничениями
  * ...
  * ???. android-version :)
  */
@@ -82,7 +83,8 @@ public class Main {
         window.setVisible(true);
 
         wishParsers = allParsers;
-        
+
+        master = new ParsersThreadMaster(wishParsers, 8);
         runParsers(wishParsers);
         
 
@@ -112,25 +114,25 @@ public class Main {
         window.setVisible(true);
     }
 
-    static threadCounter counter = new threadCounter();
+    //static threadCounter counter = new threadCounter();
+    static ParsersThreadMaster master;
     static void runParsers(final SiteParser[] parsers){
         new Thread(){
-            @Override
             public void run() {
                 System.out.print("parse... ");
                 if(timerUpdateData!=null) timerUpdateData.cancel();
                 buttonUpdate.setEnabled(false);
-                counter.init(parsers);
-                for(SiteParser parser : parsers){
-                    Thread t = new ParserThread(parser);
-                    t.start();
-                }
-                synchronized (counter){
-                    try {
-                        counter.wait();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
+                new Thread(){
+                    public void run(){
+                        master.init();
                     }
+                }.start();
+                try {
+                    synchronized (master){
+                        master.wait();
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
                 buttonUpdate.setText("Update");
                 buttonUpdate.setEnabled(true);
@@ -144,75 +146,99 @@ public class Main {
             }
         }.start();
     }
-    
-    public static class ParserThread extends Thread{
-        SiteParser parser;
-        public ParserThread(SiteParser p){
-            parser = p;
-        }
-        public void run() {
-            synchronized (counter){
-                counter.started(parser);
-            }
-            List<Contest> c = parser.parse();
-            synchronized (counter){
-                tableModel.addRows(c);
-                counter.done(parser, c);
-            }
-            //writeln(parser.getClass().getName() + " updated");
-        }
-    }
-    
-    public static class threadCounter{
-        int count, current;
-        SiteParser parsers[];
-        int status[];
-        long time[];
 
-        public void init(SiteParser newparsers[]){
+    public static class ParsersThreadMaster{
+        int maxThreads;
+        public SiteParser parsers[], list[];
+        long time[];
+        int current, count, iter;
+        public Object godFather;
+
+        public ParsersThreadMaster(SiteParser newparsers[], int K){
             count = newparsers.length;
-            parsers = newparsers.clone();
-            Arrays.sort(parsers, new Comparator<SiteParser>() {
+            maxThreads = Math.min(K, count);
+            list = newparsers.clone();
+            Arrays.sort(list, new Comparator<SiteParser>() {
                 @Override
                 public int compare(SiteParser o1, SiteParser o2) {
                     return o1.getClass().getName().compareTo(o2.getClass().getName());
                 }
             });
-            status = new int[count];
-            time = new long[count];
+            parsers = list.clone();
             DefaultTableModel tm = ((DefaultTableModel)monitorTable.getModel());
             tm.setRowCount(count);
             tm.setColumnCount(3);
             monitorTable.getColumnModel().getColumn(0).setMinWidth(45);
             monitorTable.getColumnModel().getColumn(0).setMaxWidth(45);
+            godFather = new Object();
+            time = new long[count];
+        }
+
+        int getRowNumber(SiteParser parser){
+            for(int i=0;i<count;++i) if(parser==list[i]) return i;
+            return -1;
+        }
+
+        public void init(){
             for(int i=0;i<count;++i){
-                monitorTable.setValueAt(parsers[i].getClass().getName(),i,1);
-                monitorTable.setValueAt("none",i,2);
+                monitorTable.setValueAt(list[i].getClass().getName(),i,1);
+                monitorTable.setValueAt("waiting",i,2);
             }
-            current = 0;
             buttonUpdate.setText(0+"/"+count);
+            current = 0;
+            iter = 0;
+            for(int i=0;i<count;++i){
+                new Thread(){
+                    public void run(){
+                        synchronized (godFather){
+                            try {
+                                godFather.wait();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        SiteParser parser;
+                        synchronized (godFather){
+                            parser = parsers[iter++];
+                            started(parser);
+                        }
+                        ArrayList<Contest> contests = parser.parse();
+                        synchronized (godFather){
+                            done(parser, contests);
+                            tableModel.addRows(contests);
+                        }
+                    }
+                }.start();
+            }
+            for(int i=0;i<maxThreads;++i) synchronized (godFather){godFather.notify();}
         }
 
         public void started(SiteParser parser){
-            int i = -1;
-            for(int k=0;k<parsers.length;++k) if(parser==parsers[k]) i=k;
-            status[i] = 2;
+            int i = getRowNumber(parser);
             time[i] = System.currentTimeMillis();
             monitorTable.setValueAt("running",i,2);
         }
 
         public void done(SiteParser parser, List<Contest> contests){
-            int i = -1;
-            for(int k=0;k<parsers.length;++k) if(parser==parsers[k]) i=k;
-            status[i] = 1;
-            monitorTable.setValueAt("OK "+(System.currentTimeMillis()-time[i])+" ms. +"+(contests==null?0:contests.size()),i,2);
+            int i = getRowNumber(parser);
+            time[i] = System.currentTimeMillis()-time[i];
+            monitorTable.setValueAt("OK "+time[i]+" ms. +"+(contests==null?0:contests.size()),i,2);
             monitorTable.setValueAt(new ImageIcon(parser.getIcon()), i, 0);
-            ++current;
+            parsers[current++] = parser;
             buttonUpdate.setText(current+"/"+count);
-            if(current==count) notifyAll();
+            if(current==count){
+                Arrays.sort(parsers, new Comparator<SiteParser>() {
+                    @Override
+                    public int compare(SiteParser o1, SiteParser o2) {
+                        long dif = time[getRowNumber(o1)] - time[getRowNumber(o2)];
+                        return dif==0 ? 0 : (dif>0 ? 1 : -1);
+                    }
+                });
+                synchronized (this){notifyAll();}
+            }
+            else godFather.notify();
         }
     }
-    
     
     public static final JFrame initWindow(){
         final JFrame window = new JFrame("== ContestCalendar ==");
