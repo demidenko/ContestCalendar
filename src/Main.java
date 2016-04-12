@@ -18,7 +18,7 @@ import java.util.Timer;
  * 1. форма добавления usercontests.
  * 2. несбрасываемое выделение контеста.
  * 3. добавление контестов по одному, а не пачкой, от парсеров.
- * 4. треды в очереди с ограничениями
+ * + треды в очереди с ограничениями
  * ...
  * ???. android-version :)
  */
@@ -114,7 +114,6 @@ public class Main {
         window.setVisible(true);
     }
 
-    //static threadCounter counter = new threadCounter();
     static ParsersThreadMaster master;
     static void runParsers(final SiteParser[] parsers){
         new Thread(){
@@ -235,8 +234,7 @@ public class Main {
                     }
                 });
                 synchronized (this){notifyAll();}
-            }
-            else godFather.notify();
+            }else godFather.notify();
         }
     }
     
