@@ -1,16 +1,16 @@
 import net.sf.image4j.codec.ico.ICODecoder;
 
 import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.*;
 import java.util.Calendar;
-import java.util.TreeMap;
 import java.util.List;
+import java.util.TreeMap;
 
 
 public class Utils {
@@ -60,7 +60,7 @@ public class Utils {
     static URLConnection getConnection(String urlName) throws Exception{
         URL url = new URL(urlName);
         URLConnection con = url.openConnection();
-        con.addRequestProperty("User-Agent","ContestCalendar");
+        con.addRequestProperty("User-Agent","parser ContestCalendar");
         return con;
     }
 
@@ -189,9 +189,7 @@ public class Utils {
         try {
             List<BufferedImage> imgs = ICODecoder.read(getConnection(iconUrl).getInputStream());
             for(BufferedImage img : imgs)
-                if(res==null || res.getWidth()*res.getHeight()<img.getWidth()*img.getHeight()){
-                    res = img;
-                }
+            if(res==null || res.getWidth()*res.getHeight()<img.getWidth()*img.getHeight()) res = img;
         } catch (Exception e1) {
             //e1.printStackTrace();
             try {
