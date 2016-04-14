@@ -1,30 +1,64 @@
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.TimeZone;
 
 
 public class CodeForcesParser extends SiteParser{
-    static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm");
-    static final SimpleDateFormat timeFormat = new SimpleDateFormat("dd:HH:mm");
-
-    public CodeForcesParser(){
-        dateFormat.setTimeZone(TimeZone.getTimeZone("Europe/Moscow"));
-    }
-
-    public String contestsPage() {
-        return "http://codeforces.com/contests?complete=true&locale=ru";
-    }
 
     public String mainPage() {
         return "http://codeforces.com";
+    }
+
+    public String contestsPage() {
+        return "http://codeforces.com/api/contest.list?gym=false&locale=ru";
     }
 
     public ArrayList<Contest> parse(){
         ArrayList<Contest> contests = new ArrayList<Contest>();
         String s = Utils.URLToString(contestsPage(), "UTF-8"); if(s==null) return contests;
         
+        try{
+            int i = 0;
+            for(;;){
+                i = s.indexOf("\"name\"", i+1);
+                if(i<0) break;
+                int b = s.lastIndexOf('{', i);
+                int e = s.indexOf('}',i);
+                int k = s.indexOf("\"startTimeSeconds\"",b);
+                if(!(k>b && k<e)) continue;
+                Contest c = new Contest();
+                long start = Long.parseLong(Utils.trim(s.substring(s.indexOf(':', k) + 1, s.indexOf(',', k))) + "000");
+                k = s.indexOf("\"durationSeconds\"",b);
+                long end = start + Long.parseLong(Utils.trim(s.substring(s.indexOf(':',k)+1,s.indexOf(',',k)))+"000");
+                c.startDate.setTimeInMillis(start);
+                c.endDate.setTimeInMillis(end);
+                k = s.indexOf('\"', i+6);
+                c.title = s.substring(k + 1, s.indexOf('\"', k + 1));
+                c.mainPage = mainPage();
+                k = s.indexOf("\"id\"", b);
+                k = s.indexOf(':', k+1);
+                c.contestPage = c.mainPage + "/contest/" + s.substring(k+1, s.indexOf(',',k+1));
+                c.icon = getIcon();
+                contests.add(c);
+            }
+        } catch (Exception e) {
+            e.printStackTrace(); 
+        }
+        
+        return contests;
+    }
+
+    /*
+    static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+    static {
+        dateFormat.setTimeZone(TimeZone.getTimeZone("Europe/Moscow"));
+    }
+    public String contestsPage() {
+        return "http://codeforces.com/contests?complete=true&locale=ru";
+    }
+
+    public ArrayList<Contest> parse(){
+        ArrayList<Contest> contests = new ArrayList<Contest>();
+        String s = Utils.URLToString(contestsPage(), "UTF-8"); if(s==null) return contests;
+
         try{
             int i, j, k = s.indexOf("data-contestId="), end = s.indexOf("class=\"contests-table\"");
             String str, sp[];
@@ -66,9 +100,10 @@ public class CodeForcesParser extends SiteParser{
                 k = s.indexOf("data-contestId=",k+1);
             }
         } catch (Exception e) {
-            e.printStackTrace(); 
+            e.printStackTrace();
         }
-        
+
         return contests;
     }
+     */
 }

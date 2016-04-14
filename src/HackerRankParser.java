@@ -12,7 +12,7 @@ public class HackerRankParser extends SiteParser {
 
     @Override
     public String mainPage() {
-        return "https://www.hackerrank.com/";
+        return "https://www.hackerrank.com";
     }
 
     @Override
@@ -37,7 +37,7 @@ public class HackerRankParser extends SiteParser {
                 c.mainPage = mainPage();
                 k = s.indexOf("\"slug\"", b);
                 k = s.indexOf('\"', k + 6);
-                c.contestPage = c.mainPage + "contests/" + s.substring(k+1, s.indexOf('\"',k+1));
+                c.contestPage = c.mainPage + "/contests/" + s.substring(k+1, s.indexOf('\"',k+1));
                 c.icon = getIcon();
                 contests.add(c);
             }

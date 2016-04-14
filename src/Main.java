@@ -77,7 +77,6 @@ public class Main {
     
     
     public static void main(String[] args) {
-        //new TopCoderParser().parse();
         //System.exit(0);
 
         window = initWindow();
