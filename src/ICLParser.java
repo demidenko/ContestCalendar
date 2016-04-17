@@ -16,7 +16,7 @@ public class ICLParser extends SiteParser{
 
     public ArrayList<Contest> parse() {
         ArrayList<Contest> contests = new ArrayList<Contest>();
-        String s = Utils.URLToString(contestsPage(), "windows-1251"); if(s==null) return contests;
+        String s = Utils.URLToString(contestsPage(), "windows-1251"); if(s==null) return null;
         try{
             String str;
             int i, j, k = s.indexOf("<table>"), l = s.indexOf("</table>", k);

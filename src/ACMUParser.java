@@ -18,7 +18,7 @@ public class ACMUParser extends SiteParser {
 
     public ArrayList<Contest> parse() {
         ArrayList<Contest> contests = new ArrayList<Contest>();
-        String s = Utils.URLToString(contestsPage(), "windows-1251"); if(s==null) return contests;
+        String s = Utils.URLToString(contestsPage(), "windows-1251"); if(s==null) return null;
 
         try{
             int i, j, k = s.indexOf("<h1>Расписание</h1>");

@@ -8,9 +8,8 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.*;
-import java.util.Calendar;
+import java.util.*;
 import java.util.List;
-import java.util.TreeMap;
 
 
 public class Utils {
@@ -61,6 +60,7 @@ public class Utils {
         URL url = new URL(urlName);
         URLConnection con = url.openConnection();
         con.addRequestProperty("User-Agent","parser ContestCalendar");
+        con.setConnectTimeout(30000);
         return con;
     }
 
@@ -195,7 +195,7 @@ public class Utils {
             try {
                 res = ImageIO.read(getConnection(iconUrl).getInputStream());
             } catch (Exception e2) {
-                //e2.printStackTrace();
+                //e2.printStackTrace();public
             }
         }
 
@@ -286,5 +286,15 @@ public class Utils {
             if(s.contains(x)) s=s.replace(x, month.get(x));
         }
         return s;
+    }
+
+    static Random rnd = new Random();
+    static void shuffle(Object a[]){
+        for(int i=a.length-1;i>0;--i){
+            int j = rnd.nextInt(i+1);
+            Object t = a[i];
+            a[i] = a[j];
+            a[j] = t;
+        }
     }
 }

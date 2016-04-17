@@ -1,6 +1,5 @@
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.PrintWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -21,8 +20,16 @@ public class UserContestsParser extends SiteParser {
     public ArrayList<Contest> parse() {
         ArrayList<Contest> contests = new ArrayList<Contest>();
 
+
+        Scanner in = null;
         try {
-            Scanner in = new Scanner(new File(contestsPage()));
+            in = new Scanner(new File(contestsPage()));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        try {
             Contest c = null;
             while(in.hasNext()){
                 String tag = in.next();
@@ -36,8 +43,12 @@ public class UserContestsParser extends SiteParser {
                 if(tag.equalsIgnoreCase("mainpage")) c.mainPage = Utils.trim(in.nextLine());
                 if(tag.equalsIgnoreCase("contestpage")) c.contestPage = Utils.trim(in.nextLine());
                 if(tag.equalsIgnoreCase("page")) c.contestPage = c.mainPage = Utils.trim(in.nextLine());
-                if(tag.equalsIgnoreCase("from")) c.startDate.setTime(dateFormat.parse(Utils.trim(in.nextLine())));
-                if(tag.equalsIgnoreCase("to")) c.endDate.setTime(dateFormat.parse(Utils.trim(in.nextLine())));
+                try{
+                    if(tag.equalsIgnoreCase("from")) c.startDate.setTime(dateFormat.parse(Utils.trim(in.nextLine())));
+                    if(tag.equalsIgnoreCase("to")) c.endDate.setTime(dateFormat.parse(Utils.trim(in.nextLine())));
+                }catch (ParseException e){
+                    e.printStackTrace();
+                }
             }
             if(c!=null) contests.add(c);
             in.close();

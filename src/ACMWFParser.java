@@ -48,7 +48,7 @@ public class ACMWFParser extends SiteParser {
     @Override
     public ArrayList<Contest> parse() {
         ArrayList<Contest> contests = new ArrayList<Contest>();
-        String s = Utils.URLToString(contestsPage(), "UTF-8"); if(s==null) return contests;
+        String s = Utils.URLToString(contestsPage(), "UTF-8"); if(s==null) return null;
 
         int k,j,i = s.indexOf("hosted by");
         //String university = s.substring(i+10, s.indexOf("<",i+1));

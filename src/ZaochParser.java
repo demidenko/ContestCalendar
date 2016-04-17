@@ -26,7 +26,7 @@ public class ZaochParser extends SiteParser {
     @Override
     public ArrayList<Contest> parse() {
         ArrayList<Contest> contests = new ArrayList<Contest>();
-        String s = Utils.URLToString(contestsPage(), "KOI8-R"); if(s==null) return contests;
+        String s = Utils.URLToString(contestsPage(), "KOI8-R"); if(s==null) return null;
 
         try{
             Contest c = new Contest();

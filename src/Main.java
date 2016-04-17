@@ -84,7 +84,7 @@ public class Main {
 
         wishParsers = allParsers;
 
-        master = new ParsersThreadMaster(wishParsers, 8);
+        master = new ParsersThreadMaster(wishParsers);
         runParsers(wishParsers);
         
 
@@ -148,14 +148,14 @@ public class Main {
 
     public static class ParsersThreadMaster{
         int maxThreads;
-        public SiteParser parsers[], list[];
+        SiteParser parsers[], list[];
         long time[];
         int current, count, iter;
         public Object godFather;
 
-        public ParsersThreadMaster(SiteParser newparsers[], int K){
+        public ParsersThreadMaster(SiteParser newparsers[]){
             count = newparsers.length;
-            maxThreads = Math.min(K, count);
+            maxThreads = Math.min(count, 8);
             list = newparsers.clone();
             Arrays.sort(list, new Comparator<SiteParser>() {
                 @Override
@@ -164,6 +164,7 @@ public class Main {
                 }
             });
             parsers = list.clone();
+            Utils.shuffle(parsers);
             DefaultTableModel tm = ((DefaultTableModel)monitorTable.getModel());
             tm.setRowCount(count);
             tm.setColumnCount(3);
@@ -221,8 +222,10 @@ public class Main {
         public void done(SiteParser parser, List<Contest> contests){
             int i = getRowNumber(parser);
             time[i] = System.currentTimeMillis()-time[i];
-            monitorTable.setValueAt("OK "+time[i]+" ms. +"+(contests==null?0:contests.size()),i,2);
-            monitorTable.setValueAt(new ImageIcon(parser.getIcon()), i, 0);
+            if(contests!=null){
+                monitorTable.setValueAt("OK "+time[i]+" ms. +"+(contests==null?0:contests.size()),i,2);
+                monitorTable.setValueAt(new ImageIcon(parser.getIcon()), i, 0);
+            }else monitorTable.setValueAt("error "+time[i]+" ms.",i,2);
             parsers[current++] = parser;
             buttonUpdate.setText(current+"/"+count);
             if(current==count){

@@ -18,7 +18,7 @@ public class NEERCIFMOSchoolParser extends SiteParser{
 
     public ArrayList<Contest> parse() {
         ArrayList<Contest> contests = new ArrayList<Contest>();
-        String s = Utils.URLToString(contestsPage(), "windows-1251"); if(s==null) return contests;
+        String s = Utils.URLToString(contestsPage(), "windows-1251"); if(s==null) return null;
 
         try{
             int i, j, j2, k;

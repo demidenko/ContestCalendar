@@ -21,7 +21,7 @@ public class DLGSUParser extends SiteParser{
     @Override
     public ArrayList<Contest> parse() {
         ArrayList<Contest> contests = new ArrayList<Contest>();
-        String s = Utils.URLToString(contestsPage(), "windows-1251"); if(s==null) return contests;
+        String s = Utils.URLToString(contestsPage(), "windows-1251"); if(s==null) return null;
         try{
             int i, j, k = s.indexOf("class=\"news\""), end = s.indexOf("colspan",k);
 

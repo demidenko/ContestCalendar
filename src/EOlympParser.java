@@ -21,7 +21,7 @@ public class EOlympParser extends SiteParser{
     @Override
     public ArrayList<Contest> parse() {
         ArrayList<Contest> contests = new ArrayList<Contest>();
-        String s = Utils.URLToString(contestsPage(), "UTF-8"); if(s==null) return contests;
+        String s = Utils.URLToString(contestsPage(), "UTF-8"); if(s==null) return null;
 
         try{
             int k = s.indexOf("eo-list"), i = k, ke = s.indexOf("eo-pagination");

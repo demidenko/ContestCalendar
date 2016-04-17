@@ -18,7 +18,7 @@ public class HackerRankParser extends SiteParser {
     @Override
     public ArrayList<Contest> parse() {
         ArrayList<Contest> contests = new ArrayList<Contest>();
-        String s = Utils.URLToString(contestsPage(), "UTF-8"); if(s==null) return contests;
+        String s = Utils.URLToString(contestsPage(), "UTF-8"); if(s==null) return null;
         try{
             int i = 0;
             for(;;){

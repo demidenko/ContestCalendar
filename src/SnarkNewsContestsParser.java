@@ -26,7 +26,7 @@ public class SnarkNewsContestsParser extends SiteParser {
 
     public ArrayList<Contest> parse(){
         ArrayList<Contest> contests = new ArrayList<Contest>();
-        String s = Utils.URLToString(contestsPage(), "UTF-8"); if(s==null) return contests;
+        String s = Utils.URLToString(contestsPage(), "UTF-8"); if(s==null) return null;
         try{
             int i, k = s.indexOf("class=\"maintext\""), l = s.indexOf("</table>", k);
             k = s.indexOf("<tr>", k+1);
