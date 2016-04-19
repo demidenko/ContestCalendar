@@ -1,19 +1,75 @@
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.Locale;
 
 
 public class RussianCodeCupParser extends SiteParser{
-    static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd MM yyyy HH:mm Z");
-    
-    public String contestsPage() {
-        return "http://russiancodecup.ru/about";
-    }
+    static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z", Locale.ENGLISH);
 
     @Override
     public String mainPage() {
-        return "http://russiancodecup.ru/";
+        return "http://russiancodecup.ru";
+    }
+
+    public String contestsPage() {
+        return "http://www.russiancodecup.ru/en/ajax/champ_reg_info/";
+    }
+
+    public ArrayList<Contest> parse() {
+        ArrayList<Contest> contests = new ArrayList<Contest>();
+        String s = Utils.URLToString(contestsPage(), "UTF-8"); if(s==null) return null;
+
+        try{
+            int i = s.indexOf("\"champ\""), p, k, b;
+            String t;
+            i = s.indexOf("\"name\"", i);
+            i = s.indexOf(':', i); i = s.indexOf('\"', i);
+            String name = s.substring(i+1, s.indexOf('\"',i+1));
+            i = s.indexOf("\"rounds\"");
+            for(;;){
+                i = s.indexOf("\"name\"", i+1);
+                if(i==-1) break;
+                b = s.lastIndexOf('{', i);
+                k = s.indexOf(':', i);
+                k = s.indexOf('\"', k);
+                Contest c = new Contest();
+                c.title = name + " " + s.substring(k+1, s.indexOf('\"',k+1));
+                k = s.indexOf("\"start_date\"", b);
+                k = s.indexOf(':', k); k = s.indexOf('\"', k);
+                t = s.substring(k + 1, s.indexOf('\"', k + 1));
+                p = t.indexOf('T');
+                t = t.substring(0, p) + " " + t.substring(p+1, p+9) + " GMT" + t.substring(p+9);
+                try{
+                    c.startDate.setTime(dateFormat.parse(t));
+                }catch (ParseException e){
+                    e.printStackTrace();
+                }
+                k = s.indexOf("\"end_date\"", b);
+                k = s.indexOf(':', k); k = s.indexOf('\"', k);
+                t = s.substring(k + 1, s.indexOf('\"', k + 1));
+                p = t.indexOf('T');
+                t = t.substring(0, p) + " " + t.substring(p+1, p+9) + " GMT" + t.substring(p+9);
+                try{
+                    c.endDate.setTime(dateFormat.parse(t));
+                }catch (ParseException e){
+                    e.printStackTrace();
+                }
+                c.mainPage = mainPage();
+                c.deadLine = Utils.timeConsts.YEAR;
+                c.icon = getIcon();
+                contests.add(c);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return contests;
+    }
+    /*
+    static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd MM yyyy HH:mm Z");
+    public String contestsPage() {
+        return "http://russiancodecup.ru/about";
     }
 
     public ArrayList<Contest> parse() {
@@ -51,6 +107,7 @@ public class RussianCodeCupParser extends SiteParser{
 
         return contests;
     }
+     */
     /*
     static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss Z");
     public String contestsPage() {
