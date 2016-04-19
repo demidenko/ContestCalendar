@@ -36,6 +36,8 @@ public class CodeForcesParser extends SiteParser{
                 k = s.indexOf("\"id\"", b);
                 k = s.indexOf(':', k+1);
                 c.contestPage = c.mainPage + "/contest/" + s.substring(k+1, s.indexOf(',',k+1));
+                if(!c.title.toLowerCase().contains("codeforces")) c.deadLine = Utils.timeConsts.YEAR;
+                else c.deadLine = Utils.timeConsts.DAY*2;
                 c.icon = getIcon();
                 contests.add(c);
             }
