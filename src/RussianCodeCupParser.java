@@ -3,7 +3,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Locale;
 
-
 public class RussianCodeCupParser extends SiteParser{
     static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z", Locale.ENGLISH);
 
@@ -17,7 +16,7 @@ public class RussianCodeCupParser extends SiteParser{
     }
 
     public ArrayList<Contest> parse() {
-        ArrayList<Contest> contests = new ArrayList<Contest>();
+        ArrayList<Contest> contests = new ArrayList<>();
         String s = Utils.URLToString(contestsPage(), "UTF-8"); if(s==null) return null;
 
         try{
@@ -34,7 +33,8 @@ public class RussianCodeCupParser extends SiteParser{
                 k = s.indexOf(':', i);
                 k = s.indexOf('\"', k);
                 Contest c = new Contest();
-                c.title = name + " " + s.substring(k+1, s.indexOf('\"',k+1));
+                String z = s.substring(k+1, s.indexOf('\"',k+1));
+                c.title = name + " " + z;
                 k = s.indexOf("\"start_date\"", b);
                 k = s.indexOf(':', k); k = s.indexOf('\"', k);
                 t = s.substring(k + 1, s.indexOf('\"', k + 1));
@@ -63,6 +63,8 @@ public class RussianCodeCupParser extends SiteParser{
         }catch (Exception e){
             e.printStackTrace();
         }
+
+
 
         return contests;
     }

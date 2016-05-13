@@ -21,7 +21,8 @@ public class CodeChefParser extends SiteParser {
         try{
             int i, j, k, end;
             k = s.indexOf("<h3>");
-            end = s.indexOf("Past",k);
+            end = s.indexOf("<h3>Past",k);
+            end = s.indexOf("</div>", end);
             j = k;
             for(;;){
                 j = s.indexOf("<tr", j+1);

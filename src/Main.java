@@ -69,6 +69,8 @@ public class Main {
             new IOIParser(),
             new USACOParser(),
             new Deadline24Parser(),
+            new Challenge24Parser(),
+            new CSAcademyParser(),
             //new EOlympParser()
     };
 
@@ -149,13 +151,13 @@ public class Main {
     public static class ParsersThreadMaster{
         int maxThreads;
         SiteParser parsers[], list[];
-        long time[];
+        long priority[], startTime[];
         int current, count, iter;
         public Object godFather;
 
         public ParsersThreadMaster(SiteParser newparsers[]){
             count = newparsers.length;
-            maxThreads = Math.min(count, 8);
+            maxThreads = Math.min(count, Math.max(8, (int)Math.sqrt(count)));
             list = newparsers.clone();
             Arrays.sort(list, new Comparator<SiteParser>() {
                 @Override
@@ -171,7 +173,8 @@ public class Main {
             monitorTable.getColumnModel().getColumn(0).setMinWidth(45);
             monitorTable.getColumnModel().getColumn(0).setMaxWidth(45);
             godFather = new Object();
-            time = new long[count];
+            priority = new long[count];
+            startTime = new long[count];
         }
 
         int getRowNumber(SiteParser parser){
@@ -215,24 +218,24 @@ public class Main {
 
         public void started(SiteParser parser){
             int i = getRowNumber(parser);
-            time[i] = System.currentTimeMillis();
+            startTime[i] = System.currentTimeMillis();
             monitorTable.setValueAt("running",i,2);
         }
 
         public void done(SiteParser parser, List<Contest> contests){
             int i = getRowNumber(parser);
-            time[i] = System.currentTimeMillis()-time[i];
+            priority[i] = (System.currentTimeMillis()-startTime[i] + priority[i])/2;
             if(contests!=null){
-                monitorTable.setValueAt("OK "+time[i]+" ms. +"+(contests==null?0:contests.size()),i,2);
+                monitorTable.setValueAt("OK "+ priority[i]+" ms. +"+(contests==null?0:contests.size()),i,2);
                 monitorTable.setValueAt(new ImageIcon(parser.getIcon()), i, 0);
-            }else monitorTable.setValueAt("error "+time[i]+" ms.",i,2);
+            }else monitorTable.setValueAt("error "+ priority[i]+" ms.",i,2);
             parsers[current++] = parser;
             buttonUpdate.setText(current+"/"+count);
             if(current==count){
                 Arrays.sort(parsers, new Comparator<SiteParser>() {
                     @Override
                     public int compare(SiteParser o1, SiteParser o2) {
-                        long dif = time[getRowNumber(o1)] - time[getRowNumber(o2)];
+                        long dif = priority[getRowNumber(o1)] - priority[getRowNumber(o2)];
                         return dif==0 ? 0 : (dif>0 ? 1 : -1);
                     }
                 });

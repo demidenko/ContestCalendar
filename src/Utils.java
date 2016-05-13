@@ -60,7 +60,7 @@ public class Utils {
         URL url = new URL(urlName);
         URLConnection con = url.openConnection();
         con.addRequestProperty("User-Agent","parser ContestCalendar");
-        con.setConnectTimeout(30000);
+        con.setConnectTimeout(60000);
         return con;
     }
 
