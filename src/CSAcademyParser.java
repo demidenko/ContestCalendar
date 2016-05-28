@@ -19,12 +19,19 @@ public class CSAcademyParser extends SiteParser {
         ArrayList<Contest> contests = new ArrayList<>();
         String s = Utils.URLToString(contestsPage(), "UTF-8"); if(s==null) return null;
         try {
-            int i = s.indexOf("\"contest\":");
+            int i = s.indexOf("\"contest\":"), end = s.indexOf(']', i+1);
+            int b = 0;
             for(;;){
-                i = s.indexOf("{", i+1);
-                if(i==-1) break;
-                int end = s.indexOf("}", i);
-                if(end==-1) break;
+                for(;i<end;){
+                    ++i;
+                    char c = s.charAt(i);
+                    if(c=='{'){
+                        ++b;
+                        if(b==1) break;
+                    }else
+                    if(c=='}') --b;
+                }
+                if(i>=end) break;
                 Contest c = new Contest();
                 int k = s.indexOf("\"longName\":", i+1);
                 k = s.indexOf('\"', k+10);
