@@ -100,7 +100,6 @@ public class Main {
         }, 1000-System.currentTimeMillis()%1000, 1000);
     }
 
-
     static void icotest(){
         SiteParser parsers[] = allParsers;
         JFrame window = new JFrame();

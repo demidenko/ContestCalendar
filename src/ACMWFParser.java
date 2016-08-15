@@ -65,6 +65,7 @@ public class ACMWFParser extends SiteParser {
                 j = s.indexOf("<strong>",i+1);
                 if(j>=0 && j<k){
                     String sp[] = Utils.trimTags(s.substring(j+7, s.indexOf("</strong>",j+1))).split(" ");
+                    if(sp.length<3) return contests;
                     date = sp[1] + " " + sp[2];
                 }else{
                     i = s.indexOf("<td", i+1);
