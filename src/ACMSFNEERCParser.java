@@ -11,7 +11,7 @@ public class ACMSFNEERCParser extends SiteParser {
 
     @Override
     public String contestsPage() {
-        return "http://neerc.ifmo.ru/information/index.html";
+        return "http://neerc.ifmo.ru/information/";
     }
 
     @Override
@@ -25,13 +25,14 @@ public class ACMSFNEERCParser extends SiteParser {
         String s = Utils.URLToString(contestsPage(), "UTF-8"); if(s==null) return null;
 
         try{
-            int i = s.indexOf("takes place");
-            i = s.indexOf("on", i);
-            String t = s.substring(i+3, s.indexOf(".",i));
+            Contest c = new Contest();
+            int i = s.indexOf("will take");
+            c.title = s.substring(s.lastIndexOf(">",i)+1, i-1);
+            i = s.indexOf(" on ", i);
+            String t = s.substring(i+4, s.indexOf(".",i));
             t = t.replace("-"," ");
             t = t.replaceAll("[^a-zA-Z0-9 ]","");
             String sp[] = t.split(" ");
-            Contest c = new Contest();
             try{
                 c.startDate.setTime(dateFormat.parse(sp[0]+" "+sp[1]+" "+sp[3]+" 00:00 MSK"));
                 c.endDate.setTime(dateFormat.parse(sp[0]+" "+sp[2]+" "+sp[3]+" 24:00 MSK"));

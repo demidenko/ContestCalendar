@@ -24,36 +24,43 @@ public class IOIParser extends SiteParser {
         ArrayList<Contest> contests = new ArrayList<Contest>();
         String s = Utils.URLToString(contestsPage(), "UTF-8"); if(s==null) return null;
 
+
+
         try{
             int i = s.indexOf("Current Contest");
             String str = s.substring(s.indexOf("<li>",i+1), s.indexOf("</li>",i+1));
             String t = Utils.trimTags(str);
+            t = t.replaceAll("[-,./]","");
+            String sp[] = Utils.trim(t).split("[ ]+");
+            int y = Integer.parseInt(sp[0]);
+            ArrayList<String> months = new ArrayList<>(), days = new ArrayList<>(); ///rude, i know...
+            for(int k=sp.length-1;k>=0;--k){
+                String z = sp[k].toLowerCase();
+                if(Utils.month.containsKey(z)){
+                    if(months.size()==2) continue;
+                    months.add(z);
+                }else{
+                    try{
+                        int day = Integer.parseInt(z);
+                        if(days.size()==2) continue;
+                        days.add(z);
+                    }catch (Exception e){
+                        continue;
+                    }
+                }
+            }
+            if(months.size()==1) months.add(months.get(0));
             Contest c = new Contest();
-            i = t.lastIndexOf(" - ");
-            int y = Integer.parseInt(t.substring(1,t.indexOf(" ",1)));
-            c.title = "IOI" + t.substring(0,i);
+            c.title = "IOI " + y;
             c.mainPage = mainPage();
             c.deadLine = Utils.timeConsts.YEAR;
-            t = t.substring(i+3);
-            String sp[] = t.split(" ");
-            if(sp[0].indexOf("/")==-1) sp[0]+="/"+sp[0];
             try{
-                t = sp[1].substring(0,sp[1].indexOf('-')) + " " + sp[0].substring(0,sp[0].indexOf('/')) + " " + y + " 00:00";
+                t = days.get(1) + " " + months.get(1) + " " + y + " 00:00";
                 c.startDate.setTime(dateFormat.parse(t));
-                t = sp[1].substring(sp[1].indexOf('-')+1) + " " + sp[0].substring(sp[0].indexOf('/')+1) + " " + y + " 24:00";
+                t = days.get(0) + " " + months.get(0) + " " + y + " 00:00";
                 c.endDate.setTime(dateFormat.parse(t));
             }catch (ParseException e){
                 e.printStackTrace();
-
-            }
-            i = str.indexOf("href=");
-            if(i!=-1){
-                s = Utils.URLToString("http://www.ioinformatics.org/" + str.substring(i+6,str.indexOf("\">",i)), "UTF-8");
-                if(s!=null && (i = s.indexOf("Home Page"))!=-1){
-                    i = s.lastIndexOf("\"",i);
-                    int j = s.lastIndexOf("\"",i-1);
-                    c.contestPage = s.substring(j+1,i);
-                }
             }
             c.icon = getIcon();
             contests.add(c);
