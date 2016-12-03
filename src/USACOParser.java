@@ -1,6 +1,7 @@
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Locale;
 
@@ -32,6 +33,7 @@ public class USACOParser extends SiteParser{
             String sp[] = str.split("<br>");
             for(String z : sp){
                 str = Utils.trim(z);
+                if(str.length()==0) continue;
                 i = str.indexOf(":");
                 Contest c = new Contest();
                 c.title = str.substring(i+2);

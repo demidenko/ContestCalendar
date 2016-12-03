@@ -26,7 +26,7 @@ public class ACMSFNEERCParser extends SiteParser {
 
         try{
             Contest c = new Contest();
-            int i = s.indexOf("will take");
+            int i = s.indexOf("take");
             c.title = s.substring(s.lastIndexOf(">",i)+1, i-1);
             i = s.indexOf(" on ", i);
             String t = s.substring(i+4, s.indexOf(".",i));
