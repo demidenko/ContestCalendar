@@ -18,8 +18,8 @@ public class MyTableCellRenderer implements TableCellRenderer {
     
     static final Font fontTime = new Font("DejaVu Sans Mono", Font.PLAIN, 12);
     static final Font fontTimeBold = new Font("DejaVu Sans Mono", Font.BOLD, 12);
-    static final Font fontTextPlain = new Font(null, Font.PLAIN, 12);
-    static final Font fontTextBold = new Font(null, Font.BOLD, 12);
+    static final Font fontTextPlain = new Font(Main.defaultFontName, Font.PLAIN, 12);
+    static final Font fontTextBold = new Font(Main.defaultFontName, Font.BOLD, 12);
 
     static final Color foregroundDefault = new Color(0,0,0);
     static final Color foregroundPast = new Color(128,128,128);

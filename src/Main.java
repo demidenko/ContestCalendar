@@ -35,6 +35,7 @@ public class Main {
     static JButton buttonUpdate;
     static JTextArea logText;
     static long updateTime = 1000l*60*60;
+    static final String defaultFontName = "Verdana";
     
     static SiteParser allParsers[] = {
             new CodeForcesParser(),
@@ -71,6 +72,7 @@ public class Main {
             new Deadline24Parser(),
             new Challenge24Parser(),
             new CSAcademyParser(),
+            new AtCoderParser(),
             //new EOlympParser()
     };
 
@@ -300,11 +302,11 @@ public class Main {
         final JLabel infoBigString = new JLabel();
         final JLabel infoSmallString = new JLabel();
         final JLabel infoTimer = new JLabel();
-        infoBigString.setFont(new Font(null, Font.BOLD, 14));
-        infoSmallString.setFont(new Font(null, Font.ITALIC, 10));
-        infoTimer.setFont(new Font(null, Font.PLAIN, 10));
+        infoBigString.setFont(new Font(defaultFontName, Font.BOLD, 14));
+        infoSmallString.setFont(new Font(defaultFontName, Font.ITALIC, 10));
+        infoTimer.setFont(new Font(defaultFontName, Font.PLAIN, 10));
         buttonUpdate  = new JButton("Update");
-        buttonUpdate.setFont(new Font(null, Font.BOLD, 11));
+        buttonUpdate.setFont(new Font(defaultFontName, Font.BOLD, 11));
         //infoPanel.setBorder(BorderFactory.createLineBorder(Color.red));
         //infoBigString.setBorder(BorderFactory.createLineBorder(Color.blue));
         //infoSmallString.setBorder(BorderFactory.createLineBorder(Color.blue));

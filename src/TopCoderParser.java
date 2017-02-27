@@ -36,7 +36,6 @@ public class TopCoderParser extends SiteParser {
         ArrayList<Contest> contests = new ArrayList<Contest>();
         String s = Utils.URLToString(contestsPage(), "UTF-8"); if(s==null) return null;
 
-
         try{
             int i = s.indexOf("\"items\""), k, p;
             for(;;){
@@ -56,6 +55,7 @@ public class TopCoderParser extends SiteParser {
                 k = s.indexOf(':', k); k = s.indexOf('\"',k);
                 t = s.substring(k+1, s.indexOf('\"',k+1));
                 p = t.indexOf('T');
+                if(p==-1) continue;
                 t = t.substring(0, p) + " " + t.substring(p+1, p+9) + " GMT" + t.substring(p+9);
                 try{
                     c.startDate.setTime(dateFormat.parse(t));
