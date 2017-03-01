@@ -11,39 +11,14 @@ public class ACMWFParser extends SiteParser {
 
     @Override
     public String contestsPage() {
-        return "http://icpc.baylor.edu/worldfinals/schedule";
+        return "https://icpc.baylor.edu/worldfinals/schedule";
     }
 
     @Override
     public String mainPage() {
-        return "http://icpc.baylor.edu/worldfinals";
+        return "https://icpc.baylor.edu/worldfinals";
     }
 
-
-    static final String wikipedia = "http://en.wikipedia.org";
-    String getTimeZone(String university){
-        university = university.replace(" ", "_");
-        String s = Utils.URLToString(wikipedia + "/wiki/" + university, "UTF-8");
-
-        int i = s.indexOf("Location</th>");
-        int j = s.indexOf("<a href=", i+1);
-        int k = s.indexOf("</tr>", i+1);
-        i = s.indexOf("<span class=\"flagicon\">", i+1);
-
-        if(i>=0 && i<k){
-            i = s.indexOf("</span>", i+1);
-            if(j<i) j = s.indexOf("<a href=", i+1);
-        }
-
-        String city = s.substring(j+9, s.indexOf("\"", j+9));
-
-        s = Utils.URLToString(wikipedia + city, "UTF-8");
-
-        i = s.indexOf("Time zone");
-        i = s.indexOf("<a href=", i+1);
-
-        return Utils.trimTags(s.substring(i, s.indexOf("</a>", i)));
-    }
 
     @Override
     public ArrayList<Contest> parse() {
@@ -82,6 +57,7 @@ public class ACMWFParser extends SiteParser {
                         if(title.substring(j+4).toLowerCase().contains("badges")){
                             Contest c = new Contest();
                             c.mainPage = mainPage();
+                            c.contestPage = contestsPage();
                             c.deadLine = Utils.timeConsts.YEAR;
                             c.title = title.substring(0,j);
                             int year = -1;
@@ -94,6 +70,8 @@ public class ACMWFParser extends SiteParser {
                                 break;
                             }
                             try{
+                                from = "00:00";
+                                to = "23:59";
                                 c.startDate.setTime(dateFormat.parse(date + " " + year + " " + from));
                                 c.endDate.setTime(dateFormat.parse(date + " " + year + " " + to));
                             }catch (ParseException e){
