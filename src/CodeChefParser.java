@@ -4,8 +4,9 @@ import java.util.ArrayList;
 
 
 public class CodeChefParser extends SiteParser {
-    static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
-    
+    //static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
+    static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd MM yyyy  HH:mm:ss Z");
+
     public String contestsPage() {
         return "http://www.codechef.com/contests/";
     }
@@ -35,9 +36,11 @@ public class CodeChefParser extends SiteParser {
                 c.title = s.substring(s.indexOf("\">",i)+2, s.indexOf("</a",i));
                 i = s.indexOf("<td", i+1);
                 try{
-                    c.startDate.setTime(dateFormat.parse(Utils.trim(s.substring(s.indexOf(">", i) + 1, s.indexOf("</", i))) + " India Standard Time"));
+                    String t = s.substring(s.indexOf(">", i) + 1, s.indexOf("</", i));
+                    c.startDate.setTime(dateFormat.parse(Utils.trim(Utils.trimTags(Utils.replaceMonth(t.toLowerCase()))) + " India Standard Time"));
                     i = s.indexOf("<td", i+1);
-                    c.endDate.setTime(dateFormat.parse(Utils.trim(s.substring(s.indexOf(">", i) + 1, s.indexOf("</", i))) + " India Standard Time"));
+                    t = s.substring(s.indexOf(">", i) + 1, s.indexOf("</", i));
+                    c.endDate.setTime(dateFormat.parse(Utils.trim(Utils.trimTags(Utils.replaceMonth(t.toLowerCase()))) + " India Standard Time"));
                 }catch (ParseException e){
                     e.printStackTrace();
                     continue;

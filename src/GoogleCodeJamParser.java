@@ -4,15 +4,15 @@ import java.util.*;
 
 
 public class GoogleCodeJamParser extends SiteParser{
-    static final SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, MMM dd, yyyy HH:mm Z", Locale.ENGLISH);
-    
+    static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z", Locale.ENGLISH);
+
     
     public String contestsPage() {
-        return "http://code.google.com/codejam/schedule.html";
+        return "http://code.google.com/codejam/schedule?data=1";
     }
 
     public String mainPage() {
-        return "https://code.google.com/codejam";
+        return "https://code.google.com/codejam/";
     }
 
     public ArrayList<Contest> parse() {
@@ -20,6 +20,44 @@ public class GoogleCodeJamParser extends SiteParser{
         String s = Utils.URLToString(contestsPage(), "UTF-8"); if(s==null) return null;
 
         try{
+            int i = 0, j = 0;
+            String title = "";
+            for(;;){
+                int inext = s.indexOf("event_title", i+1);
+                int jnext = s.indexOf("duration", j+1);
+                if(inext!=-1 && inext<jnext){
+                    i = inext;
+                    title = s.substring(s.indexOf("\"", i+12)+1, s.indexOf("\"", i+15));
+                    continue;
+                }
+                j = jnext;
+                if(j==-1) break;
+                Contest c = new Contest();
+                int duration = Integer.parseInt(Utils.trim(s.substring(s.indexOf(':',j)+1, s.indexOf(',',j))));
+                j = s.indexOf("name", j+1);
+                c.title = title + " " + s.substring(s.indexOf("\"", j+5)+1, s.indexOf("\"", j+8));
+                j = s.indexOf("startDateTime", j+1);
+                try {
+                    String d = s.substring(s.indexOf("\"", j+14)+1, s.indexOf("\"", j+17));
+                    int k = d.indexOf('T');
+                    c.startDate.setTime(dateFormat.parse(d.substring(0, k) + " " + d.substring(k+1, k+9) + " GMT" + d.substring(k+9)));
+                    c.endDate.setTimeInMillis(c.startDate.getTimeInMillis());
+                    c.endDate.add(Calendar.MINUTE, duration);
+                }catch (ParseException e){
+                    e.printStackTrace();
+                    continue;
+                }
+                c.deadLine = Utils.timeConsts.YEAR;
+                c.contestPage = mainPage();
+                c.mainPage = mainPage();
+                c.icon = getIcon();
+                contests.add(c);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        /*try{
             int i, j, k = s.indexOf("class=\"block\""), end = s.indexOf("</table>", k);
             String str, t, sp[];
             for(;;){
@@ -82,7 +120,7 @@ public class GoogleCodeJamParser extends SiteParser{
             }
         }catch (Exception e){
             e.printStackTrace();
-        }
+        }*/
         return contests;
     }
 }

@@ -272,7 +272,7 @@ public class Utils {
         month.put("декабрь", "12");
         month.put("декабря", "12");
         month.put("january", "01");
-        month.put("febrary", "02");
+        month.put("february", "02");
         month.put("march", "03");
         month.put("may", "04");
         month.put("april", "05");
@@ -283,6 +283,18 @@ public class Utils {
         month.put("october", "10");
         month.put("november", "11");
         month.put("december", "12");
+        month.put("jan", "01");
+        month.put("feb", "02");
+        month.put("mar", "03");
+        month.put("may", "04");
+        month.put("apr", "05");
+        month.put("jun", "06");
+        month.put("jul", "07");
+        month.put("aug", "08");
+        month.put("sep", "09");
+        month.put("oct", "10");
+        month.put("nov", "11");
+        month.put("dec", "12");
     }
 
     static class timeConsts{
