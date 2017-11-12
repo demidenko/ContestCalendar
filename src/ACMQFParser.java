@@ -15,7 +15,7 @@ public class ACMQFParser extends SiteParser{
     }
 
     public String mainPage() {
-        return "http://ikit.sfu-kras.ru/olimpACM";
+        return "http://ikit.sfu-kras.ru/olimp/acm";
     }
 
 

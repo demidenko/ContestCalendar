@@ -19,7 +19,7 @@ public class ISITPersonalParser extends SiteParser {
 
     @Override
     public String mainPage() {
-        return "http://ikit.sfu-kras.ru/lich_pervenstvo";
+        return "http://ikit.sfu-kras.ru/olimp/individual";
     }
 
     @Override

@@ -30,7 +30,7 @@ public class IOIParser extends SiteParser {
             int i = s.indexOf("Current Contest");
             String str = s.substring(s.indexOf("<li>",i+1), s.indexOf("</li>",i+1));
             String t = Utils.trimTags(str);
-            t = t.replaceAll("[-,./]","");
+            t = t.replaceAll("[-,./]"," ");
             String sp[] = Utils.trim(t).split("[ ]+");
             int y = Integer.parseInt(sp[0]);
             ArrayList<String> months = new ArrayList<>(), days = new ArrayList<>(); ///rude, i know...

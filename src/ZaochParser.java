@@ -15,7 +15,7 @@ public class ZaochParser extends SiteParser {
         int m = c.get(Calendar.MONTH);
         int y = c.get(Calendar.YEAR);
         if(m<9) --y;
-        return "http://olympiads.ru/zaoch/"+y+"-"+((y+1)%100)+"/info.shtml";
+        return "http://olympiads.ru/zaoch/"+y+"-"+((y+1)%100)+"/zaoch_rules.shtml";
     }
 
     @Override
@@ -30,15 +30,17 @@ public class ZaochParser extends SiteParser {
 
         try{
             Contest c = new Contest();
-            c.title = Utils.trim(Utils.trimTags(s.substring(s.indexOf("<h4"), s.indexOf("</h4>"))));
+            int i = s.indexOf("<h4");
+            c.title = Utils.trim(Utils.trimTags(s.substring(i, s.indexOf("</h4>",i+1))));
             c.deadLine = Utils.timeConsts.YEAR;
             c.contestPage = mainPage();
             c.mainPage = mainPage();
-            int i = s.indexOf("<li>");
-            String sp[] = Utils.trimTags(s.substring(s.indexOf("<b",i+1),s.indexOf("</b>",i+1))).toLowerCase().split(" ");
+            i = s.indexOf("<p>", i+1);
+            String sp[] = Utils.trimTags(Utils.trim(s.substring(i,s.indexOf("<p>",i+1)))).toLowerCase().split(" ");
+            i = sp.length;
             try{
-                c.startDate.setTime(dateFormat.parse(sp[1] + " " + Utils.month.get(sp[2]) + " " + sp[3] + " 00:00 MSK"));
-                c.endDate.setTime(dateFormat.parse(sp[6] + " " + Utils.month.get(sp[7]) + " " + sp[8] + " 23:59 MSK"));
+                c.startDate.setTime(dateFormat.parse(sp[i-9] + " " + Utils.month.get(sp[i-8]) + " " + sp[i-7] + " 00:00 MSK"));
+                c.endDate.setTime(dateFormat.parse(sp[i-4] + " " + Utils.month.get(sp[i-3]) + " " + sp[i-2] + " 23:59 MSK"));
             }catch (ParseException e){
                 e.printStackTrace();
             }

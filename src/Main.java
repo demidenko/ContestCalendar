@@ -66,7 +66,7 @@ public class Main {
             new SnarkNewsContestsParser(),
             new RussianCodeCupParser(),
             new ZaochParser(),
-            new HackerEarthParser(),
+            //new HackerEarthParser(),
             new IOIParser(),
             new USACOParser(),
             new Deadline24Parser(),
