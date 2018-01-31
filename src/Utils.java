@@ -61,6 +61,7 @@ public class Utils {
         URL url = new URL(urlName);
         URLConnection con = url.openConnection();
         con.addRequestProperty("User-Agent","parser ContestCalendar");
+        con.addRequestProperty("x-requested-with", "XMLHttpRequest");
         con.setConnectTimeout(60000);
         return con;
     }

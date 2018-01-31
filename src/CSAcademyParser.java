@@ -6,7 +6,7 @@ import java.util.ArrayList;
 public class CSAcademyParser extends SiteParser {
     @Override
     public String contestsPage() {
-        return "https://csacademy.com/contests/";
+        return "https://csacademy.com/contests/?";
     }
 
     @Override
@@ -19,7 +19,7 @@ public class CSAcademyParser extends SiteParser {
         ArrayList<Contest> contests = new ArrayList<>();
         String s = Utils.URLToString(contestsPage(), "UTF-8"); if(s==null) return null;
         try {
-            int i = s.indexOf("\"contest\":"), end = s.indexOf(']', i+1);
+            int i = s.indexOf("\"Contest\":"), end = s.indexOf(']', i+1);
             int b = 0;
             for(;;){
                 for(;i<end;){
@@ -39,6 +39,7 @@ public class CSAcademyParser extends SiteParser {
                 k = s.indexOf("\"name\":", i+1);
                 k = s.indexOf('\"', k+6);
                 c.contestPage = mainPage() + "/contest/" + s.substring(k+1, s.indexOf('\"', k+1));
+                if(c.contestPage.contains("virtual") || c.contestPage.contains("interviews-") || c.contestPage.contains("algorithms-")) continue;
                 k = s.indexOf("\"startTime\":", i+1);
                 try {
                     c.startDate.setTimeInMillis(Long.parseLong(Utils.trim(s.substring(s.indexOf(':',k)+1, s.indexOf('.', k+1))))*1000);

@@ -43,7 +43,7 @@ public class Main {
             new SnarkNewsSeriesParser(),
             new OpenCupParser(),
             new ACMPParser("acmp"),
-            new ACMPParser("acmu"),
+            //new ACMPParser("acmu"),
             new NEERCIFMOSchoolParser(),
             new CodeChefParser(),
             new GoogleCodeJamParser(),
